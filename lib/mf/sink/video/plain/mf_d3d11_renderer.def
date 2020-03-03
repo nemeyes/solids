@@ -1,0 +1,9 @@
+LIBRARY	"MFD3D11Renderer"
+EXPORTS
+    CreateMFD3D11Renderer
+    CreateMFD3D11RendererActivate
+    DllCanUnloadNow                 PRIVATE
+    DllGetClassObject               PRIVATE
+    DllMain                         PRIVATE
+    DllRegisterServer               PRIVATE
+    DllUnregisterServer             PRIVATE
