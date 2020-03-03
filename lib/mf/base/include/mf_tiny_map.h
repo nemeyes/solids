@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_TINY_MAP_H_
 #define _SLD_MF_TINY_MAP_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -24,10 +24,10 @@ namespace sld
 			};
 
 			template <class Key, class Value>
-			class tiny_map : public sld::lib::mf::list<sld::lib::mf::pair<Key, Value>>
+			class tiny_map : public solids::lib::mf::list<solids::lib::mf::pair<Key, Value>>
 			{
 			protected:
-				typedef sld::lib::mf::pair<Key, Value> pair_type;
+				typedef solids::lib::mf::pair<Key, Value> pair_type;
 			public:
 				tiny_map(void)
 				{
@@ -41,10 +41,10 @@ namespace sld
 				{
 					HRESULT hr = S_OK;
 
-					typename sld::lib::mf::list<pair_type>::node_t * node = sld::lib::mf::list<pair_type>::front();
+					typename solids::lib::mf::list<pair_type>::node_t * node = solids::lib::mf::list<pair_type>::front();
 					while (TRUE)
 					{
-						if (node == &sld::lib::mf::list<pair_type>::_anchor)
+						if (node == &solids::lib::mf::list<pair_type>::_anchor)
 						{
 							hr = insert_back(pair_type(k, v));
 							break;
@@ -69,12 +69,12 @@ namespace sld
 				{
 					HRESULT hr = E_FAIL;
 
-					typename sld::lib::mf::list<pair_type>::node_t * node = sld::lib::mf::list<pair_type>::front();
-					typename sld::lib::mf::list<pair_type>::node_t * to_remove = NULL;
+					typename solids::lib::mf::list<pair_type>::node_t * node = solids::lib::mf::list<pair_type>::front();
+					typename solids::lib::mf::list<pair_type>::node_t * to_remove = NULL;
 
 					while (TRUE)
 					{
-						if (node == &sld::lib::mf::list<pair_type>::_anchor)
+						if (node == &solids::lib::mf::list<pair_type>::_anchor)
 						{
 							break;
 						}
@@ -105,9 +105,9 @@ namespace sld
 
 					pair_type pair;
 
-					typename sld::lib::mf::list<pair_type>::position pos = sld::lib::mf::list<pair_type>::front_position();
+					typename solids::lib::mf::list<pair_type>::position pos = solids::lib::mf::list<pair_type>::front_position();
 
-					while (pos != sld::lib::mf::list<pair_type>::end_position())
+					while (pos != solids::lib::mf::list<pair_type>::end_position())
 					{
 						hr = get_item_pos(pos, &pair);
 						if (FAILED(hr))
@@ -130,44 +130,44 @@ namespace sld
 							break;
 						}
 
-						pos = sld::lib::mf::list<pair_type>::next(pos);
+						pos = solids::lib::mf::list<pair_type>::next(pos);
 					}
 					return (bFound ? S_OK : MF_E_INVALID_KEY);
 				}
 
 				void clear()
 				{
-					sld::lib::mf::list<pair_type>::clear();
+					solids::lib::mf::list<pair_type>::clear();
 				}
 
 				template <class FN>
 				void clear_values(FN & clear_fn)
 				{
-					typename sld::lib::mf::list<pair_type>::node_t * n = sld::lib::mf::list<pair_type>::_anchor.next;
+					typename solids::lib::mf::list<pair_type>::node_t * n = solids::lib::mf::list<pair_type>::_anchor.next;
 					
-					while (n != &sld::lib::mf::list<pair_type>::_anchor)
+					while (n != &solids::lib::mf::list<pair_type>::_anchor)
 					{
 						clear_fn(n->item.value);
 
-						typename sld::lib::mf::list<pair_type>::node_t* tmp = n->next;
+						typename solids::lib::mf::list<pair_type>::node_t* tmp = n->next;
 						delete n;
 						n = tmp;
 					}
 
-					sld::lib::mf::list<pair_type>::_anchor.next = &sld::lib::mf::list<pair_type>::_anchor;
-					sld::lib::mf::list<pair_type>::_anchor.prev = &sld::lib::mf::list<pair_type>::_anchor;
+					solids::lib::mf::list<pair_type>::_anchor.next = &solids::lib::mf::list<pair_type>::_anchor;
+					solids::lib::mf::list<pair_type>::_anchor.prev = &solids::lib::mf::list<pair_type>::_anchor;
 
-					sld::lib::mf::list<pair_type>::_count = 0;
+					solids::lib::mf::list<pair_type>::_count = 0;
 				}
 
 				DWORD get_count(void) const
 				{
-					return sld::lib::mf::list<pair_type>::get_count();
+					return solids::lib::mf::list<pair_type>::get_count();
 				}
 
 				class map_position
 				{
-					friend class sld::lib::mf::tiny_map;
+					friend class solids::lib::mf::tiny_map;
 				public:
 					map_position(void)
 					{
@@ -184,30 +184,30 @@ namespace sld
 					}
 
 				private:
-					typename sld::lib::mf::list<pair_type>::position _pos;
+					typename solids::lib::mf::list<pair_type>::position _pos;
 
-					map_position(typename sld::lib::mf::list<pair_type>::position p)
+					map_position(typename solids::lib::mf::list<pair_type>::position p)
 						: _pos(p)
 					{
 					}
 				};
 
 
-				sld::lib::mf::tiny_map<Key, Value>::map_position front_position(void)
+				solids::lib::mf::tiny_map<Key, Value>::map_position front_position(void)
 				{
-					return sld::lib::mf::tiny_map<Key, Value>::map_position(sld::lib::mf::list<pair_type>::front_position());
+					return solids::lib::mf::tiny_map<Key, Value>::map_position(solids::lib::mf::list<pair_type>::front_position());
 				}
 
-				sld::lib::mf::tiny_map<Key, Value>::map_position end_position(void) const
+				solids::lib::mf::tiny_map<Key, Value>::map_position end_position(void) const
 				{
-					return sld::lib::mf::tiny_map<Key, Value>::map_position(sld::lib::mf::list<pair_type>::end_position());
+					return solids::lib::mf::tiny_map<Key, Value>::map_position(solids::lib::mf::list<pair_type>::end_position());
 				}
 
-				HRESULT get_value(sld::lib::mf::tiny_map<Key, Value>::map_position vals, Value * ppitem)
+				HRESULT get_value(solids::lib::mf::tiny_map<Key, Value>::map_position vals, Value * ppitem)
 				{
 					HRESULT hr = S_OK;
 					pair_type pair;
-					hr = sld::lib::mf::list<pair_type>::get_item_pos(vals.pos, &pair);
+					hr = solids::lib::mf::list<pair_type>::get_item_pos(vals.pos, &pair);
 
 					if (SUCCEEDED(hr))
 					{
@@ -216,11 +216,11 @@ namespace sld
 					return hr;
 				}
 
-				HRESULT get_key(sld::lib::mf::tiny_map<Key, Value>::map_position vals, Key * ppitem)
+				HRESULT get_key(solids::lib::mf::tiny_map<Key, Value>::map_position vals, Key * ppitem)
 				{
 					HRESULT hr = S_OK;
 					pair_type pair;
-					hr = sld::lib::mf::list<pair_type>::get_item_pos(vals.pos, &pair);
+					hr = solids::lib::mf::list<pair_type>::get_item_pos(vals.pos, &pair);
 
 					if (SUCCEEDED(hr))
 					{
@@ -229,9 +229,9 @@ namespace sld
 					return hr;
 				}
 
-				sld::lib::mf::tiny_map<Key, Value>::map_position next(const sld::lib::mf::tiny_map<Key, Value>::map_position vals)
+				solids::lib::mf::tiny_map<Key, Value>::map_position next(const solids::lib::mf::tiny_map<Key, Value>::map_position vals)
 				{
-					return sld::lib::mf::tiny_map<Key, Value>::map_position(sld::lib::mf::list<pair_type>::next(vals.pos));
+					return solids::lib::mf::tiny_map<Key, Value>::map_position(solids::lib::mf::list<pair_type>::next(vals.pos));
 				}
 			};
 		};

@@ -6,7 +6,7 @@
 #include <mf_video_display.h>
 #include "mf_mv_renderer.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -19,8 +19,8 @@ namespace sld
 					namespace multiview
 					{
 						class stream
-							: sld::lib::mf::base
-							, sld::lib::mf::refcount_object
+							: solids::lib::mf::base
+							, solids::lib::mf::refcount_object
 							, public IMFStreamSink
 							, public IMFMediaTypeHandler
 							, public IMFGetService
@@ -29,7 +29,7 @@ namespace sld
 
 						{
 						public:
-							stream(DWORD id, sld::lib::mf::critical_section & lock, sld::lib::mf::scheduler * sched);
+							stream(DWORD id, solids::lib::mf::critical_section & lock, solids::lib::mf::scheduler * sched);
 							virtual ~stream(void);
 
 							// IUnknown
@@ -68,7 +68,7 @@ namespace sld
 							HRESULT process(IMFSample* sample);
 
 							HRESULT get_max_rate(BOOL fThin, float* pflRate);
-							HRESULT initialize(IMFMediaSink* parent, sld::lib::mf::sink::video::multiview::renderer* render);
+							HRESULT initialize(IMFMediaSink* parent, solids::lib::mf::sink::video::multiview::renderer* render);
 							HRESULT release(void);
 							inline BOOL is_active(void) const
 							{
@@ -131,11 +131,11 @@ namespace sld
 							HRESULT validate_operation(int32_t op);
 
 							const DWORD											_stream_id;
-							sld::lib::mf::critical_section &					_lock;								// critical section for thread safety
+							solids::lib::mf::critical_section &					_lock;								// critical section for thread safety
 							int32_t												_state;
 							BOOL												_is_shutdown;						// Flag to indicate if Shutdown() method was called.
 							DWORD												_work_queue_id;
-							sld::lib::mf::async_callback<sld::lib::mf::sink::video::multiview::stream>			_work_queue_cb;
+							solids::lib::mf::async_callback<solids::lib::mf::sink::video::multiview::stream>			_work_queue_cb;
 							int32_t												_consume_data;
 							MFTIME												_stime;								// Presentation time when the clock started.
 							DWORD												_nwritten;							// How many bytes we have written so far.
@@ -143,12 +143,12 @@ namespace sld
 							IMFMediaSink *										_sink;								// Parent media sink
 							IMFMediaEventQueue *								_event_queue;						// Event queue
 							//IMFByteStream*              m_pByteStream;                  // Bytestream where we write the data.
-							sld::lib::mf::sink::video::multiview::renderer * _renderer;
+							solids::lib::mf::sink::video::multiview::renderer * _renderer;
 							scheduler *											_scheduler;
 							IMFMediaType *										_current_type;
 							BOOL												_prerolling;
 							BOOL												_waiting_for_clock_start;
-							sld::lib::mf::thread_safe_queue<IUnknown>		_samples_to_process;				// Queue to hold samples and markers. Applies to: ProcessSample, PlaceMarker
+							solids::lib::mf::thread_safe_queue<IUnknown>		_samples_to_process;				// Queue to hold samples and markers. Applies to: ProcessSample, PlaceMarker
 							UINT32												_uninterlace_mode;
 
 							fraction_t											_image_bytes_pp;

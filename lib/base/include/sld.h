@@ -30,7 +30,7 @@
 #define SLD_SAFE_FREE(X)                        {if (X) { free(X); X = NULL; }}
 #define SLD_SAFE_DELETE(P)                      {if (P) {delete P; P = NULL;}}
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

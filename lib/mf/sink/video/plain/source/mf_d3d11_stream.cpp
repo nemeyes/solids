@@ -1,7 +1,7 @@
 //
 #include "mf_d3d11_stream.h"
 
-GUID const* const sld::lib::mf::sink::video::plain::stream::_video_formats[] =
+GUID const* const solids::lib::mf::sink::video::plain::stream::_video_formats[] =
 {
     &MFVideoFormat_NV12,
     &MFVideoFormat_IYUV,
@@ -23,9 +23,9 @@ GUID const* const sld::lib::mf::sink::video::plain::stream::_video_formats[] =
     &MFVideoFormat_420O
 };
 
-const DWORD sld::lib::mf::sink::video::plain::stream::_nvideo_formats = sizeof(sld::lib::mf::sink::video::plain::stream::_video_formats) / sizeof(sld::lib::mf::sink::video::plain::stream::_video_formats[0]);
-const MFRatio sld::lib::mf::sink::video::plain::stream::_default_fps = { 60, 1 };
-const sld::lib::mf::sink::video::plain::stream::format_entry_t sld::lib::mf::sink::video::plain::stream::_dxgi_format_mapping[] =
+const DWORD solids::lib::mf::sink::video::plain::stream::_nvideo_formats = sizeof(solids::lib::mf::sink::video::plain::stream::_video_formats) / sizeof(solids::lib::mf::sink::video::plain::stream::_video_formats[0]);
+const MFRatio solids::lib::mf::sink::video::plain::stream::_default_fps = { 60, 1 };
+const solids::lib::mf::sink::video::plain::stream::format_entry_t solids::lib::mf::sink::video::plain::stream::_dxgi_format_mapping[] =
 {
     { MFVideoFormat_RGB32,      DXGI_FORMAT_B8G8R8X8_UNORM },
     { MFVideoFormat_ARGB32,     DXGI_FORMAT_R8G8B8A8_UNORM },
@@ -46,7 +46,7 @@ const sld::lib::mf::sink::video::plain::stream::format_entry_t sld::lib::mf::sin
 #define SAMPLE_QUEUE_HIWATER_THRESHOLD 3
 #define MAX_PAST_FRAMES         3
 
-BOOL sld::lib::mf::sink::video::plain::stream::_valid_state_mat[sld::lib::mf::sink::video::plain::stream::state_t::count][sld::lib::mf::sink::async_operation::type_t::count] =
+BOOL solids::lib::mf::sink::video::plain::stream::_valid_state_mat[solids::lib::mf::sink::video::plain::stream::state_t::count][solids::lib::mf::sink::async_operation::type_t::count] =
 {
     // States:    Operations:
     //            SetType   Start     Restart   Pause     Stop      Sample    Marker
@@ -69,14 +69,14 @@ BOOL sld::lib::mf::sink::video::plain::stream::_valid_state_mat[sld::lib::mf::si
 #pragma warning( push )
 #pragma warning( disable : 4355 )  // 'this' used in base member initializer list
 
-sld::lib::mf::sink::video::plain::stream::stream(DWORD dwStreamId, sld::lib::mf::critical_section * cs, sld::lib::mf::scheduler * sched)
+solids::lib::mf::sink::video::plain::stream::stream(DWORD dwStreamId, solids::lib::mf::critical_section * cs, solids::lib::mf::scheduler * sched)
     : _stream_id(dwStreamId)
     , _lock(cs)
-    , _state(sld::lib::mf::sink::video::plain::stream::state_t::type_not_set)
+    , _state(solids::lib::mf::sink::video::plain::stream::state_t::type_not_set)
     , _is_shutdown(FALSE)
     , _work_queue_id(0)
-    , _work_queue_cb(this, &sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb)
-    , _consume_data(sld::lib::mf::sink::video::plain::stream::consume_state_t::process_samples)
+    , _work_queue_cb(this, &solids::lib::mf::sink::video::plain::stream::dispatch_workitem_cb)
+    , _consume_data(solids::lib::mf::sink::video::plain::stream::consume_state_t::process_samples)
     , _start_time(0)
     , _nwritten(0)
     , _noutstanding_sample_requests(0)
@@ -100,21 +100,21 @@ sld::lib::mf::sink::video::plain::stream::stream(DWORD dwStreamId, sld::lib::mf:
 #pragma warning( pop )
 
 //-------------------------------------------------------------------
-// sld::lib::mf::sink::video::plain::stream destructor
+// solids::lib::mf::sink::video::plain::stream destructor
 //-------------------------------------------------------------------
 
-sld::lib::mf::sink::video::plain::stream::~stream(void)
+solids::lib::mf::sink::video::plain::stream::~stream(void)
 {
 }
 
 // IUnknown methods
 
-ULONG sld::lib::mf::sink::video::plain::stream::AddRef(void)
+ULONG solids::lib::mf::sink::video::plain::stream::AddRef(void)
 {
-    return sld::lib::mf::refcount_object::AddRef();
+    return solids::lib::mf::refcount_object::AddRef();
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::plain::stream::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
     {
@@ -153,21 +153,21 @@ HRESULT sld::lib::mf::sink::video::plain::stream::QueryInterface(REFIID iid, __R
     return S_OK;
 }
 
-ULONG  sld::lib::mf::sink::video::plain::stream::Release(void)
+ULONG  solids::lib::mf::sink::video::plain::stream::Release(void)
 {
-    return sld::lib::mf::refcount_object::Release();
+    return solids::lib::mf::refcount_object::Release();
 }
 
 /// IMFStreamSink methods
-HRESULT sld::lib::mf::sink::video::plain::stream::Flush(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::Flush(void)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     HRESULT hr = check_shutdown();
 
     if (SUCCEEDED(hr))
     {
-        _consume_data = sld::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples;
+        _consume_data = solids::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples;
         // Note: Even though we are flushing data, we still need to send
         // any marker events that were queued.
         hr = process_samples_from_queue(_consume_data);
@@ -181,7 +181,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::Flush(void)
         hr = _renderer->flush();
     }
 
-    _consume_data = sld::lib::mf::sink::video::plain::stream::consume_state_t::process_samples;
+    _consume_data = solids::lib::mf::sink::video::plain::stream::consume_state_t::process_samples;
 
     return hr;
 }
@@ -191,9 +191,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::Flush(void)
 // Description: Returns the stream identifier.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetIdentifier(__RPC__out DWORD* pdwIdentifier)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetIdentifier(__RPC__out DWORD* pdwIdentifier)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     if (pdwIdentifier == NULL)
     {
@@ -215,9 +215,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetIdentifier(__RPC__out DWORD
 // Description: Returns the parent media sink.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaSink(__RPC__deref_out_opt IMFMediaSink** ppMediaSink)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetMediaSink(__RPC__deref_out_opt IMFMediaSink** ppMediaSink)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     if (ppMediaSink == NULL)
     {
@@ -241,9 +241,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaSink(__RPC__deref_out_
 // Description: Returns a media type handler for this stream.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeHandler(__RPC__deref_out_opt IMFMediaTypeHandler** ppHandler)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetMediaTypeHandler(__RPC__deref_out_opt IMFMediaTypeHandler** ppHandler)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     if (ppHandler == NULL)
     {
@@ -274,20 +274,20 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeHandler(__RPC__der
 //       types, although this sink does not.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::PlaceMarker(MFSTREAMSINK_MARKER_TYPE eMarkerType, __RPC__in const PROPVARIANT* pvarMarkerValue, __RPC__in const PROPVARIANT* pvarContextValue)
+HRESULT solids::lib::mf::sink::video::plain::stream::PlaceMarker(MFSTREAMSINK_MARKER_TYPE eMarkerType, __RPC__in const PROPVARIANT* pvarMarkerValue, __RPC__in const PROPVARIANT* pvarContextValue)
 {
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     HRESULT hr = S_OK;
     IMarker* pMarker = NULL;
     hr = check_shutdown();
     if (SUCCEEDED(hr))
-        hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::place_marker);
+        hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::place_marker);
 
     // Create a marker object and put it on the sample queue.
     if (SUCCEEDED(hr))
-        hr = sld::lib::mf::marker::create(eMarkerType, pvarMarkerValue, pvarContextValue, &pMarker);
+        hr = solids::lib::mf::marker::create(eMarkerType, pvarMarkerValue, pvarContextValue, &pMarker);
 
     if (SUCCEEDED(hr))
         hr = _samples_to_process.queue(pMarker);
@@ -298,10 +298,10 @@ HRESULT sld::lib::mf::sink::video::plain::stream::PlaceMarker(MFSTREAMSINK_MARKE
         if (_state != State_Paused)
         {
             // Queue the operation.
-            hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::place_marker); // Increments ref count on pOp.
+            hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::place_marker); // Increments ref count on pOp.
         }
     }
-    sld::lib::mf::safe_release(pMarker);
+    solids::lib::mf::safe_release(pMarker);
 
     return hr;
 }
@@ -314,9 +314,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::PlaceMarker(MFSTREAMSINK_MARKE
 //       MEStreamSinkRequestSample event.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::ProcessSample(__RPC__in_opt IMFSample* pSample)
+HRESULT solids::lib::mf::sink::video::plain::stream::ProcessSample(__RPC__in_opt IMFSample* pSample)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
     
     if (pSample == NULL)
     {
@@ -343,7 +343,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::ProcessSample(__RPC__in_opt IM
         if (!_prerolling && !_waiting_for_on_clock_start)
         {
             // Validate the operation.
-            hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::process_sample);
+            hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::process_sample);
             if (FAILED(hr))
             {
                 break;
@@ -367,7 +367,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::ProcessSample(__RPC__in_opt IM
         if (_state != State_Paused && _state != State_Stopped)
         {
             // Queue the operation.
-            hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::process_sample);
+            hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::process_sample);
         }
     } while (FALSE);
 
@@ -377,11 +377,11 @@ HRESULT sld::lib::mf::sink::video::plain::stream::ProcessSample(__RPC__in_opt IM
 // IMFMediaEventGenerator methods.
 // Note: These methods call through to the event queue helper object.
 
-HRESULT sld::lib::mf::sink::video::plain::stream::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* punkState)
+HRESULT solids::lib::mf::sink::video::plain::stream::BeginGetEvent(IMFAsyncCallback* pCallback, IUnknown* punkState)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
     hr = check_shutdown();
 
     if (SUCCEEDED(hr))
@@ -392,11 +392,11 @@ HRESULT sld::lib::mf::sink::video::plain::stream::BeginGetEvent(IMFAsyncCallback
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::EndGetEvent(IMFAsyncResult* pResult, _Out_  IMFMediaEvent** ppEvent)
+HRESULT solids::lib::mf::sink::video::plain::stream::EndGetEvent(IMFAsyncResult* pResult, _Out_  IMFMediaEvent** ppEvent)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
     hr = check_shutdown();
 
     if (SUCCEEDED(hr))
@@ -407,7 +407,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::EndGetEvent(IMFAsyncResult* pR
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetEvent(DWORD dwFlags, __RPC__deref_out_opt IMFMediaEvent** ppEvent)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetEvent(DWORD dwFlags, __RPC__deref_out_opt IMFMediaEvent** ppEvent)
 {
     // NOTE:
     // GetEvent can block indefinitely, so we don't hold the lock.
@@ -419,7 +419,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetEvent(DWORD dwFlags, __RPC_
 
     { // scope for lock
 
-        sld::lib::mf::auto_lock lock(_lock);
+        solids::lib::mf::auto_lock lock(_lock);
 
         // Check shutdown
         hr = check_shutdown();
@@ -439,16 +439,16 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetEvent(DWORD dwFlags, __RPC_
         hr = pQueue->GetEvent(dwFlags, ppEvent);
     }
 
-    sld::lib::mf::safe_release(pQueue);
+    solids::lib::mf::safe_release(pQueue);
 
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::QueueEvent(MediaEventType met, __RPC__in REFGUID guidExtendedType, HRESULT hrStatus, __RPC__in_opt const PROPVARIANT* pvValue)
+HRESULT solids::lib::mf::sink::video::plain::stream::QueueEvent(MediaEventType met, __RPC__in REFGUID guidExtendedType, HRESULT hrStatus, __RPC__in_opt const PROPVARIANT* pvValue)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
     hr = check_shutdown();
 
     if (SUCCEEDED(hr))
@@ -466,9 +466,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::QueueEvent(MediaEventType met,
 // Description: Return the current media type, if any.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetCurrentMediaType(_Outptr_ IMFMediaType** ppMediaType)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetCurrentMediaType(_Outptr_ IMFMediaType** ppMediaType)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     if (ppMediaType == NULL)
     {
@@ -499,7 +499,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetCurrentMediaType(_Outptr_ I
 // Description: Return the major type GUID.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetMajorType(__RPC__out GUID* pguidMajorType)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetMajorType(__RPC__out GUID* pguidMajorType)
 {
     if (pguidMajorType == NULL)
     {
@@ -525,7 +525,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMajorType(__RPC__out GUID* 
 // Description: Return a preferred media type by index.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeByIndex(DWORD dwIndex, _Outptr_ IMFMediaType** ppType)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetMediaTypeByIndex(DWORD dwIndex, _Outptr_ IMFMediaType** ppType)
 {
     HRESULT hr = S_OK;
 
@@ -575,7 +575,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeByIndex(DWORD dwIn
             *ppType = pVideoMediaType;
         } while (FALSE);
 
-        sld::lib::mf::safe_release(pVideoMediaType);
+        solids::lib::mf::safe_release(pVideoMediaType);
 
         if (FAILED(hr))
         {
@@ -591,7 +591,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeByIndex(DWORD dwIn
 // Description: Return the number of preferred media types.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeCount(__RPC__out DWORD* pdwTypeCount)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetMediaTypeCount(__RPC__out DWORD* pdwTypeCount)
 {
     HRESULT hr = S_OK;
 
@@ -623,7 +623,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetMediaTypeCount(__RPC__out D
 // ppMediaType: Optionally, receives a "close match" media type.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::IsMediaTypeSupported(IMFMediaType* pMediaType, _Outptr_opt_result_maybenull_ IMFMediaType** ppMediaType)
+HRESULT solids::lib::mf::sink::video::plain::stream::IsMediaTypeSupported(IMFMediaType* pMediaType, _Outptr_opt_result_maybenull_ IMFMediaType** ppMediaType)
 {
     HRESULT hr = S_OK;
     GUID subType = GUID_NULL;
@@ -666,7 +666,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::IsMediaTypeSupported(IMFMediaT
 
         for (DWORD i = 0; i < ARRAYSIZE(_dxgi_format_mapping); i++)
         {
-            const sld::lib::mf::sink::video::plain::stream::format_entry_t & e = _dxgi_format_mapping[i];
+            const solids::lib::mf::sink::video::plain::stream::format_entry_t & e = _dxgi_format_mapping[i];
             if (e.sub_type == subType)
             {
                 _dxgi_format = e.dxgi_format;
@@ -695,7 +695,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::IsMediaTypeSupported(IMFMediaT
 // Description: Set the current media type.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaType* pMediaType)
+HRESULT solids::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaType* pMediaType)
 {
     if (pMediaType == NULL)
     {
@@ -706,7 +706,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaTy
     MFRatio fps = { 0, 0 };
     GUID guidSubtype = GUID_NULL;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     do
     {
@@ -716,7 +716,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaTy
             break;
         }
 
-        hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::set_media_type);
+        hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::set_media_type);
         if (FAILED(hr))
         {
             break;
@@ -728,7 +728,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaTy
             break;
         }
 
-        sld::lib::mf::safe_release(_current_type);
+        solids::lib::mf::safe_release(_current_type);
         _current_type = pMediaType;
         _current_type->AddRef();
 
@@ -826,9 +826,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaTy
                 break;
         }
 
-        if (sld::lib::mf::sink::video::plain::stream::state_t::started != _state && sld::lib::mf::sink::video::plain::stream::state_t::paused != _state)
+        if (solids::lib::mf::sink::video::plain::stream::state_t::started != _state && solids::lib::mf::sink::video::plain::stream::state_t::paused != _state)
         {
-            _state = sld::lib::mf::sink::video::plain::stream::state_t::ready;
+            _state = solids::lib::mf::sink::video::plain::stream::state_t::ready;
         }
         else
         {
@@ -845,7 +845,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::SetCurrentMediaType(IMFMediaTy
 // Description: IMFGetService
 //-------------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
+HRESULT solids::lib::mf::sink::video::plain::stream::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
 {
     IMFGetService* pGetService = NULL;
     HRESULT hr = _media->QueryInterface(IID_PPV_ARGS(&pGetService));
@@ -853,7 +853,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetService(__RPC__in REFGUID g
     {
         hr = pGetService->GetService(guidService, riid, ppvObject);
     }
-    sld::lib::mf::safe_release(pGetService);
+    solids::lib::mf::safe_release(pGetService);
     return hr;
 }
 
@@ -865,14 +865,14 @@ HRESULT sld::lib::mf::sink::video::plain::stream::GetService(__RPC__in REFGUID g
 //
 //--------------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::process(IMFSample* sample)
+HRESULT solids::lib::mf::sink::video::plain::stream::process(IMFSample* sample)
 {
     HRESULT hr = S_OK;
 
-    if (sld::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples == _consume_data)
+    if (solids::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples == _consume_data)
         return hr;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
     do
     {
         hr = check_shutdown();
@@ -894,7 +894,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process(IMFSample* sample)
         if (_state != State_Paused && _state != State_Stopped)
         {
             // Queue the operation.
-            hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::process_sample);
+            hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::process_sample);
         }
     }
     else
@@ -906,7 +906,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process(IMFSample* sample)
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::get_max_rate(BOOL fThin, float* pflRate)
+HRESULT solids::lib::mf::sink::video::plain::stream::get_max_rate(BOOL fThin, float* pflRate)
 {
     HRESULT hr = S_OK;
     DWORD dwMonitorRefreshRate = 0;
@@ -969,13 +969,13 @@ HRESULT sld::lib::mf::sink::video::plain::stream::get_max_rate(BOOL fThin, float
 //       initialized.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::initialize(IMFMediaSink* pParent, sld::lib::mf::sink::video::plain::renderer * presenter)
+HRESULT solids::lib::mf::sink::video::plain::stream::initialize(IMFMediaSink* pParent, solids::lib::mf::sink::video::plain::renderer * presenter)
 {
     HRESULT hr = S_OK;
 
     if (SUCCEEDED(hr))
     {
-        hr = sld::lib::mf::attributes<IMFAttributes>::initialize();
+        hr = solids::lib::mf::attributes<IMFAttributes>::initialize();
     }
 
     // Create the event queue helper.
@@ -1009,9 +1009,9 @@ HRESULT sld::lib::mf::sink::video::plain::stream::initialize(IMFMediaSink* pPare
 // Name: release
 // Description: Shuts down the stream sink.
 //-------------------------------------------------------------------
-HRESULT sld::lib::mf::sink::video::plain::stream::release(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::release(void)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     _is_shutdown = TRUE;
 
@@ -1024,18 +1024,18 @@ HRESULT sld::lib::mf::sink::video::plain::stream::release(void)
 
     _samples_to_process.clear();
 
-    sld::lib::mf::safe_release(_media);
-    sld::lib::mf::safe_release(_event_queue);
-    sld::lib::mf::safe_release(_byte_stream);
-    sld::lib::mf::safe_release(_renderer);
-    sld::lib::mf::safe_release(_current_type);
+    solids::lib::mf::safe_release(_media);
+    solids::lib::mf::safe_release(_event_queue);
+    solids::lib::mf::safe_release(_byte_stream);
+    solids::lib::mf::safe_release(_renderer);
+    solids::lib::mf::safe_release(_current_type);
 
     return MF_E_SHUTDOWN;
 }
 
-BOOL sld::lib::mf::sink::video::plain::stream::is_active(void) const
+BOOL solids::lib::mf::sink::video::plain::stream::is_active(void) const
 {
-    return ((_state == sld::lib::mf::sink::video::plain::stream::state_t::started) || (_state == sld::lib::mf::sink::video::plain::stream::state_t::paused));
+    return ((_state == solids::lib::mf::sink::video::plain::stream::state_t::started) || (_state == solids::lib::mf::sink::video::plain::stream::state_t::paused));
 }
 
 //-------------------------------------------------------------------
@@ -1043,24 +1043,24 @@ BOOL sld::lib::mf::sink::video::plain::stream::is_active(void) const
 // Description: Called when the presentation clock pauses.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::pause(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::pause(void)
 {
-    sld::lib::mf::auto_lock lock(_lock);
-    HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::pause);
+    solids::lib::mf::auto_lock lock(_lock);
+    HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::pause);
     if (SUCCEEDED(hr))
     {
         _state = State_Paused;
-        hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::pause);
+        hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::pause);
     }
 
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::preroll(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::preroll(void)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     hr = check_shutdown();
 
@@ -1083,16 +1083,16 @@ HRESULT sld::lib::mf::sink::video::plain::stream::preroll(void)
 // Description: Called when the presentation clock restarts.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::restart(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::restart(void)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
-    HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::restart);
+    HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::restart);
 
     if (SUCCEEDED(hr))
     {
-        _state = sld::lib::mf::sink::video::plain::stream::state_t::started;
-        hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::restart);
+        _state = solids::lib::mf::sink::video::plain::stream::state_t::started;
+        hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::restart);
     }
 
     return hr;
@@ -1106,15 +1106,15 @@ HRESULT sld::lib::mf::sink::video::plain::stream::restart(void)
 //       resume from the last current position.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::start(MFTIME start)
+HRESULT solids::lib::mf::sink::video::plain::stream::start(MFTIME start)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     HRESULT hr = S_OK;
 
     do
     {
-        hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::start);
+        hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::start);
         if (FAILED(hr))
         {
             break;
@@ -1126,8 +1126,8 @@ HRESULT sld::lib::mf::sink::video::plain::stream::start(MFTIME start)
             _start_time = start;        // Cache the start time.
         }
 
-        _state = sld::lib::mf::sink::video::plain::stream::state_t::started;
-        hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::start);
+        _state = solids::lib::mf::sink::video::plain::stream::state_t::started;
+        hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::start);
     } while (FALSE);
 
     _waiting_for_on_clock_start = FALSE;
@@ -1140,16 +1140,16 @@ HRESULT sld::lib::mf::sink::video::plain::stream::start(MFTIME start)
 // Description: Called when the presentation clock stops.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::stop(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::stop(void)
 {
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
-    HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::stop);
+    HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::stop);
 
     if (SUCCEEDED(hr))
     {
         _state = State_Stopped;
-        hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::stop);
+        hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::stop);
     }
 
     return hr;
@@ -1162,7 +1162,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::stop(void)
 // Description: Complete a ProcessSample or PlaceMarker request.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_process_sample(sld::lib::mf::sink::async_operation* pOp)
+HRESULT solids::lib::mf::sink::video::plain::stream::dispatch_process_sample(solids::lib::mf::sink::async_operation* pOp)
 {
     HRESULT hr = S_OK;
     assert(pOp != NULL);
@@ -1175,12 +1175,12 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_process_sample(sld::l
 
     if (_renderer->can_process_next_sample())
     {
-        hr = process_samples_from_queue(sld::lib::mf::sink::video::plain::stream::consume_state_t::process_samples);
+        hr = process_samples_from_queue(solids::lib::mf::sink::video::plain::stream::consume_state_t::process_samples);
 
         // Ask for another sample
         if (SUCCEEDED(hr))
         {
-            if (pOp->op() == sld::lib::mf::sink::async_operation::type_t::process_sample)
+            if (pOp->op() == solids::lib::mf::sink::async_operation::type_t::process_sample)
             {
                 hr = request_samples();
             }
@@ -1196,7 +1196,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_process_sample(sld::l
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::stream::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::plain::stream::check_shutdown(void) const
 {
     if (_is_shutdown)
     {
@@ -1208,7 +1208,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::check_shutdown(void) const
     }
 }
 
-inline HRESULT sld::lib::mf::sink::video::plain::stream::get_fps(IMFMediaType* pType, MFRatio* pRatio)
+inline HRESULT solids::lib::mf::sink::video::plain::stream::get_fps(IMFMediaType* pType, MFRatio* pRatio)
 {
     return MFGetAttributeRatio(pType, MF_MT_FRAME_RATE, (UINT32*)&pRatio->Numerator, (UINT32*)&pRatio->Denominator);
 }
@@ -1221,7 +1221,7 @@ inline HRESULT sld::lib::mf::sink::video::plain::stream::get_fps(IMFMediaType* p
 //              (queued + requested) is less than the max allowed
 //
 //--------------------------------------------------------------------------
-BOOL sld::lib::mf::sink::video::plain::stream::need_more_samples(void)
+BOOL solids::lib::mf::sink::video::plain::stream::need_more_samples(void)
 {
     const DWORD cSamplesInFlight = _samples_to_process.get_count() + _noutstanding_sample_requests;
 
@@ -1233,10 +1233,10 @@ BOOL sld::lib::mf::sink::video::plain::stream::need_more_samples(void)
 // Description: Callback for MFPutWorkItem.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncResult* pAsyncResult)
+HRESULT solids::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncResult* pAsyncResult)
 {
     // Called by work queue thread. Need to hold the critical section.
-    sld::lib::mf::auto_lock lock(_lock);
+    solids::lib::mf::auto_lock lock(_lock);
 
     HRESULT hr = check_shutdown();
     if (FAILED(hr))
@@ -1251,13 +1251,13 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncR
     if (SUCCEEDED(hr))
     {
         // The state object is a CAsncOperation object.
-        sld::lib::mf::sink::async_operation * pOp = (sld::lib::mf::sink::async_operation*)pState;
+        solids::lib::mf::sink::async_operation * pOp = (solids::lib::mf::sink::async_operation*)pState;
 
         int32_t op = pOp->op();
         switch (op)
         {
-        case sld::lib::mf::sink::async_operation::type_t::start :
-        case sld::lib::mf::sink::async_operation::type_t::restart:
+        case solids::lib::mf::sink::async_operation::type_t::start :
+        case solids::lib::mf::sink::async_operation::type_t::restart:
             // Send MEStreamSinkStarted.
             hr = QueueEvent(MEStreamSinkStarted, GUID_NULL, hr, NULL);
 
@@ -1276,7 +1276,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncR
 
             break;
 
-        case sld::lib::mf::sink::async_operation::type_t::stop:
+        case solids::lib::mf::sink::async_operation::type_t::stop:
 
             _renderer->SetFullscreen(FALSE);
 
@@ -1290,12 +1290,12 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncR
 
             break;
 
-        case sld::lib::mf::sink::async_operation::type_t::pause:
+        case solids::lib::mf::sink::async_operation::type_t::pause:
             hr = QueueEvent(MEStreamSinkPaused, GUID_NULL, hr, NULL);
             break;
 
-        case sld::lib::mf::sink::async_operation::type_t::process_sample:
-        case sld::lib::mf::sink::async_operation::type_t::place_marker:
+        case solids::lib::mf::sink::async_operation::type_t::process_sample:
+        case solids::lib::mf::sink::async_operation::type_t::place_marker:
             if (!(_waiting_for_on_clock_start))
             {
                 hr = dispatch_process_sample(pOp);
@@ -1303,7 +1303,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncR
             break;
         }
     }
-    sld::lib::mf::safe_release(pState);
+    solids::lib::mf::safe_release(pState);
     return hr;
 }
 
@@ -1326,7 +1326,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::dispatch_workitem_cb(IMFAsyncR
 // sample, or receive a marker.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int32_t consumeData)
+HRESULT solids::lib::mf::sink::video::plain::stream::process_samples_from_queue(int32_t consumeData)
 {
     HRESULT hr = S_OK;
     IUnknown* pUnk = NULL;
@@ -1363,7 +1363,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int
             else
             {
                 assert(pSample != NULL);    // Not a marker, must be a sample
-                if (consumeData == sld::lib::mf::sink::video::plain::stream::consume_state_t::process_samples)
+                if (consumeData == solids::lib::mf::sink::video::plain::stream::consume_state_t::process_samples)
                 {
                     hr = _renderer->process_sample(_current_type, pSample, &_uninterlace_mode, &bDeviceChanged, &bProcessAgain, &pOutSample);
 
@@ -1388,7 +1388,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int
                     {
                         if (pOutSample)
                         {
-                            hr = _scheduler->schedule_sample(pOutSample, (sld::lib::mf::sink::video::plain::stream::state_t::started != _state));
+                            hr = _scheduler->schedule_sample(pOutSample, (solids::lib::mf::sink::video::plain::stream::state_t::started != _state));
                             bProcessMoreSamples = FALSE;
                         }
                     }
@@ -1396,10 +1396,10 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int
             }
         }
 
-        sld::lib::mf::safe_release(pUnk);
-        sld::lib::mf::safe_release(pMarker);
-        sld::lib::mf::safe_release(pSample);
-        sld::lib::mf::safe_release(pOutSample);
+        solids::lib::mf::safe_release(pUnk);
+        solids::lib::mf::safe_release(pMarker);
+        solids::lib::mf::safe_release(pSample);
+        solids::lib::mf::safe_release(pOutSample);
 
         if (!bProcessMoreSamples)
         {
@@ -1407,7 +1407,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int
         }
     }       // while loop
 
-    sld::lib::mf::safe_release(pUnk);
+    solids::lib::mf::safe_release(pUnk);
 
     return hr;
 }
@@ -1416,10 +1416,10 @@ HRESULT sld::lib::mf::sink::video::plain::stream::process_samples_from_queue(int
 // Name: queue_async_operation
 // Description: Puts an async operation on the work queue.
 //-------------------------------------------------------------------
-HRESULT sld::lib::mf::sink::video::plain::stream::queue_async_operation(int32_t op)
+HRESULT solids::lib::mf::sink::video::plain::stream::queue_async_operation(int32_t op)
 {
     HRESULT hr = S_OK;
-    sld::lib::mf::sink::async_operation * pOp = new sld::lib::mf::sink::async_operation(op); // Created with ref count = 1
+    solids::lib::mf::sink::async_operation * pOp = new solids::lib::mf::sink::async_operation(op); // Created with ref count = 1
     if (pOp == NULL)
     {
         hr = E_OUTOFMEMORY;
@@ -1430,7 +1430,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::queue_async_operation(int32_t 
         hr = MFPutWorkItem(_work_queue_id, &_work_queue_cb, pOp);
     }
 
-    sld::lib::mf::safe_release(pOp);  // Releases ref count
+    solids::lib::mf::safe_release(pOp);  // Releases ref count
 
     return hr;
 }
@@ -1442,7 +1442,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::queue_async_operation(int32_t 
 //  Synopsis:   Issue more sample requests if necessary.
 //
 //--------------------------------------------------------------------------
-HRESULT sld::lib::mf::sink::video::plain::stream::request_samples(void)
+HRESULT solids::lib::mf::sink::video::plain::stream::request_samples(void)
 {
     HRESULT hr = S_OK;
 
@@ -1470,7 +1470,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::request_samples(void)
 //          the marker information.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::send_marker_event(IMarker* pMarker, int32_t consumeState)
+HRESULT solids::lib::mf::sink::video::plain::stream::send_marker_event(IMarker* pMarker, int32_t consumeState)
 {
     HRESULT hr = S_OK;
     HRESULT hrStatus = S_OK;  // Status code for marker event.
@@ -1480,7 +1480,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::send_marker_event(IMarker* pMa
 
     do
     {
-        if (consumeState == sld::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples)
+        if (consumeState == solids::lib::mf::sink::video::plain::stream::consume_state_t::drop_samples)
         {
             hrStatus = E_ABORT;
         }
@@ -1504,7 +1504,7 @@ HRESULT sld::lib::mf::sink::video::plain::stream::send_marker_event(IMarker* pMa
 // Description: Checks if an operation is valid in the current state.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::stream::validate_operation(int32_t op)
+HRESULT solids::lib::mf::sink::video::plain::stream::validate_operation(int32_t op)
 {
     HRESULT hr = S_OK;
 

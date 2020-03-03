@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_SCHEDULER_H_
 #define _SLD_MF_SCHEDULER_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -42,7 +42,7 @@ namespace sld
 				virtual ~scheduler(void)
 				{
 					{
-						//sld::lib::mf::auto_lock lock(&_lock_wait_timer);
+						//solids::lib::mf::auto_lock lock(&_lock_wait_timer);
 						if (_wait_timer != NULL)
 						{
 							::CloseHandle(_wait_timer);
@@ -124,7 +124,7 @@ namespace sld
 				{
 					HRESULT hr = S_OK;
 
-					//sld::lib::mf::auto_lock lock(&_lock);
+					//solids::lib::mf::auto_lock lock(&_lock);
 
 					_prev_delta = 0;
 					_delta_count = 0;
@@ -139,7 +139,7 @@ namespace sld
 					::timeBeginPeriod(1);
 
 					{
-						//sld::lib::mf::auto_lock lock(&_lock_wait_timer);
+						//solids::lib::mf::auto_lock lock(&_lock_wait_timer);
 						_wait_timer = ::CreateWaitableTimer(NULL, FALSE, NULL);
 						if (_wait_timer == NULL)
 							hr = HRESULT_FROM_WIN32(GetLastError());
@@ -151,12 +151,12 @@ namespace sld
 
 				HRESULT stop(void)
 				{
-					//sld::lib::mf::auto_lock lock(&_lock);
+					//solids::lib::mf::auto_lock lock(&_lock);
 					_run = false;
 					_scheduled_samples.clear();
 
 					{
-						//sld::lib::mf::auto_lock lock(&_lock_wait_timer);
+						//solids::lib::mf::auto_lock lock(&_lock_wait_timer);
 						if (_wait_timer != NULL)
 						{
 							::CloseHandle(_wait_timer);
@@ -173,7 +173,7 @@ namespace sld
 
 				HRESULT flush(void)
 				{
-					//sld::lib::mf::auto_lock lock(&_lock);
+					//solids::lib::mf::auto_lock lock(&_lock);
 					//_scheduled_samples.clear();
 
 					if (_key_timer != NULL)
@@ -310,7 +310,7 @@ namespace sld
 					hr = process_sample_in_queue(&wait);
 					if (SUCCEEDED(hr) && _wait_timer)
 					{
-						//sld::lib::mf::auto_lock lock(&_lock_wait_timer);
+						//solids::lib::mf::auto_lock lock(&_lock_wait_timer);
 						if (!_wait_timer)
 							return hr;
 						if (wait != INFINITE && wait > 0)
@@ -343,7 +343,7 @@ namespace sld
 					//hr = result->GetStatus();
 					//if(SUCCEEDED(hr))
 					{
-						sld::lib::mf::auto_lock lock(&_lock);
+						solids::lib::mf::auto_lock lock(&_lock);
 						if (_key_timer)
 						{
 							hr = MFCancelWorkItem(_key_timer);
@@ -353,7 +353,7 @@ namespace sld
 					hr = start_process_sample();
 					return hr;
 #else
-					sld::lib::mf::auto_lock lock(_lock);
+					solids::lib::mf::auto_lock lock(_lock);
 					if (_key_timer)
 					{
 						hr = MFCancelWorkItem(_key_timer);
@@ -367,11 +367,11 @@ namespace sld
 				METHODASYNCCALLBACKEX(timer_callback, scheduler, 0, MFASYNC_CALLBACK_QUEUE_STANDARD);
 
 			private:
-				sld::lib::mf::critical_section *		_lock;
-				sld::lib::mf::critical_section		_lock_wait_timer;
+				solids::lib::mf::critical_section *		_lock;
+				solids::lib::mf::critical_section		_lock_wait_timer;
 				DWORD									_queue_id;
-				sld::lib::mf::scheduler_callback_t *	_cb;
-				sld::lib::mf::thread_safe_queue<IMFSample>			_scheduled_samples;
+				solids::lib::mf::scheduler_callback_t *	_cb;
+				solids::lib::mf::thread_safe_queue<IMFSample>			_scheduled_samples;
 				IMFClock* _clock;
 				float							_rate;
 				HANDLE							_wait_timer;

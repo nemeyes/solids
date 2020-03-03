@@ -3,7 +3,7 @@
 //-------------------------------------------------------------------
 // CPresenter constructor.
 //-------------------------------------------------------------------
-sld::lib::mf::sink::video::multiview::renderer::renderer(sld::lib::mf::sink::video::multiview::media * media_sink)
+solids::lib::mf::sink::video::multiview::renderer::renderer(solids::lib::mf::sink::video::multiview::media * media_sink)
 	: _lock()
 	, _is_shutdown(FALSE)
 	, _dxgi_factory2(NULL)
@@ -63,16 +63,16 @@ sld::lib::mf::sink::video::multiview::renderer::renderer(sld::lib::mf::sink::vid
 
 }
 
-sld::lib::mf::sink::video::multiview::renderer::~renderer(void)
+solids::lib::mf::sink::video::multiview::renderer::~renderer(void)
 {
 	if (_view_info)
 	{
 		for (int i = 0; i < _view_count; i++)
 		{
-			sld::lib::mf::safe_release(_view_info[i].buffer);
-			sld::lib::mf::safe_release(_view_info[i].video_processor_enum);
-			sld::lib::mf::safe_release(_view_info[i].video_processor);
-			sld::lib::mf::safe_release(_view_info[i].shader_resource_view);
+			solids::lib::mf::safe_release(_view_info[i].buffer);
+			solids::lib::mf::safe_release(_view_info[i].video_processor_enum);
+			solids::lib::mf::safe_release(_view_info[i].video_processor);
+			solids::lib::mf::safe_release(_view_info[i].shader_resource_view);
 		}
 		delete[] _view_info;
 		_view_info = NULL;
@@ -82,23 +82,23 @@ sld::lib::mf::sink::video::multiview::renderer::~renderer(void)
 		delete _d3d_renderer;
 		_d3d_renderer = NULL;
 	}
-	sld::lib::mf::safe_release(_d3d11_video_context);
+	solids::lib::mf::safe_release(_d3d11_video_context);
     safe_delete(_monitors);
 }
 
 //IUnknown
-ULONG sld::lib::mf::sink::video::multiview::renderer::AddRef(void)
+ULONG solids::lib::mf::sink::video::multiview::renderer::AddRef(void)
 {
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
 //IUnknown
-ULONG sld::lib::mf::sink::video::multiview::renderer::Release(void)
+ULONG solids::lib::mf::sink::video::multiview::renderer::Release(void)
 {
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 //IUnknown
-HRESULT sld::lib::mf::sink::video::multiview::renderer::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
         return E_POINTER;
@@ -119,9 +119,9 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::QueryInterface(REFIID ii
 
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::multiview::renderer::GetFullscreen(__RPC__out BOOL* pfFullscreen)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::GetFullscreen(__RPC__out BOOL* pfFullscreen)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
     if (FAILED(hr))
@@ -136,25 +136,25 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::GetFullscreen(__RPC__out
 }
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::multiview::renderer::SetFullscreen(BOOL fFullscreen)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::SetFullscreen(BOOL fFullscreen)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
     if (SUCCEEDED(hr))
     {
         _is_full_screen = fFullscreen;
-		sld::lib::mf::safe_release(_video_device);
+		solids::lib::mf::safe_release(_video_device);
     }
     return hr;
 }
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::multiview::renderer::SetVideoWindow(__RPC__in HWND hwndVideo)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::SetVideoWindow(__RPC__in HWND hwndVideo)
 {
     HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -189,7 +189,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::SetVideoWindow(__RPC__in
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
 {
     HRESULT hr = S_OK;
 
@@ -235,14 +235,14 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::GetService(__RPC__in REF
     return hr;
 }
 
-BOOL sld::lib::mf::sink::video::multiview::renderer::can_process_next_sample(void)
+BOOL solids::lib::mf::sink::video::multiview::renderer::can_process_next_sample(void)
 {
     return _can_process_next_sample;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::flush(void)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::flush(void)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
@@ -251,7 +251,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::flush(void)
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::get_monitor_refresh_rate(DWORD * refresh_rate)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::get_monitor_refresh_rate(DWORD * refresh_rate)
 {
 	if (!refresh_rate)
 		return E_POINTER;
@@ -263,7 +263,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::get_monitor_refresh_rate
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::is_media_type_supported(IMFMediaType* pMediaType, DXGI_FORMAT dxgiFormat)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::is_media_type_supported(IMFMediaType* pMediaType, DXGI_FORMAT dxgiFormat)
 {
     HRESULT hr = S_OK;
     do
@@ -287,10 +287,10 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::is_media_type_supported(
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::render_samples(IMFSample* sample)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::render_samples(IMFSample* sample)
 {
     HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -316,7 +316,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::render_samples(IMFSample
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMediaType * mt, IMFSample * sample, UINT32 * unInterlace_mode, BOOL * device_changed, BOOL * process_again, IMFSample ** osample)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::process_samples(IMFMediaType * mt, IMFSample * sample, UINT32 * unInterlace_mode, BOOL * device_changed, BOOL * process_again, IMFSample ** osample)
 {
 	*process_again = FALSE;
 	HRESULT hr = S_OK;
@@ -329,7 +329,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMedia
 	ID3D11Device * device_input = NULL;
 	UINT resource_index = 0;
 
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 	do
 	{
 		_can_process_next_sample = FALSE;
@@ -416,9 +416,9 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMedia
 						create_video_processor(view_index, texture_2d, *unInterlace_mode);
 						if (FAILED(hr)) break;
 
-						sld::lib::mf::safe_release(mf_buffer);
-						sld::lib::mf::safe_release(dxgi_buffer);
-						sld::lib::mf::safe_release(texture_2d);
+						solids::lib::mf::safe_release(mf_buffer);
+						solids::lib::mf::safe_release(dxgi_buffer);
+						solids::lib::mf::safe_release(texture_2d);
 					}
 
 					_view_info[view_index].active_video_ratio[0] = ratio_array[2 * view_index];
@@ -462,9 +462,9 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMedia
 					hr = colorspace_convert(view_index, texture_2d, resource_index, *unInterlace_mode);
 					if (FAILED(hr)) break;
 
-					sld::lib::mf::safe_release(mf_buffer);
-					sld::lib::mf::safe_release(dxgi_buffer);
-					sld::lib::mf::safe_release(texture_2d);
+					solids::lib::mf::safe_release(mf_buffer);
+					solids::lib::mf::safe_release(dxgi_buffer);
+					solids::lib::mf::safe_release(texture_2d);
 				}
 			}
 			if (FAILED(hr)) break;
@@ -487,9 +487,9 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMedia
 				hr = colorspace_convert(_selected, texture_2d, resource_index, *unInterlace_mode);
 				if (FAILED(hr)) break;
 
-				sld::lib::mf::safe_release(mf_buffer);
-				sld::lib::mf::safe_release(dxgi_buffer);
-				sld::lib::mf::safe_release(texture_2d);
+				solids::lib::mf::safe_release(mf_buffer);
+				solids::lib::mf::safe_release(dxgi_buffer);
+				solids::lib::mf::safe_release(texture_2d);
 			}
 		}
 		
@@ -541,13 +541,13 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::process_samples(IMFMedia
 		}
 	} while (FALSE);
 
-	sld::lib::mf::safe_release(device_input);
-	sld::lib::mf::safe_release(mf_buffer);
+	solids::lib::mf::safe_release(device_input);
+	solids::lib::mf::safe_release(mf_buffer);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::colorspace_convert(UINT view_index, ID3D11Texture2D* pSrcTexture2D, UINT resource_index, UINT32 unInterlaceMode)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::colorspace_convert(UINT view_index, ID3D11Texture2D* pSrcTexture2D, UINT resource_index, UINT32 unInterlaceMode)
 {
 	HRESULT hr = S_OK;
 	ID3D11VideoProcessorOutputView* pOutputView = NULL;
@@ -567,12 +567,12 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::colorspace_convert(UINT 
 		hr = _d3d11_video_context->VideoProcessorBlt(_view_info[view_index].video_processor, pOutputView, 0, 1, &_stream_data);
 		if (FAILED(hr))  break;
 	} while (FALSE);
-	sld::lib::mf::safe_release(pOutputView);
-	sld::lib::mf::safe_release(pInputView);
+	solids::lib::mf::safe_release(pOutputView);
+	solids::lib::mf::safe_release(pInputView);
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::set_current_media_type(IMFMediaType* pMediaType)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::set_current_media_type(IMFMediaType* pMediaType)
 {
 	//hr = pMediaType->QueryInterface(IID_IMFAttributes, reinterpret_cast<void**>(&pAttributes));
 	return S_OK;
@@ -582,28 +582,28 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::set_current_media_type(I
 // Description: Releases resources	 held by the presenter.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::release(void)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::release(void)
 {
 	HRESULT hr = MF_E_SHUTDOWN;
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
     _is_shutdown = TRUE;
 
-	sld::lib::mf::safe_release(_dxgi_manager);
-	sld::lib::mf::safe_release(_dxgi_factory2);
-	sld::lib::mf::safe_release(_d3d11_device);
-	sld::lib::mf::safe_release(_d3d11_immediate_context);
-	sld::lib::mf::safe_release(_dxgi_output1);
-	sld::lib::mf::safe_release(_sample_allocator_ex);
-	sld::lib::mf::safe_release(_dcomp_device);
-	sld::lib::mf::safe_release(_hwnd_target);
-	sld::lib::mf::safe_release(_root_visual);
+	solids::lib::mf::safe_release(_dxgi_manager);
+	solids::lib::mf::safe_release(_dxgi_factory2);
+	solids::lib::mf::safe_release(_d3d11_device);
+	solids::lib::mf::safe_release(_d3d11_immediate_context);
+	solids::lib::mf::safe_release(_dxgi_output1);
+	solids::lib::mf::safe_release(_sample_allocator_ex);
+	solids::lib::mf::safe_release(_dcomp_device);
+	solids::lib::mf::safe_release(_hwnd_target);
+	solids::lib::mf::safe_release(_root_visual);
 
-	sld::lib::mf::safe_release(_video_device);
-	sld::lib::mf::safe_release(_swap_chain1);
+	solids::lib::mf::safe_release(_video_device);
+	solids::lib::mf::safe_release(_swap_chain1);
 	return hr;
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::check_decode_switch_regkey(void)
+void solids::lib::mf::sink::video::multiview::renderer::check_decode_switch_regkey(void)
 {
 	const TCHAR* lpcszDXSW = TEXT("DXSWSwitch");
 	const TCHAR* lpcszDComp = TEXT("DComp");
@@ -636,7 +636,7 @@ void sld::lib::mf::sink::video::multiview::renderer::check_decode_switch_regkey(
 	return;
 }
         
-HRESULT sld::lib::mf::sink::video::multiview::renderer::check_device_state(BOOL * device_changed)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::check_device_state(BOOL * device_changed)
 {
 	if (!device_changed)
 		return E_POINTER;
@@ -662,8 +662,8 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::check_device_state(BOOL 
 				return hr;
 
 			*device_changed = TRUE;
-			sld::lib::mf::safe_release(_video_device);
-			sld::lib::mf::safe_release(_swap_chain1);
+			solids::lib::mf::safe_release(_video_device);
+			solids::lib::mf::safe_release(_swap_chain1);
 
 			device_state_checks = 0;
 		}
@@ -672,13 +672,13 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::check_device_state(BOOL 
 	return hr;
 }
 
-BOOL sld::lib::mf::sink::video::multiview::renderer::check_empty_rect(RECT * dst)
+BOOL solids::lib::mf::sink::video::multiview::renderer::check_empty_rect(RECT * dst)
 {
 	GetClientRect(_hwnd, dst);
 	return IsRectEmpty(dst);
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::multiview::renderer::check_shutdown(void) const
 {
     if (_is_shutdown)
         return MF_E_SHUTDOWN;
@@ -686,7 +686,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::check_shutdown(void) con
         return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_device(D3D_DRIVER_TYPE driver_type)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_device(D3D_DRIVER_TYPE driver_type)
 {
 	HRESULT hr = S_OK;
 	IDXGIAdapter * tmpAdapter = NULL;
@@ -700,7 +700,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_
 
 	do
 	{
-		sld::lib::mf::safe_release(_d3d11_device);
+		solids::lib::mf::safe_release(_d3d11_device);
 		if (D3D_DRIVER_TYPE_HARDWARE == driver_type)
 		{
 			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, _use_debug_layer, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3d11_device, &featureLevel, NULL);
@@ -708,11 +708,11 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_
 			{
 				ID3D11VideoDevice* pDX11VideoDevice = NULL;
 				hr = _d3d11_device->QueryInterface(__uuidof(ID3D11VideoDevice), (void**)&pDX11VideoDevice);
-				sld::lib::mf::safe_release(pDX11VideoDevice);
+				solids::lib::mf::safe_release(pDX11VideoDevice);
 
 				if (SUCCEEDED(hr))
 					break;
-				sld::lib::mf::safe_release(_d3d11_device);
+				solids::lib::mf::safe_release(_d3d11_device);
 			}
 		}
 
@@ -731,7 +731,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_
 		if (FAILED(hr))
 			break;
 
-		sld::lib::mf::safe_release(_d3d11_immediate_context);
+		solids::lib::mf::safe_release(_d3d11_immediate_context);
 		_d3d11_device->GetImmediateContext(&_d3d11_immediate_context);
 
 		hr = _d3d11_immediate_context->QueryInterface(__uuidof(ID3D11VideoContext), (void**)&_d3d11_video_context);
@@ -747,7 +747,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_
 		{
 			_d3d_render_ctx.dev = _d3d11_device;
 			_d3d_render_ctx.devctx = _d3d11_immediate_context;
-			_d3d_renderer = new sld::lib::video::sink::d3d11::multiview::renderer();
+			_d3d_renderer = new solids::lib::video::sink::d3d11::multiview::renderer();
 		}
 
 		hr = _d3d11_device->QueryInterface(__uuidof(IDXGIDevice1), (LPVOID*)&dxgiDevice);
@@ -762,19 +762,19 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_dxgi_manager_and_
 		if (FAILED(hr))
 			break;
 
-		sld::lib::mf::safe_release(_dxgi_factory2);
+		solids::lib::mf::safe_release(_dxgi_factory2);
 		hr = adapter->GetParent(__uuidof(IDXGIFactory2), (LPVOID*)&_dxgi_factory2);
 
 	} while (FALSE);
 
-	sld::lib::mf::safe_release(tmpAdapter);
-	sld::lib::mf::safe_release(d3d10MultiThread);
-	sld::lib::mf::safe_release(dxgiDevice);
-	sld::lib::mf::safe_release(adapter);
+	solids::lib::mf::safe_release(tmpAdapter);
+	solids::lib::mf::safe_release(d3d10MultiThread);
+	solids::lib::mf::safe_release(dxgiDevice);
+	solids::lib::mf::safe_release(adapter);
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::find_bob_processor_index(DWORD* pIndex, UINT index)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::find_bob_processor_index(DWORD* pIndex, UINT index)
 {
     HRESULT hr = S_OK;
     D3D11_VIDEO_PROCESSOR_CAPS caps = {};
@@ -815,7 +815,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::find_bob_processor_index
     return E_FAIL;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::create_video_processor(UINT index, ID3D11Texture2D* pSrcTexture2D, UINT32 unInterlaceMode)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::create_video_processor(UINT index, ID3D11Texture2D* pSrcTexture2D, UINT32 unInterlaceMode)
 {
 	HRESULT hr = S_OK;
 	do
@@ -825,15 +825,15 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_video_processor(U
 			ID3D11Texture2D * backBuffer = NULL;
 			hr = _swap_chain1->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBuffer);
 			_d3d_renderer->set_shader_resource_view(index, backBuffer);
-			sld::lib::mf::safe_release(backBuffer);
+			solids::lib::mf::safe_release(backBuffer);
 		}
 			
 		//if (!_view_info[index].video_processor_enum || !_view_info[index].video_processor
 		//	|| _view_info[index].src_width != src_width || _view_info[index].src_height != src_height)
 		if (!_view_info[index].video_processor_enum || ! _view_info[index].video_processor)
 		{
-			sld::lib::mf::safe_release(_view_info[index].video_processor_enum);
-			sld::lib::mf::safe_release(_view_info[index].video_processor);
+			solids::lib::mf::safe_release(_view_info[index].video_processor_enum);
+			solids::lib::mf::safe_release(_view_info[index].video_processor);
 			//_view_info[index].src_width = src_width;
 			//_view_info[index].src_height = src_height;
 
@@ -924,12 +924,12 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::create_video_processor(U
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::set_monitor(UINT adapterID)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::set_monitor(UINT adapterID)
 {
     HRESULT hr = S_OK;
     DWORD dwMatchID = 0;
 
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -953,7 +953,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::set_monitor(UINT adapter
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::renderer::set_video_monitor(HWND hwndVideo)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::set_video_monitor(HWND hwndVideo)
 {
     HRESULT hr = S_OK;
     CAMDDrawMonitorInfo* pMonInfo = NULL;
@@ -1002,7 +1002,7 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::set_video_monitor(HWND h
 }
 
 _Post_satisfies_(this->_swap_chain1 != NULL)
-HRESULT sld::lib::mf::sink::video::multiview::renderer::update_dxgi_swap_chain(void)
+HRESULT solids::lib::mf::sink::video::multiview::renderer::update_dxgi_swap_chain(void)
 {
     HRESULT hr = S_OK;
     // Get the DXGISwapChain1
@@ -1071,25 +1071,25 @@ HRESULT sld::lib::mf::sink::video::multiview::renderer::update_dxgi_swap_chain(v
     return hr;
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::set_view_count(INT count)
+void solids::lib::mf::sink::video::multiview::renderer::set_view_count(INT count)
 {
 	bool changed = (_view_count != count);
 	_view_count = count;
 	if (_view_info == NULL)
-		_view_info = new sld::lib::video::sink::d3d11::multiview::renderer::view_session_t[_view_count];
+		_view_info = new solids::lib::video::sink::d3d11::multiview::renderer::view_session_t[_view_count];
 	if (_view_info && changed)
 	{
 		delete _view_info;
-		_view_info = new sld::lib::video::sink::d3d11::multiview::renderer::view_session_t[_view_count];
+		_view_info = new solids::lib::video::sink::d3d11::multiview::renderer::view_session_t[_view_count];
 	}
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::enable_coordinated_cs_converter(BOOL enable)
+void solids::lib::mf::sink::video::multiview::renderer::enable_coordinated_cs_converter(BOOL enable)
 {
 	_enable_coordinated_cs_converter = enable;
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::set_view_position(INT index, FLOAT* position)
+void solids::lib::mf::sink::video::multiview::renderer::set_view_position(INT index, FLOAT* position)
 {
 	if (_view_info)
 	{
@@ -1100,21 +1100,21 @@ void sld::lib::mf::sink::video::multiview::renderer::set_view_position(INT index
 	}
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::set_selected(INT index)
+void solids::lib::mf::sink::video::multiview::renderer::set_selected(INT index)
 {
 	_selected = index;
 	if (_d3d_renderer)
 		_d3d_renderer->select(index);
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::maximize(void)
+void solids::lib::mf::sink::video::multiview::renderer::maximize(void)
 {
 	_maximize = !_maximize;
 	if (_d3d_renderer)
 		_d3d_renderer->maximize();
 }
 
-void sld::lib::mf::sink::video::multiview::renderer::change_render_type(void)
+void solids::lib::mf::sink::video::multiview::renderer::change_render_type(void)
 {
 	/*
 	if (_d3d_renderer)

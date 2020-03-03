@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -12,7 +12,7 @@ namespace sld
 			namespace sink
 			{
 				class async_operation
-					: sld::lib::mf::refcount_object
+					: solids::lib::mf::refcount_object
 					, public IUnknown
 				{
 				public:

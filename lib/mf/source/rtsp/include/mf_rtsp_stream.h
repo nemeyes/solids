@@ -3,7 +3,7 @@
 
 #include "mf_rtsp_source.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -14,8 +14,8 @@ namespace sld
 				namespace rtsp
 				{
 					class stream
-						: sld::lib::mf::base
-						, sld::lib::mf::refcount_object
+						: solids::lib::mf::base
+						, solids::lib::mf::refcount_object
 						, public IMFMediaStream
 					{
 					public:
@@ -49,7 +49,7 @@ namespace sld
 						STDMETHODIMP RequestSample(IUnknown * token);
 
 
-						HRESULT initialize(sld::lib::mf::source::rtsp::source * source, IMFStreamDescriptor * sd, int32_t type);
+						HRESULT initialize(solids::lib::mf::source::rtsp::source * source, IMFStreamDescriptor * sd, int32_t type);
 						HRESULT release(void);
 
 						// Other methods (called by source)
@@ -74,7 +74,7 @@ namespace sld
 						int32_t					_state;
 						IMFMediaEventQueue *	_event_queue;
 						IMFStreamDescriptor *	_sd;
-						sld::lib::mf::source::rtsp::source * _source;
+						solids::lib::mf::source::rtsp::source * _source;
 						BOOL	_active;
 						BOOL	_eos;
 

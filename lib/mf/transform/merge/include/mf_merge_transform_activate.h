@@ -4,7 +4,7 @@
 #include <mf_base.h>
 #include "mf_merge_transform.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -15,8 +15,8 @@ namespace sld
 				namespace merge
 				{
 					class activate
-						: sld::lib::mf::base
-						, sld::lib::mf::refcount_object
+						: solids::lib::mf::base
+						, solids::lib::mf::refcount_object
 						, public attributes<IMFActivate>
 						, public IPersistStream
 					{

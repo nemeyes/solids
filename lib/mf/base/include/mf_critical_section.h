@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_CRITICAL_SECTION_H_
 #define _SLD_MF_CRITICAL_SECTION_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

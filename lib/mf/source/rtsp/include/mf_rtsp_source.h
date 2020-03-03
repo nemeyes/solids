@@ -12,7 +12,7 @@
 #endif
 #include "mf_rtsp_source_async_operation.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -24,13 +24,13 @@ namespace sld
 				{
 					class stream;
 					class source
-						: sld::lib::mf::base
-						, sld::lib::mf::refcount_object
+						: solids::lib::mf::base
+						, solids::lib::mf::refcount_object
 						, public IMFMediaSource
 #if defined(WITH_FFRTSPCLIENT)
-						, public sld::lib::net::rtsp::ff::client
+						, public solids::lib::net::rtsp::ff::client
 #else
-						, public sld::lib::net::rtsp::client
+						, public solids::lib::net::rtsp::client
 #endif
 					{
 					public:
@@ -61,7 +61,7 @@ namespace sld
 							}
 						} bitstream_t;
 
-						static HRESULT create_instance(sld::lib::mf::source::rtsp::source ** source);
+						static HRESULT create_instance(solids::lib::mf::source::rtsp::source ** source);
 
 						// IUnknown
 						STDMETHODIMP	QueryInterface(REFIID iid, void** ppv);
@@ -88,7 +88,7 @@ namespace sld
 						HRESULT initialize(void);
 						//HRESULT release(void);
 
-						HRESULT queue_async_operation(sld::lib::mf::source::rtsp::async_operation * aop);
+						HRESULT queue_async_operation(solids::lib::mf::source::rtsp::async_operation * aop);
 						HRESULT queue_async_operation(int32_t op);
 
 						HRESULT get_video_sample(IMFSample ** sample);
@@ -136,7 +136,7 @@ namespace sld
 						critical_section		_lock;
 						int32_t					_state;
 						IMFMediaEventQueue *	_event_queue;
-						std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>				_streams;
+						std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>				_streams;
 						std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>							_samples;
 						//std::map<int32_t, std::queue<bitstream_t*>*>													_bitstreams;
 
@@ -153,7 +153,7 @@ namespace sld
 						LARGE_INTEGER			_begin_elapsed_microseconds;
 
 						DWORD					_work_queue_id;
-						async_callback<sld::lib::mf::source::rtsp::source>	_work_queue_cb;
+						async_callback<solids::lib::mf::source::rtsp::source>	_work_queue_cb;
 						ATL::CComPtr<IMFPresentationDescriptor>					_pd;
 						ATL::CComPtr<IMFAsyncResult>							_begin_open_result;
 

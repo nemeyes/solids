@@ -1,8 +1,8 @@
 #include "mf_d3d11_media.h"
 
-sld::lib::mf::critical_section sld::lib::mf::sink::video::plain::media::_lock_stream_and_scheduler;
+solids::lib::mf::critical_section solids::lib::mf::sink::video::plain::media::_lock_stream_and_scheduler;
 
-HRESULT sld::lib::mf::sink::video::plain::media::create_instance(_In_ REFIID iid, _COM_Outptr_ void** ppSink)
+HRESULT solids::lib::mf::sink::video::plain::media::create_instance(_In_ REFIID iid, _COM_Outptr_ void** ppSink)
 {
     if (ppSink == NULL)
     {
@@ -12,7 +12,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::create_instance(_In_ REFIID iid
     *ppSink = NULL;
 
     HRESULT hr = S_OK;
-    sld::lib::mf::sink::video::plain::media * pSink = new sld::lib::mf::sink::video::plain::media();
+    solids::lib::mf::sink::video::plain::media * pSink = new solids::lib::mf::sink::video::plain::media();
 
     if (pSink == NULL)
     {
@@ -29,19 +29,19 @@ HRESULT sld::lib::mf::sink::video::plain::media::create_instance(_In_ REFIID iid
         hr = pSink->QueryInterface(iid, ppSink);
     }
 
-    sld::lib::mf::safe_release(pSink);
+    solids::lib::mf::safe_release(pSink);
 
     return hr;
 }
 
 // IUnknown methods
 
-ULONG sld::lib::mf::sink::video::plain::media::AddRef(void)
+ULONG solids::lib::mf::sink::video::plain::media::AddRef(void)
 {
-    return sld::lib::mf::refcount_object::AddRef();
+    return solids::lib::mf::refcount_object::AddRef();
 }
 
-HRESULT sld::lib::mf::sink::video::plain::media::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::plain::media::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
     {
@@ -80,13 +80,13 @@ HRESULT sld::lib::mf::sink::video::plain::media::QueryInterface(REFIID iid, __RP
     return S_OK;
 }
 
-ULONG  sld::lib::mf::sink::video::plain::media::Release(void)
+ULONG  solids::lib::mf::sink::video::plain::media::Release(void)
 {
-    return sld::lib::mf::refcount_object::Release();
+    return solids::lib::mf::refcount_object::Release();
 }
 
 ///  IMFMediaSink methods.
-HRESULT sld::lib::mf::sink::video::plain::media::AddStreamSink(DWORD dwStreamSinkIdentifier, __RPC__in_opt IMFMediaType* pMediaType, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
+HRESULT solids::lib::mf::sink::video::plain::media::AddStreamSink(DWORD dwStreamSinkIdentifier, __RPC__in_opt IMFMediaType* pMediaType, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
 {
     return MF_E_STREAMSINKS_FIXED;
 }
@@ -98,9 +98,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::AddStreamSink(DWORD dwStreamSin
 // Note: This sink has a fixed number of streams.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetCharacteristics(__RPC__out DWORD* pdwCharacteristics)
+HRESULT solids::lib::mf::sink::video::plain::media::GetCharacteristics(__RPC__out DWORD* pdwCharacteristics)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (pdwCharacteristics == NULL)
     {
@@ -122,9 +122,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetCharacteristics(__RPC__out D
 // Description: Returns a pointer to the presentation clock.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetPresentationClock(__RPC__deref_out_opt IMFPresentationClock** ppPresentationClock)
+HRESULT solids::lib::mf::sink::video::plain::media::GetPresentationClock(__RPC__deref_out_opt IMFPresentationClock** ppPresentationClock)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (ppPresentationClock == NULL)
     {
@@ -155,9 +155,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetPresentationClock(__RPC__der
 // Description: Retrieves a stream by ID.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkById(DWORD dwStreamSinkIdentifier, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
+HRESULT solids::lib::mf::sink::video::plain::media::GetStreamSinkById(DWORD dwStreamSinkIdentifier, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (ppStreamSink == NULL)
     {
@@ -186,9 +186,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkById(DWORD dwStrea
 // Description: Retrieves a stream by index.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkByIndex(DWORD dwIndex, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
+HRESULT solids::lib::mf::sink::video::plain::media::GetStreamSinkByIndex(DWORD dwIndex, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (ppStreamSink == NULL)
     {
@@ -216,9 +216,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkByIndex(DWORD dwIn
 // Description: Returns the number of streams.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkCount(__RPC__out DWORD* pcStreamSinkCount)
+HRESULT solids::lib::mf::sink::video::plain::media::GetStreamSinkCount(__RPC__out DWORD* pcStreamSinkCount)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (pcStreamSinkCount == NULL)
     {
@@ -244,7 +244,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetStreamSinkCount(__RPC__out D
 //       always returns MF_E_STREAMSINKS_FIXED.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::RemoveStreamSink(DWORD dwStreamSinkIdentifier)
+HRESULT solids::lib::mf::sink::video::plain::media::RemoveStreamSink(DWORD dwStreamSinkIdentifier)
 {
     return MF_E_STREAMSINKS_FIXED;
 }
@@ -256,9 +256,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::RemoveStreamSink(DWORD dwStream
 // pPresentationClock: Pointer to the clock. Can be NULL.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::SetPresentationClock(__RPC__in_opt IMFPresentationClock* pPresentationClock)
+HRESULT solids::lib::mf::sink::video::plain::media::SetPresentationClock(__RPC__in_opt IMFPresentationClock* pPresentationClock)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
@@ -286,7 +286,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::SetPresentationClock(__RPC__in_
         // Release the pointer to the old clock.
         // Store the pointer to the new clock.
 
-        sld::lib::mf::safe_release(_clock);
+        solids::lib::mf::safe_release(_clock);
         _clock = pPresentationClock;
         if (_clock)
         {
@@ -302,9 +302,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::SetPresentationClock(__RPC__in_
 // Description: Releases resources held by the media sink.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::Shutdown(void)
+HRESULT solids::lib::mf::sink::video::plain::media::Shutdown(void)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = MF_E_SHUTDOWN;
 
@@ -320,16 +320,16 @@ HRESULT sld::lib::mf::sink::video::plain::media::Shutdown(void)
         _renderer->shutdown();
     }
 
-    sld::lib::mf::safe_release(_clock);
-    sld::lib::mf::safe_release(_stream);
-    sld::lib::mf::safe_release(_renderer);
+    solids::lib::mf::safe_release(_clock);
+    solids::lib::mf::safe_release(_stream);
+    solids::lib::mf::safe_release(_renderer);
 
     if (_scheduler != NULL)
     {
         hr = _scheduler->stop();
     }
 
-    sld::lib::mf::safe_release(_scheduler);
+    solids::lib::mf::safe_release(_scheduler);
 
     return hr;
 }
@@ -342,9 +342,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::Shutdown(void)
 //       running (started) state. We still accept data and archive it.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::OnClockPause(MFTIME hnsSystemTime)
+HRESULT solids::lib::mf::sink::video::plain::media::OnClockPause(MFTIME hnsSystemTime)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
@@ -361,9 +361,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::OnClockPause(MFTIME hnsSystemTi
 // Description: Called when the presentation clock restarts.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::OnClockRestart(MFTIME hnsSystemTime)
+HRESULT solids::lib::mf::sink::video::plain::media::OnClockRestart(MFTIME hnsSystemTime)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
@@ -382,7 +382,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::OnClockRestart(MFTIME hnsSystem
 // Note: For a rateless sink, the clock rate is not important.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::OnClockSetRate(MFTIME hnsSystemTime, float flRate)
+HRESULT solids::lib::mf::sink::video::plain::media::OnClockSetRate(MFTIME hnsSystemTime, float flRate)
 {
     if (_scheduler != NULL)
     {
@@ -406,9 +406,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::OnClockSetRate(MFTIME hnsSystem
 //       input samples have an earlier time stamp, we discard them.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::OnClockStart(MFTIME hnsSystemTime, LONGLONG llClockStartOffset)
+HRESULT solids::lib::mf::sink::video::plain::media::OnClockStart(MFTIME hnsSystemTime, LONGLONG llClockStartOffset)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
     if (FAILED(hr))
@@ -448,9 +448,9 @@ HRESULT sld::lib::mf::sink::video::plain::media::OnClockStart(MFTIME hnsSystemTi
 // Note: After this method is called, we stop accepting new data.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::OnClockStop(MFTIME hnsSystemTime)
+HRESULT solids::lib::mf::sink::video::plain::media::OnClockStop(MFTIME hnsSystemTime)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
 
@@ -476,7 +476,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::OnClockStop(MFTIME hnsSystemTim
 // Description: IMFGetService
 //-------------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
+HRESULT solids::lib::mf::sink::video::plain::media::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
 {
     HRESULT hr = S_OK;
 
@@ -500,7 +500,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::GetService(__RPC__in REFGUID gu
     return hr;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetFastestRate(
+STDMETHODIMP solids::lib::mf::sink::video::plain::media::GetFastestRate(
     MFRATE_DIRECTION eDirection,
     BOOL fThin,
     _Out_ float* pflRate
@@ -508,7 +508,7 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetFastestRate(
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -550,7 +550,7 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetFastestRate(
 // Description: IMFRateSupport
 //-------------------------------------------------------------------------
 
-STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetSlowestRate(
+STDMETHODIMP solids::lib::mf::sink::video::plain::media::GetSlowestRate(
     MFRATE_DIRECTION eDirection,
     BOOL fThin,
     _Out_ float* pflRate
@@ -558,7 +558,7 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetSlowestRate(
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -586,12 +586,12 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::GetSlowestRate(
     return hr;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::plain::media::IsRateSupported(BOOL fThin, float flRate, __RPC__inout_opt float* pflNearestSupportedRate)
+STDMETHODIMP solids::lib::mf::sink::video::plain::media::IsRateSupported(BOOL fThin, float flRate, __RPC__inout_opt float* pflNearestSupportedRate)
 {
     HRESULT hr = S_OK;
     float flNearestSupportedRate = flRate;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -635,11 +635,11 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::IsRateSupported(BOOL fThin
     return hr;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::plain::media::NotifyPreroll(MFTIME hnsUpcomingStartTime)
+STDMETHODIMP solids::lib::mf::sink::video::plain::media::NotifyPreroll(MFTIME hnsUpcomingStartTime)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     hr = check_shutdown();
 
@@ -657,7 +657,7 @@ STDMETHODIMP sld::lib::mf::sink::video::plain::media::NotifyPreroll(MFTIME hnsUp
 // CMediaSink constructor.
 //-------------------------------------------------------------------
 
-sld::lib::mf::sink::video::plain::media::media(void)
+solids::lib::mf::sink::video::plain::media::media(void)
     : _stream_id(1)
     , _lock()
     , _is_shutdown(FALSE)
@@ -672,11 +672,11 @@ sld::lib::mf::sink::video::plain::media::media(void)
 // CMediaSink destructor.
 //-------------------------------------------------------------------
 
-sld::lib::mf::sink::video::plain::media::~media(void)
+solids::lib::mf::sink::video::plain::media::~media(void)
 {
 }
 
-HRESULT sld::lib::mf::sink::video::plain::media::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::plain::media::check_shutdown(void) const
 {
     if (_is_shutdown)
     {
@@ -696,28 +696,28 @@ HRESULT sld::lib::mf::sink::video::plain::media::check_shutdown(void) const
 //       initialized.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::plain::media::initialize(void)
+HRESULT solids::lib::mf::sink::video::plain::media::initialize(void)
 {
     HRESULT hr = S_OK;
     IMFMediaSink* pSink = NULL;
 
     do
     {
-        _scheduler = new sld::lib::mf::scheduler(&_lock_stream_and_scheduler);
+        _scheduler = new solids::lib::mf::scheduler(&_lock_stream_and_scheduler);
         if (_scheduler == NULL)
         {
             hr = E_OUTOFMEMORY;
             break;
         }
 
-        _stream = new sld::lib::mf::sink::video::plain::stream(_stream_id, &_lock_stream_and_scheduler, _scheduler);
+        _stream = new solids::lib::mf::sink::video::plain::stream(_stream_id, &_lock_stream_and_scheduler, _scheduler);
         if (_stream == NULL)
         {
             hr = E_OUTOFMEMORY;
             break;
         }
 
-        _renderer = new sld::lib::mf::sink::video::plain::renderer();
+        _renderer = new solids::lib::mf::sink::video::plain::renderer();
         if (_renderer == NULL)
         {
             hr = E_OUTOFMEMORY;
@@ -736,7 +736,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::initialize(void)
             break;
         }
 
-        _scheduler->set_callback(static_cast<sld::lib::mf::scheduler_callback_t*>(_stream));
+        _scheduler->set_callback(static_cast<solids::lib::mf::scheduler_callback_t*>(_stream));
     } while (FALSE);
 
     if (FAILED(hr))
@@ -744,7 +744,7 @@ HRESULT sld::lib::mf::sink::video::plain::media::initialize(void)
         Shutdown();
     }
 
-    sld::lib::mf::safe_release(pSink);
+    solids::lib::mf::safe_release(pSink);
 
     return hr;
 }

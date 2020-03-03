@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_LINKED_LIST_H_
 #define _SLD_MF_LINKED_LIST_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -38,7 +38,7 @@ namespace sld
 			public:
 				class position
 				{
-					friend class sld::lib::mf::list<T>;
+					friend class solids::lib::mf::list<T>;
 				public:
 					position(void)
 						: _node(NULL)
@@ -55,37 +55,37 @@ namespace sld
 					}
 
 				private:
-					const sld::lib::mf::list<T>::node_t* _node;
-					position(sld::lib::mf::list<T>::node_t* p)
+					const solids::lib::mf::list<T>::node_t* _node;
+					position(solids::lib::mf::list<T>::node_t* p)
 						: _node(p)
 					{}
 				};
 
 			protected:
-				typename sld::lib::mf::list<T>::node_t _anchor;
+				typename solids::lib::mf::list<T>::node_t _anchor;
 				DWORD _count;
 
-				sld::lib::mf::list<T>::node_t* front(void) const
+				solids::lib::mf::list<T>::node_t* front(void) const
 				{
 					return _anchor.next;
 				}
 
-				sld::lib::mf::list<T>::node_t* back(void) const
+				solids::lib::mf::list<T>::node_t* back(void) const
 				{
 					return _anchor.prev;
 				}
 
-				virtual HRESULT insert_after(T item, sld::lib::mf::list<T>::node_t* before)
+				virtual HRESULT insert_after(T item, solids::lib::mf::list<T>::node_t* before)
 				{
 					if (before == NULL)
 						return E_POINTER;
 
-					typename sld::lib::mf::list<T>::node_t* node = new (std::nothrow)typename sld::lib::mf::list<T>::node_t(item);
+					typename solids::lib::mf::list<T>::node_t* node = new (std::nothrow)typename solids::lib::mf::list<T>::node_t(item);
 					node_t* node = new (std::nothrow)node_t(item);
 					if (node == NULL)
 						return E_OUTOFMEMORY;
 
-					typename sld::lib::mf::list<T>::node_t* after = before->next;
+					typename solids::lib::mf::list<T>::node_t* after = before->next;
 					before->next = node;
 					after->prev = node;
 					node->prev = before;
@@ -94,7 +94,7 @@ namespace sld
 					return S_OK;
 				}
 
-				virtual HRESULT get_item(const sld::lib::mf::list<T>::node_t* node, T* ppitem)
+				virtual HRESULT get_item(const solids::lib::mf::list<T>::node_t* node, T* ppitem)
 				{
 					if (node == NULL || ppitem == NULL)
 						return E_POINTER;
@@ -103,7 +103,7 @@ namespace sld
 					return S_OK;
 				}
 
-				virtual HRESULT remove_item(sld::lib::mf::list<T>::node_t* node, T* ppitem)
+				virtual HRESULT remove_item(solids::lib::mf::list<T>::node_t* node, T* ppitem)
 				{
 					if (node == NULL)
 						return E_POINTER;
@@ -194,11 +194,11 @@ namespace sld
 				template<class FN> 
 				void clear(FN & clear_fn)
 				{
-					typename sld::lib::mf::list<T>::node_t* n = _anchor.next;
+					typename solids::lib::mf::list<T>::node_t* n = _anchor.next;
 					while (n != &_anchor)
 					{
 						clear_fn(n->item);
-						typename sld::lib::mf::list<T>::node_t* tmp = n->next;
+						typename solids::lib::mf::list<T>::node_t* tmp = n->next;
 						delete n;
 						n = tmp;
 					}
@@ -212,20 +212,20 @@ namespace sld
 					clear<noop<T>>(noop<T>());
 				}
 
-				sld::lib::mf::list<T>::position front_position(void)
+				solids::lib::mf::list<T>::position front_position(void)
 				{
 					if (empty())
-						return sld::lib::mf::list<T>::position(NULL);
+						return solids::lib::mf::list<T>::position(NULL);
 					else
-						return sld::lib::mf::list<T>::position(front());
+						return solids::lib::mf::list<T>::position(front());
 				}
 
-				sld::lib::mf::list<T>::position end_position(void) const
+				solids::lib::mf::list<T>::position end_position(void) const
 				{
-					return sld::lib::mf::list<T>::position();
+					return solids::lib::mf::list<T>::position();
 				}
 
-				HRESULT get_item_pos(sld::lib::mf::list<T>::position pos, T* ppitem)
+				HRESULT get_item_pos(solids::lib::mf::list<T>::position pos, T* ppitem)
 				{
 					if (pos._node)
 						return get_item(pos._node, ppitem);
@@ -233,20 +233,20 @@ namespace sld
 						return E_FAIL;
 				}
 
-				sld::lib::mf::list<T>::position Next(const sld::lib::mf::list<T>::position pos)
+				solids::lib::mf::list<T>::position Next(const solids::lib::mf::list<T>::position pos)
 				{
 					if (pos._node && (pos._node->next != &_anchor))
-						return sld::lib::mf::list<T>::position(pos._node->next);
+						return solids::lib::mf::list<T>::position(pos._node->next);
 					else
-						return sld::lib::mf::list<T>::position(NULL);
+						return solids::lib::mf::list<T>::position(NULL);
 				}
 
-				HRESULT remove(sld::lib::mf::list<T>::position& pos, T* ppitem)
+				HRESULT remove(solids::lib::mf::list<T>::position& pos, T* ppitem)
 				{
 					if (pos._node)
 					{
-						typename sld::lib::mf::list<T>::node_t* node = const_cast<typename sld::lib::mf::list<T>::node_t*>(pos._node);
-						pos = sld::lib::mf::list<T>::position();
+						typename solids::lib::mf::list<T>::node_t* node = const_cast<typename solids::lib::mf::list<T>::node_t*>(pos._node);
+						pos = solids::lib::mf::list<T>::position();
 						return remove_item(node, ppitem);
 					}
 					else
@@ -271,7 +271,7 @@ namespace sld
 				}
 
 			protected:
-				HRESULT insert_after(ptr item, sld::lib::mf::list<T>::node_t* before)
+				HRESULT insert_after(ptr item, solids::lib::mf::list<T>::node_t* before)
 				{
 					if (!item && !NULLABLE)
 						return E_POINTER;
@@ -281,12 +281,12 @@ namespace sld
 
 					HRESULT hr = list<T>::insert_after(item, before);
 					if (FAILED(hr))
-						sld::lib::mf::safe_release(item);
+						solids::lib::mf::safe_release(item);
 
 					return hr;
 				}
 
-				HRESULT get_item(const sld::lib::mf::list<T>::node_t* node, ptr* ppitem)
+				HRESULT get_item(const solids::lib::mf::list<T>::node_t* node, ptr* ppitem)
 				{
 					ptr pitem = NULL;
 					HRESULT hr = list<T>::get_item(node, ppitem);
@@ -303,7 +303,7 @@ namespace sld
 					return hr;
 				}
 
-				HRESULT remove_item(sld::lib::mf::list<T>::node_t* node, ptr* ppitem)
+				HRESULT remove_item(solids::lib::mf::list<T>::node_t* node, ptr* ppitem)
 				{
 					ptr pitem = NULL;
 					HRESULT hr = list<T>::remove_item(node, &pitem);
@@ -315,7 +315,7 @@ namespace sld
 							*ppitem = pitem;
 							(*ppitem)->AddRef();
 						}
-						sld::lib::mf::safe_release(pitem);
+						solids::lib::mf::safe_release(pitem);
 					}
 					return hr;
 				}
@@ -393,17 +393,17 @@ namespace sld
 				node_t	_anchor;  // Anchor node for the linked list.
 				DWORD	_count;   // Number of items in the list.
 
-				typename sld::lib::mf::com_ptr_list2<T>::node_t * front(void) const
+				typename solids::lib::mf::com_ptr_list2<T>::node_t * front(void) const
 				{
 					return _anchor.next;
 				}
 
-				typename sld::lib::mf::com_ptr_list2<T>::node_t * back(void) const
+				typename solids::lib::mf::com_ptr_list2<T>::node_t * back(void) const
 				{
 					return _anchor.prev;
 				}
 
-				virtual HRESULT insert_after(Ptr item, typename sld::lib::mf::com_ptr_list2<T>::node_t * before)
+				virtual HRESULT insert_after(Ptr item, typename solids::lib::mf::com_ptr_list2<T>::node_t * before)
 				{
 					if (before == NULL)
 						return E_POINTER;
@@ -412,11 +412,11 @@ namespace sld
 					if (!item && !NULLABLE)
 						return E_POINTER;
 
-					typename sld::lib::mf::com_ptr_list2<T>::node_t * node = new typename sld::lib::mf::com_ptr_list2<T>::node_t(item);
+					typename solids::lib::mf::com_ptr_list2<T>::node_t * node = new typename solids::lib::mf::com_ptr_list2<T>::node_t(item);
 					if (node == NULL)
 						return E_OUTOFMEMORY;
 
-					typename sld::lib::mf::com_ptr_list2<T>::node_t * after = before->next;
+					typename solids::lib::mf::com_ptr_list2<T>::node_t * after = before->next;
 
 					before->next = node;
 					after->prev = node;
@@ -428,7 +428,7 @@ namespace sld
 					return S_OK;
 				}
 
-				virtual HRESULT get_item(const typename sld::lib::mf::com_ptr_list2<T>::node_t * node, Ptr * ppitem)
+				virtual HRESULT get_item(const typename solids::lib::mf::com_ptr_list2<T>::node_t * node, Ptr * ppitem)
 				{
 					if (node == NULL || ppitem == NULL)
 						return E_POINTER;
@@ -443,7 +443,7 @@ namespace sld
 				// RemoveItem:
 				// Removes a node and optionally returns the item.
 				// ppItem can be NULL.
-				virtual HRESULT remove_item(typename sld::lib::mf::com_ptr_list2<T>::node_t * node, Ptr * ppitem)
+				virtual HRESULT remove_item(typename solids::lib::mf::com_ptr_list2<T>::node_t * node, Ptr * ppitem)
 				{
 					if (node == NULL)
 						return E_POINTER;
@@ -486,7 +486,7 @@ namespace sld
 
 				void clear(void)
 				{
-					typename sld::lib::mf::com_ptr_list2<T>::node_t * n = _anchor.next;
+					typename solids::lib::mf::com_ptr_list2<T>::node_t * n = _anchor.next;
 
 					// Delete the nodes
 					while (n != &_anchor)
@@ -497,7 +497,7 @@ namespace sld
 							n->item = NULL;
 						}
 
-						typename sld::lib::mf::com_ptr_list2<T>::node_t * tmp = n->next;
+						typename solids::lib::mf::com_ptr_list2<T>::node_t * tmp = n->next;
 						delete n;
 						n = tmp;
 					}
@@ -571,24 +571,24 @@ namespace sld
 
 				// Enumerator functions
 
-				typename sld::lib::mf::com_ptr_list2<T>::position front_position(void)
+				typename solids::lib::mf::com_ptr_list2<T>::position front_position(void)
 				{
 					if (is_empty())
 					{
-						return sld::lib::mf::com_ptr_list2<T>::position(NULL);
+						return solids::lib::mf::com_ptr_list2<T>::position(NULL);
 					}
 					else
 					{
-						return sld::lib::mf::com_ptr_list2<T>::position(front());
+						return solids::lib::mf::com_ptr_list2<T>::position(front());
 					}
 				}
 
-				typename sld::lib::mf::com_ptr_list2<T>::position end_position(void) const
+				typename solids::lib::mf::com_ptr_list2<T>::position end_position(void) const
 				{
-					return sld::lib::mf::com_ptr_list2<T>::position();
+					return solids::lib::mf::com_ptr_list2<T>::position();
 				}
 
-				HRESULT get_item_by_position(typename sld::lib::mf::com_ptr_list2<T>::position pos, Ptr * ppitem)
+				HRESULT get_item_by_position(typename solids::lib::mf::com_ptr_list2<T>::position pos, Ptr * ppitem)
 				{
 					if (pos)
 						return GetItem(pos._node, ppitem);
@@ -596,12 +596,12 @@ namespace sld
 						return E_FAIL;
 				}
 
-				typename sld::lib::mf::com_ptr_list2<T>::position next(const typename sld::lib::mf::com_ptr_list2<T>::position pos)
+				typename solids::lib::mf::com_ptr_list2<T>::position next(const typename solids::lib::mf::com_ptr_list2<T>::position pos)
 				{
 					if (pos._node && (pos._node->next != &_anchor))
-						return sld::lib::mf::com_ptr_list2<T>::position(pos._node->next);
+						return solids::lib::mf::com_ptr_list2<T>::position(pos._node->next);
 					else
-						return sld::lib::mf::com_ptr_list2<T>::position(NULL);
+						return solids::lib::mf::com_ptr_list2<T>::position(NULL);
 				}
 			};
 		};

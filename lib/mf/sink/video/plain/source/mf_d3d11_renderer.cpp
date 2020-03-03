@@ -1,6 +1,6 @@
 #include "mf_d3d11_renderer.h"
 
-sld::lib::mf::sink::video::plain::renderer::renderer(void)
+solids::lib::mf::sink::video::plain::renderer::renderer(void)
     : _lock()
     , _is_shutdown(FALSE)
     , m_pDXGIManager(NULL)
@@ -14,23 +14,23 @@ sld::lib::mf::sink::video::plain::renderer::renderer(void)
     , m_useDebugLayer(D3D11_CREATE_DEVICE_VIDEO_SUPPORT)
     , _can_process_next_sample(TRUE)
 {
-    _d3d11_renderer = new sld::lib::video::sink::d3d11::plain::renderer();
+    _d3d11_renderer = new solids::lib::video::sink::d3d11::plain::renderer();
 }
 
-sld::lib::mf::sink::video::plain::renderer::~renderer(void)
+solids::lib::mf::sink::video::plain::renderer::~renderer(void)
 {
-    sld::lib::mf::safe_delete(m_pMonitors);
+    solids::lib::mf::safe_delete(m_pMonitors);
     if (_d3d11_renderer)
         delete _d3d11_renderer;
     _d3d11_renderer = NULL;
 }
 
-ULONG sld::lib::mf::sink::video::plain::renderer::AddRef(void)
+ULONG solids::lib::mf::sink::video::plain::renderer::AddRef(void)
 {
-    return sld::lib::mf::refcount_object::AddRef();
+    return solids::lib::mf::refcount_object::AddRef();
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::plain::renderer::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
     {
@@ -57,15 +57,15 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::QueryInterface(REFIID iid, _
     return S_OK;
 }
 
-ULONG  sld::lib::mf::sink::video::plain::renderer::Release(void)
+ULONG  solids::lib::mf::sink::video::plain::renderer::Release(void)
 {
-    return sld::lib::mf::refcount_object::Release();
+    return solids::lib::mf::refcount_object::Release();
 }
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::plain::renderer::GetFullscreen(__RPC__out BOOL* pfFullscreen)
+HRESULT solids::lib::mf::sink::video::plain::renderer::GetFullscreen(__RPC__out BOOL* pfFullscreen)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
     if (FAILED(hr))
@@ -84,9 +84,9 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::GetFullscreen(__RPC__out BOO
 }
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::plain::renderer::SetFullscreen(BOOL fs)
+HRESULT solids::lib::mf::sink::video::plain::renderer::SetFullscreen(BOOL fs)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = check_shutdown();
     if (SUCCEEDED(hr))
@@ -101,11 +101,11 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::SetFullscreen(BOOL fs)
 }
 
 // IMFVideoDisplayControl
-HRESULT sld::lib::mf::sink::video::plain::renderer::SetVideoWindow(__RPC__in HWND hwndVideo)
+HRESULT solids::lib::mf::sink::video::plain::renderer::SetVideoWindow(__RPC__in HWND hwndVideo)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -119,7 +119,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::SetVideoWindow(__RPC__in HWN
             break;
         }
 
-        m_pMonitors = new sld::lib::mf::sink::monitors();
+        m_pMonitors = new solids::lib::mf::sink::monitors();
         if (!m_pMonitors)
         {
             hr = E_OUTOFMEMORY;
@@ -147,7 +147,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::SetVideoWindow(__RPC__in HWN
 // Name: GetService
 // Description: IMFGetService
 //-------------------------------------------------------------------------
-HRESULT sld::lib::mf::sink::video::plain::renderer::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
+HRESULT solids::lib::mf::sink::video::plain::renderer::GetService(__RPC__in REFGUID guidService, __RPC__in REFIID riid, __RPC__deref_out_opt LPVOID* ppvObject)
 {
     HRESULT hr = S_OK;
 
@@ -197,20 +197,20 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::GetService(__RPC__in REFGUID
     return hr;
 }
 
-BOOL sld::lib::mf::sink::video::plain::renderer::can_process_next_sample(void)
+BOOL solids::lib::mf::sink::video::plain::renderer::can_process_next_sample(void)
 {
     return _can_process_next_sample;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::flush(void)
+HRESULT solids::lib::mf::sink::video::plain::renderer::flush(void)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
     HRESULT hr = check_shutdown();
     _can_process_next_sample = TRUE;
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::get_monitor_refresh_rate(DWORD* pdwRefreshRate)
+HRESULT solids::lib::mf::sink::video::plain::renderer::get_monitor_refresh_rate(DWORD* pdwRefreshRate)
 {
     if (pdwRefreshRate == NULL)
     {
@@ -227,7 +227,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::get_monitor_refresh_rate(DWO
     return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::is_media_type_supported(IMFMediaType* pMediaType, DXGI_FORMAT dxgiFormat)
+HRESULT solids::lib::mf::sink::video::plain::renderer::is_media_type_supported(IMFMediaType* pMediaType, DXGI_FORMAT dxgiFormat)
 {
     HRESULT hr = S_OK;
     UINT32 uiNumerator = 30000, uiDenominator = 1001;
@@ -267,11 +267,11 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::is_media_type_supported(IMFM
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::present(void)
+HRESULT solids::lib::mf::sink::video::plain::renderer::present(void)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -302,7 +302,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::present(void)
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(IMFMediaType * pCurrentType, IMFSample * pSample, UINT32 * punInterlaceMode, BOOL * pbDeviceChanged, BOOL * pbProcessAgain, IMFSample ** ppOutputSample)
+HRESULT solids::lib::mf::sink::video::plain::renderer::process_sample(IMFMediaType * pCurrentType, IMFSample * pSample, UINT32 * punInterlaceMode, BOOL * pbDeviceChanged, BOOL * pbProcessAgain, IMFSample ** ppOutputSample)
 {
     HRESULT             hr              = S_OK;
     BYTE *              pData           = NULL;
@@ -314,7 +314,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(IMFMediaType 
     ID3D11Device *      pDeviceInput    = NULL;
     UINT                dwViewIndex     = 0;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -421,20 +421,20 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(IMFMediaType 
         }
     } while (FALSE);
 
-    sld::lib::mf::safe_release(pTexture2D);
-    sld::lib::mf::safe_release(pDXGIBuffer);
-    sld::lib::mf::safe_release(pDeviceInput);
-    sld::lib::mf::safe_release(pBuffer);
+    solids::lib::mf::safe_release(pTexture2D);
+    solids::lib::mf::safe_release(pDXGIBuffer);
+    solids::lib::mf::safe_release(pDeviceInput);
+    solids::lib::mf::safe_release(pBuffer);
 
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::set_current_media_type(IMFMediaType* pMediaType)
+HRESULT solids::lib::mf::sink::video::plain::renderer::set_current_media_type(IMFMediaType* pMediaType)
 {
     HRESULT hr = S_OK;
     IMFAttributes* pAttributes = NULL;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -469,7 +469,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::set_current_media_type(IMFMe
                 break;
             }
 
-            _d3d11_renderer->set_display_rect(sld::lib::mf::mf_video_area_to_rect(videoArea));
+            _d3d11_renderer->set_display_rect(solids::lib::mf::mf_video_area_to_rect(videoArea));
 
             PixelAspectToPictureAspect(videoArea.Area.cx, videoArea.Area.cy, parX, parY, &PARWidth, &PARHeight);
 
@@ -481,21 +481,21 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::set_current_media_type(IMFMe
 
     } while (FALSE);
 
-    sld::lib::mf::safe_release(pAttributes);
+    solids::lib::mf::safe_release(pAttributes);
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::shutdown(void)
+HRESULT solids::lib::mf::sink::video::plain::renderer::shutdown(void)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     HRESULT hr = MF_E_SHUTDOWN;
 
     _is_shutdown = TRUE;
 
-    sld::lib::mf::safe_release(m_pDXGIManager);
-    sld::lib::mf::safe_release(m_pDXGIOutput1);
-    sld::lib::mf::safe_release(m_pSampleAllocatorEx);
+    solids::lib::mf::safe_release(m_pDXGIManager);
+    solids::lib::mf::safe_release(m_pDXGIOutput1);
+    solids::lib::mf::safe_release(m_pSampleAllocatorEx);
 
     if (_d3d11_renderer->is_initialized())
         _d3d11_renderer->release();
@@ -515,7 +515,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::shutdown(void)
 //
 //--------------------------------------------------------------------------
 
-void sld::lib::mf::sink::video::plain::renderer::AspectRatioCorrectSize(
+void solids::lib::mf::sink::video::plain::renderer::AspectRatioCorrectSize(
     LPSIZE lpSizeImage,     // size to be aspect ratio corrected
     const SIZE& sizeAr,     // aspect ratio of image
     const SIZE& sizeOrig,   // original image size
@@ -539,7 +539,7 @@ void sld::lib::mf::sink::video::plain::renderer::AspectRatioCorrectSize(
     }
 }
 
-void sld::lib::mf::sink::video::plain::renderer::CheckDecodeSwitchRegKey(void)
+void solids::lib::mf::sink::video::plain::renderer::CheckDecodeSwitchRegKey(void)
 {
     const TCHAR* lpcszDXSW = TEXT("DXSWSwitch");
     const TCHAR* lpcszInVP = TEXT("XVP");
@@ -568,7 +568,7 @@ void sld::lib::mf::sink::video::plain::renderer::CheckDecodeSwitchRegKey(void)
     return;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::CheckDeviceState(BOOL* pbDeviceChanged)
+HRESULT solids::lib::mf::sink::video::plain::renderer::CheckDeviceState(BOOL* pbDeviceChanged)
 {
     if (pbDeviceChanged == NULL)
         return E_POINTER;
@@ -609,14 +609,14 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::CheckDeviceState(BOOL* pbDev
     return hr;
 }
 
-BOOL sld::lib::mf::sink::video::plain::renderer::check_empty_rect(RECT* pDst)
+BOOL solids::lib::mf::sink::video::plain::renderer::check_empty_rect(RECT* pDst)
 {
     GetClientRect(m_hwndVideo, pDst);
 
     return IsRectEmpty(pDst);
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::plain::renderer::check_shutdown(void) const
 {
     if (_is_shutdown)
     {
@@ -628,7 +628,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::check_shutdown(void) const
     }
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::create_dxgi_manager_and_device(D3D_DRIVER_TYPE DriverType)
+HRESULT solids::lib::mf::sink::video::plain::renderer::create_dxgi_manager_and_device(D3D_DRIVER_TYPE DriverType)
 {
     HRESULT hr = S_OK;
     UINT    resetToken;
@@ -657,7 +657,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::create_dxgi_manager_and_devi
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::GetVideoDisplayArea(IMFMediaType* pType, MFVideoArea* pArea)
+HRESULT solids::lib::mf::sink::video::plain::renderer::GetVideoDisplayArea(IMFMediaType* pType, MFVideoArea* pArea)
 {
     HRESULT hr = S_OK;
     BOOL    bPanScan = FALSE;
@@ -703,14 +703,14 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::GetVideoDisplayArea(IMFMedia
         // Default: Use the entire video area.
         if (hr == MF_E_ATTRIBUTENOTFOUND)
         {
-            *pArea = sld::lib::mf::make_area(0.0, 0.0, image_width, image_height);
+            *pArea = solids::lib::mf::make_area(0.0, 0.0, image_width, image_height);
             hr = S_OK;
         }
     }
     return hr;
 }
 
-void sld::lib::mf::sink::video::plain::renderer::PixelAspectToPictureAspect(
+void solids::lib::mf::sink::video::plain::renderer::PixelAspectToPictureAspect(
     int Width,
     int Height,
     int PixelAspectX,
@@ -761,7 +761,7 @@ void sld::lib::mf::sink::video::plain::renderer::PixelAspectToPictureAspect(
     );
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(ID3D11Texture2D * pTexture2D, UINT dwViewIndex, RECT rcDest, UINT32 unInterlaceMode, IMFSample** ppVideoOutFrame)
+HRESULT solids::lib::mf::sink::video::plain::renderer::process_sample(ID3D11Texture2D * pTexture2D, UINT dwViewIndex, RECT rcDest, UINT32 unInterlaceMode, IMFSample** ppVideoOutFrame)
 {
     HRESULT hr = S_OK;
     ID3D11Texture2D *   pOutTexture = NULL;
@@ -803,9 +803,9 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(ID3D11Texture
 
     } while (0);
 
-    sld::lib::mf::safe_release(pBuffer);
-    sld::lib::mf::safe_release(pRTSample);
-    sld::lib::mf::safe_release(pOutTexture);
+    solids::lib::mf::safe_release(pBuffer);
+    solids::lib::mf::safe_release(pRTSample);
+    solids::lib::mf::safe_release(pOutTexture);
 
     return hr;
 }
@@ -818,7 +818,7 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::process_sample(ID3D11Texture
 //
 //--------------------------------------------------------------------------
 
-void sld::lib::mf::sink::video::plain::renderer::ReduceToLowestTerms(int NumeratorIn, int DenominatorIn, int * pNumeratorOut, int * pDenominatorOut)
+void solids::lib::mf::sink::video::plain::renderer::ReduceToLowestTerms(int NumeratorIn, int DenominatorIn, int * pNumeratorOut, int * pDenominatorOut)
 {
     int GCD = gcd(NumeratorIn, DenominatorIn);
 
@@ -826,12 +826,12 @@ void sld::lib::mf::sink::video::plain::renderer::ReduceToLowestTerms(int Numerat
     *pDenominatorOut = DenominatorIn / GCD;
 }
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::SetMonitor(UINT adapterID)
+HRESULT solids::lib::mf::sink::video::plain::renderer::SetMonitor(UINT adapterID)
 {
     HRESULT hr = S_OK;
     DWORD dwMatchID = 0;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     do
     {
@@ -855,10 +855,10 @@ HRESULT sld::lib::mf::sink::video::plain::renderer::SetMonitor(UINT adapterID)
 }
 
 
-HRESULT sld::lib::mf::sink::video::plain::renderer::SetVideoMonitor(HWND hwndVideo)
+HRESULT solids::lib::mf::sink::video::plain::renderer::SetVideoMonitor(HWND hwndVideo)
 {
     HRESULT hr = S_OK;
-    sld::lib::mf::sink::monitor_t * pMonInfo = NULL;
+    solids::lib::mf::sink::monitor_t * pMonInfo = NULL;
     HMONITOR hMon = NULL;
 
     if (!m_pMonitors)

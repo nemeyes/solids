@@ -4,7 +4,7 @@
 #include "mf_base.h"
 #include "sld_mf_plain_controller.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -21,7 +21,7 @@ namespace sld
 						public:
 							static HRESULT create_source(const wchar_t * url, IMFMediaSource ** mediaSource);
 
-							static HRESULT add_branch_to_partial_topology(IMFTopology* topology, IMFMediaSource* mediaSource, DWORD streamIndex, IMFPresentationDescriptor* presentDescriptor, sld::lib::mf::control::plain::controller::context_t* context, IUnknown** pDeviceManager);
+							static HRESULT add_branch_to_partial_topology(IMFTopology* topology, IMFMediaSource* mediaSource, DWORD streamIndex, IMFPresentationDescriptor* presentDescriptor, solids::lib::mf::control::plain::controller::context_t* context, IUnknown** pDeviceManager);
 
 							static HRESULT create_stream_source_node(IMFMediaSource* mediaSource, IMFPresentationDescriptor* presentDescriptor, IMFStreamDescriptor* streamDescriptor, IMFTopologyNode** node);
 							static HRESULT create_video_renderer_activate(HWND hwnd, IMFActivate** activate);

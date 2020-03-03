@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -14,7 +14,7 @@ namespace sld
 				namespace rtsp
 				{
 					class async_operation
-						: refcount_object
+						: solids::lib::mf::refcount_object
 						, public IUnknown
 					{
 					public:

@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_BUFFER_H_
 #define _SLD_MF_BUFFER_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

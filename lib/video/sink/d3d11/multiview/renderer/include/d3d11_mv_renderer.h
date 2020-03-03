@@ -11,7 +11,7 @@ const D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
 	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -29,7 +29,7 @@ namespace sld
 							core(void);
 							~core(void);
 
-							void initialize(sld::lib::video::sink::d3d11::multiview::renderer::context_t* ctx);
+							void initialize(solids::lib::video::sink::d3d11::multiview::renderer::context_t* ctx);
 							void release(void);
 							void select(int32_t index);
 							void maximize(void);
@@ -38,7 +38,7 @@ namespace sld
 							void render(void);
 
 						private:
-							void create_render_target_view(int32_t type = sld::lib::video::sink::d3d11::multiview::renderer::layout_t::layout_2x2);
+							void create_render_target_view(int32_t type = solids::lib::video::sink::d3d11::multiview::renderer::layout_t::layout_2x2);
 							void create_shader(void);
 							void create_vertex_buffer(void);
 							void create_index_buffer(void);
@@ -108,7 +108,7 @@ namespace sld
 							DirectX::XMVECTOR			_cam_up;
 
 							int32_t						_view_count;
-							sld::lib::video::sink::d3d11::multiview::renderer::view_session_t * _view_info;
+							solids::lib::video::sink::d3d11::multiview::renderer::view_session_t * _view_info;
 							int32_t						_layout;
 
 							int32_t						_selected_index;

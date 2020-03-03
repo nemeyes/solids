@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_THREAD_SAFE_QUEUE_H_
 #define _SLD_MF_THREAD_SAFE_QUEUE_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -72,7 +72,7 @@ namespace sld
 			private:
 
 				CRITICAL_SECTION    _lock;
-				sld::lib::mf::com_ptr_list2<T>     _list;
+				solids::lib::mf::com_ptr_list2<T>     _list;
 			};
 		};
 	};

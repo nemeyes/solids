@@ -4,7 +4,7 @@
 #include "buffer_sink.h"
 #include "rtsp_client.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -13,10 +13,10 @@ namespace sld
 			namespace rtsp
 			{
 				class client::h2645_buffer_sink
-					: public sld::lib::net::rtsp::client::buffer_sink
+					: public solids::lib::net::rtsp::client::buffer_sink
 				{
 				public:
-					h2645_buffer_sink(sld::lib::net::rtsp::client::core * front, int32_t codec, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
+					h2645_buffer_sink(solids::lib::net::rtsp::client::core * front, int32_t codec, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
 					virtual ~h2645_buffer_sink(void);
 
 				protected:

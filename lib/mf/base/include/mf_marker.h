@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_MARKER_H_
 #define _SLD_MF_MARKER_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -29,7 +29,7 @@ namespace sld
 						return E_POINTER;
 
 					HRESULT hr = S_OK;
-					sld::lib::mf::marker * pmarker = new sld::lib::mf::marker(mt);
+					solids::lib::mf::marker * pmarker = new solids::lib::mf::marker(mt);
 
 					if (pmarker == NULL)
 						hr = E_OUTOFMEMORY;

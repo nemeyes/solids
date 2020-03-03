@@ -12,7 +12,7 @@
 #include <dxgi.h>
 #include <dxgi1_2.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -25,7 +25,7 @@ namespace sld
 					namespace multiview
 					{
 						class EXP_SLD_D3D11_MV_CLASS renderer
-							: public sld::lib::base
+							: public solids::lib::base
 						{
 							class core;
 						public:
@@ -71,7 +71,7 @@ namespace sld
 								ID3D11DeviceContext* devctx;
 								IDXGISwapChain1* sw;
 								int32_t					vc;
-								sld::lib::video::sink::d3d11::multiview::renderer::view_session_t* vi;
+								solids::lib::video::sink::d3d11::multiview::renderer::view_session_t* vi;
 								int32_t					width;
 								int32_t					height;
 							} context_t;
@@ -79,7 +79,7 @@ namespace sld
 							renderer(void);
 							~renderer(void);
 
-							void	initialize(sld::lib::video::sink::d3d11::multiview::renderer::context_t * ctx);
+							void	initialize(solids::lib::video::sink::d3d11::multiview::renderer::context_t * ctx);
 							void	release(void);
 							void	select(int32_t index);
 							void	maximize(void);
@@ -88,7 +88,7 @@ namespace sld
 							void	render(void);
 
 						private:
-							sld::lib::video::sink::d3d11::multiview::renderer* _core;
+							solids::lib::video::sink::d3d11::multiview::renderer* _core;
 
 							/*
 							private:

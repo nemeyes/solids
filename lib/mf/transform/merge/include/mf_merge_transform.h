@@ -7,7 +7,7 @@
 #define MAX_INPUT_STREAM_COUNT 9
 #define BASE_OUTPUT_STREAM_ID 0
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -18,8 +18,8 @@ namespace sld
 				namespace merge
 				{
 					class transform
-						: sld::lib::mf::base
-						, sld::lib::mf::refcount_object
+						: solids::lib::mf::base
+						, solids::lib::mf::refcount_object
 						, public IMFTransform
 						, public IMergeTransformContext
 					{

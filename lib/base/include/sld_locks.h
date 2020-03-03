@@ -3,7 +3,7 @@
 
 #include <mutex>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

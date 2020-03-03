@@ -9,7 +9,7 @@
 #include <DirectxMath.h>
 #include <d3dcompiler.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

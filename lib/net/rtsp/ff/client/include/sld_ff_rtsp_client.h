@@ -9,7 +9,7 @@
 
 #include <sld.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -20,7 +20,7 @@ namespace sld
 				namespace ff
 				{
 					class EXP_SLD_RTSP_CLIENT_CLASS client
-						: public sld::lib::base
+						: public solids::lib::base
 					{
 					public:
 						class core;
@@ -47,7 +47,7 @@ namespace sld
 						virtual void on_end_audio(void);
 
 					private:
-						sld::lib::net::rtsp::ff::client::core* _core;
+						solids::lib::net::rtsp::ff::client::core* _core;
 					};
 				};
 			};

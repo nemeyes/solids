@@ -1,10 +1,10 @@
 #include "mf_plain_controller.h"
 #include "mf_topology_builder.h"
 
-sld::lib::mf::control::plain::controller::core::core(void)
+solids::lib::mf::control::plain::controller::core::core(void)
 	: _context(nullptr)
 	, _refcount(1)
-	, _state(sld::lib::mf::control::plain::controller::state_t::closed)
+	, _state(solids::lib::mf::control::plain::controller::state_t::closed)
 	, _session(NULL)
 	, _clock(NULL)
 	, _topology(NULL)
@@ -21,24 +21,24 @@ sld::lib::mf::control::plain::controller::core::core(void)
 	_close_event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 }
 
-sld::lib::mf::control::plain::controller::core::~core(void)
+solids::lib::mf::control::plain::controller::core::~core(void)
 {
-	sld::lib::mf::safe_release(_video_display);
-	sld::lib::mf::safe_release(_presentation_clock);
+	solids::lib::mf::safe_release(_video_display);
+	solids::lib::mf::safe_release(_presentation_clock);
 	
 	//stop();
 	close_session();
 	shutdown_source();
-	sld::lib::mf::safe_release(_topology);
-	sld::lib::mf::safe_release(_device_manager);
+	solids::lib::mf::safe_release(_topology);
+	solids::lib::mf::safe_release(_device_manager);
 	MFShutdown();
 	::CloseHandle(_close_event);
 }
 
 // Playback control
-int32_t sld::lib::mf::control::plain::controller::core::open(sld::lib::mf::control::plain::controller::context_t * context)
+int32_t solids::lib::mf::control::plain::controller::core::open(solids::lib::mf::control::plain::controller::context_t * context)
 {
-	int32_t status = sld::lib::mf::control::plain::controller::err_code_t::success;
+	int32_t status = solids::lib::mf::control::plain::controller::err_code_t::success;
 	HRESULT hr = S_OK;
 	
 	_context = context;
@@ -52,27 +52,27 @@ int32_t sld::lib::mf::control::plain::controller::core::open(sld::lib::mf::contr
 		stop();
 		close_session();
 		shutdown_source();
-		sld::lib::mf::safe_release(_topology);
-		sld::lib::mf::safe_release(_device_manager);
+		solids::lib::mf::safe_release(_topology);
+		solids::lib::mf::safe_release(_device_manager);
 
 		hr = create_session();
 		BREAK_ON_FAIL(hr);
 		 
 		// Step 2 : create a media source for specified URL string, The URL can be a path to a stream or it can be a path to a local file
 		
-		hr = sld::lib::mf::control::plain::topology::builder::create_source(_context->url, &_media_source);
+		hr = solids::lib::mf::control::plain::topology::builder::create_source(_context->url, &_media_source);
 		if (FAILED(hr))
 		{
 			if (HRESULT_FACILITY(hr) == 7) //WIN32 ERROR
 			{
 				if(HRESULT_CODE(hr)== ERROR_FILE_NOT_FOUND)
 				{
-					status = sld::lib::mf::control::plain::controller::err_code_t::invalid_file_path;
+					status = solids::lib::mf::control::plain::controller::err_code_t::invalid_file_path;
 				}
 			}
 			else
 			{
-				status = sld::lib::mf::control::plain::controller::err_code_t::unsupported_media_file;
+				status = solids::lib::mf::control::plain::controller::err_code_t::unsupported_media_file;
 			}
 			break;
 		}
@@ -100,7 +100,7 @@ int32_t sld::lib::mf::control::plain::controller::core::open(sld::lib::mf::contr
 
 			for (DWORD index = 0; index < number_of_streams; index++)
 			{
-				hr = sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_topology(_topology, _media_source, index, present_descriptor, _context, &_device_manager);
+				hr = solids::lib::mf::control::plain::topology::builder::add_branch_to_partial_topology(_topology, _media_source, index, present_descriptor, _context, &_device_manager);
 				BREAK_ON_FAIL(hr);
 			}
 		} while (0);
@@ -123,77 +123,77 @@ int32_t sld::lib::mf::control::plain::controller::core::open(sld::lib::mf::contr
 
 		// If we've just initialized a brand new topology in step 1, set the player state 
 		// to "open pending" - not playing yet, but ready to begin.
-		if (_state == sld::lib::mf::control::plain::controller::state_t::ready)
+		if (_state == solids::lib::mf::control::plain::controller::state_t::ready)
 		{
-			_state = sld::lib::mf::control::plain::controller::state_t::open_pending;
+			_state = solids::lib::mf::control::plain::controller::state_t::open_pending;
 		}
 	} while (0);
 
 	if (FAILED(hr))
 	{
-		_state = sld::lib::mf::control::plain::controller::state_t::closed;
-		if (status == sld::lib::mf::control::plain::controller::err_code_t::success)
-			return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		_state = solids::lib::mf::control::plain::controller::state_t::closed;
+		if (status == solids::lib::mf::control::plain::controller::err_code_t::success)
+			return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
-	return sld::lib::mf::control::plain::controller::err_code_t::success;
+	return solids::lib::mf::control::plain::controller::err_code_t::success;
 }
 
-int32_t sld::lib::mf::control::plain::controller::core::play(void)
+int32_t solids::lib::mf::control::plain::controller::core::play(void)
 {
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
-		if (_state != sld::lib::mf::control::plain::controller::state_t::open_pending &&
-			_state != sld::lib::mf::control::plain::controller::state_t::paused && 
-			_state != sld::lib::mf::control::plain::controller::state_t::stopped)
-			return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		solids::lib::mf::auto_lock lock(&_lock);
+		if (_state != solids::lib::mf::control::plain::controller::state_t::open_pending &&
+			_state != solids::lib::mf::control::plain::controller::state_t::paused && 
+			_state != solids::lib::mf::control::plain::controller::state_t::stopped)
+			return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
 
 	if (_session == NULL)
-		return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 
-	if ((_state == sld::lib::mf::control::plain::controller::state_t::paused) ||
-		(_state == sld::lib::mf::control::plain::controller::state_t::stopped))
+	if ((_state == solids::lib::mf::control::plain::controller::state_t::paused) ||
+		(_state == solids::lib::mf::control::plain::controller::state_t::stopped))
 	{
 		HRESULT hr = start_session();
 		if (SUCCEEDED(hr))
-			return sld::lib::mf::control::plain::controller::err_code_t::success;
+			return solids::lib::mf::control::plain::controller::err_code_t::success;
 		else
-			return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+			return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
-	return sld::lib::mf::control::plain::controller::err_code_t::success;
+	return solids::lib::mf::control::plain::controller::err_code_t::success;
 }
 
-int32_t sld::lib::mf::control::plain::controller::core::pause(void)
+int32_t solids::lib::mf::control::plain::controller::core::pause(void)
 {
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
-		if (_state != sld::lib::mf::control::plain::controller::state_t::started)
-			return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		solids::lib::mf::auto_lock lock(&_lock);
+		if (_state != solids::lib::mf::control::plain::controller::state_t::started)
+			return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
 
 	if (_session == NULL)
-		return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 
 	HRESULT hr = _session->Pause();
 	if (SUCCEEDED(hr))
 	{
-		_state = sld::lib::mf::control::plain::controller::state_t::paused;
-		return sld::lib::mf::control::plain::controller::err_code_t::success;
+		_state = solids::lib::mf::control::plain::controller::state_t::paused;
+		return solids::lib::mf::control::plain::controller::err_code_t::success;
 	}
 	else
 	{
-		return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
 }
 
-int32_t sld::lib::mf::control::plain::controller::core::stop(void)
+int32_t solids::lib::mf::control::plain::controller::core::stop(void)
 {
 	HRESULT hr = S_OK;
 	do
 	{
 		{
-			sld::lib::mf::auto_lock lock(&_lock);
-			if (_state != sld::lib::mf::control::plain::controller::state_t::started)
+			solids::lib::mf::auto_lock lock(&_lock);
+			if (_state != solids::lib::mf::control::plain::controller::state_t::started)
 			{
 				hr = MF_E_INVALIDREQUEST;
 				break;
@@ -204,37 +204,37 @@ int32_t sld::lib::mf::control::plain::controller::core::stop(void)
 		HRESULT hr = _session->Stop();
 		BREAK_ON_FAIL(hr);
 
-		_state = sld::lib::mf::control::plain::controller::state_t::stopped;
+		_state = solids::lib::mf::control::plain::controller::state_t::stopped;
 
 	} while (0);
 
 	if (SUCCEEDED(hr))
 	{
-		return sld::lib::mf::control::plain::controller::err_code_t::success;
+		return solids::lib::mf::control::plain::controller::err_code_t::success;
 	}
 	else
 	{
-		return sld::lib::mf::control::plain::controller::err_code_t::generic_fail;
+		return solids::lib::mf::control::plain::controller::err_code_t::generic_fail;
 	}
 }
 
-int32_t sld::lib::mf::control::plain::controller::core::close(void)
+int32_t solids::lib::mf::control::plain::controller::core::close(void)
 {
 	stop();
 	close_session();
 	shutdown_source();
-	sld::lib::mf::safe_release(_topology);
-	sld::lib::mf::safe_release(_device_manager);
+	solids::lib::mf::safe_release(_topology);
+	solids::lib::mf::safe_release(_device_manager);
 
-	return sld::lib::mf::control::plain::controller::err_code_t::success;
+	return solids::lib::mf::control::plain::controller::err_code_t::success;
 }
 
-int32_t sld::lib::mf::control::plain::controller::core::state(void) const
+int32_t solids::lib::mf::control::plain::controller::core::state(void) const
 { 
 	return _state; 
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::QueryInterface(REFIID riid, void ** ppv)
+HRESULT solids::lib::mf::control::plain::controller::core::QueryInterface(REFIID riid, void ** ppv)
 {
 	HRESULT hr = S_OK;
 
@@ -263,12 +263,12 @@ HRESULT sld::lib::mf::control::plain::controller::core::QueryInterface(REFIID ri
 	return hr;
 }
 
-ULONG sld::lib::mf::control::plain::controller::core::AddRef(void)
+ULONG solids::lib::mf::control::plain::controller::core::AddRef(void)
 {
 	return InterlockedIncrement(&_refcount);
 }
 
-ULONG sld::lib::mf::control::plain::controller::core::Release(void)
+ULONG solids::lib::mf::control::plain::controller::core::Release(void)
 {
 	ULONG uCount = InterlockedDecrement(&_refcount);
 	if (uCount == 0)
@@ -285,7 +285,7 @@ ULONG sld::lib::mf::control::plain::controller::core::Release(void)
 // async_result - a pointer to the asynchronous result object which references the event 
 // itself in the IMFMediaEventGenerator's event queue.  (The media session is the object
 // that implements the IMFMediaEventGenerator interface.)
-HRESULT sld::lib::mf::control::plain::controller::core::Invoke(IMFAsyncResult * async_result)
+HRESULT solids::lib::mf::control::plain::controller::core::Invoke(IMFAsyncResult * async_result)
 {
 	ATL::CComPtr<IMFMediaEvent> media_event;
 	HRESULT hr = S_OK;
@@ -320,7 +320,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::Invoke(IMFAsyncResult * 
 		// If we are in a normal state, handle the event by passing it to the HandleEvent()
 		// function.  Otherwise, if we are in the closing state, do nothing with the event.
 		//log_debug("amadeus.player", "Invoke is %d", _state);
-		if (_state != sld::lib::mf::control::plain::controller::state_t::closing)
+		if (_state != solids::lib::mf::control::plain::controller::state_t::closing)
 		{
 			process_event(media_event);
 		}
@@ -329,7 +329,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::Invoke(IMFAsyncResult * 
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::process_event(ATL::CComPtr<IMFMediaEvent> & mediaEvent)
+HRESULT solids::lib::mf::control::plain::controller::core::process_event(ATL::CComPtr<IMFMediaEvent> & mediaEvent)
 {
 	HRESULT hrStatus = S_OK;            // Event status
 	HRESULT hr = S_OK;
@@ -373,18 +373,18 @@ HRESULT sld::lib::mf::control::plain::controller::core::process_event(ATL::CComP
 		else if (mediaEventType == MESessionStarted)
 		{
 
-			_state = sld::lib::mf::control::plain::controller::state_t::started;
+			_state = solids::lib::mf::control::plain::controller::state_t::started;
 			::OutputDebugStringW(L"MESessionStarted\n");
 		}
 		else if (mediaEventType == MESessionPaused)
 		{
-			_state = sld::lib::mf::control::plain::controller::state_t::paused;
+			_state = solids::lib::mf::control::plain::controller::state_t::paused;
 			::OutputDebugStringW(L"MESessionPaused\n");
 		}
 		else if (mediaEventType == MESessionRateChanged)
 		{
 			/*
-			sld::lib::mf::auto_lock lock(&_lock);
+			solids::lib::mf::auto_lock lock(&_lock);
 
 			PROPVARIANT var_play;
 			PropVariantInit(&var_play);
@@ -829,17 +829,17 @@ HRESULT sld::lib::mf::control::plain::controller::core::process_event(ATL::CComP
 }
 
 
-HRESULT sld::lib::mf::control::plain::controller::core::topology_ready_cb(void)
+HRESULT solids::lib::mf::control::plain::controller::core::topology_ready_cb(void)
 {
 	HRESULT hr = S_OK;
 	// release any previous instance of the m_pVideoDisplay interface
 
-	sld::lib::mf::safe_release(_video_display);
+	solids::lib::mf::safe_release(_video_display);
 
 	// Ask the session for the IMFVideoDisplayControl interface. 
 	MFGetService(_session, MR_VIDEO_RENDER_SERVICE, IID_PPV_ARGS(&_video_display));
 
-	sld::lib::mf::safe_release(_clock);
+	solids::lib::mf::safe_release(_clock);
 	
 	_session->GetClock(&_clock);
 	_clock->QueryInterface(IID_PPV_ARGS(&_presentation_clock));
@@ -860,7 +860,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::topology_ready_cb(void)
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::presentation_ended_cb(void)
+HRESULT solids::lib::mf::control::plain::controller::core::presentation_ended_cb(void)
 {
 	// The session puts itself into the stopped state automatically.
 	if (_context && _context->repeat)
@@ -874,19 +874,19 @@ HRESULT sld::lib::mf::control::plain::controller::core::presentation_ended_cb(vo
 
 		HRESULT hr = pause();
 		if (SUCCEEDED(hr))
-			_state = sld::lib::mf::control::plain::controller::state_t::paused;
+			_state = solids::lib::mf::control::plain::controller::state_t::paused;
 		
 		if (SUCCEEDED(hr))
 		{
 			HRESULT hr = _session->Start(&GUID_NULL, &var_play);
 			if (SUCCEEDED(hr))
-				_state = sld::lib::mf::control::plain::controller::state_t::started;
+				_state = solids::lib::mf::control::plain::controller::state_t::started;
 		}
 		PropVariantClear(&var_play);
 	}
 	else
 	{
-		_state = sld::lib::mf::control::plain::controller::state_t::stopped;
+		_state = solids::lib::mf::control::plain::controller::state_t::stopped;
 		//_session->Stop();
 		//_session->Shutdown();
 	}
@@ -894,19 +894,19 @@ HRESULT sld::lib::mf::control::plain::controller::core::presentation_ended_cb(vo
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::create_session(void)
+HRESULT solids::lib::mf::control::plain::controller::core::create_session(void)
 {
 	// Close the old session, if any.
 	HRESULT hr = S_OK;
 	do
 	{
-		assert(_state == sld::lib::mf::control::plain::controller::state_t::closed);
+		assert(_state == solids::lib::mf::control::plain::controller::state_t::closed);
 
 		// Create the media session.
 		hr = MFCreateMediaSession(NULL, &_session);
 		BREAK_ON_FAIL(hr);
 
-		_state = sld::lib::mf::control::plain::controller::state_t::ready;
+		_state = solids::lib::mf::control::plain::controller::state_t::ready;
 
 		// designate this class as the one that will be handling events from the media 
 		hr = _session->BeginGetEvent((IMFAsyncCallback*)this, NULL);
@@ -916,7 +916,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::create_session(void)
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::close_session(void)
+HRESULT solids::lib::mf::control::plain::controller::core::close_session(void)
 {
 	HRESULT hr = S_OK;
 	DWORD wait_result = 0;
@@ -924,13 +924,13 @@ HRESULT sld::lib::mf::control::plain::controller::core::close_session(void)
 	//_state = amadeus::mf::player::framework::vr360::state_t::closing;
 
 	// release the video display object
-	sld::lib::mf::safe_release(_video_display);
+	solids::lib::mf::safe_release(_video_display);
 
 	// Call the asynchronous Close() method and then wait for the close
 	// operation to complete on another thread
 	if (_session != NULL)
 	{
-		_state = sld::lib::mf::control::plain::controller::state_t::closing;
+		_state = solids::lib::mf::control::plain::controller::state_t::closing;
 		hr = _session->Close();
 		if (SUCCEEDED(hr))
 		{
@@ -952,16 +952,16 @@ HRESULT sld::lib::mf::control::plain::controller::core::close_session(void)
 	}
 
 	_session = NULL;
-	_state = sld::lib::mf::control::plain::controller::state_t::closed;
+	_state = solids::lib::mf::control::plain::controller::state_t::closed;
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::start_session(void)
+HRESULT solids::lib::mf::control::plain::controller::core::start_session(void)
 {
 	// If Start fails later, we will get an MESessionStarted event with an error code, 
 	// and will update our state. Passing in GUID_NULL and VT_EMPTY indicates that
 	// playback should start from the current position.
-	if (_state != sld::lib::mf::control::plain::controller::state_t::started)
+	if (_state != solids::lib::mf::control::plain::controller::state_t::started)
 	{
 		assert(_session != NULL);
 		PROPVARIANT var_play;
@@ -970,14 +970,14 @@ HRESULT sld::lib::mf::control::plain::controller::core::start_session(void)
 
 		HRESULT hr = _session->Start(&GUID_NULL, &var_play);
 		if (SUCCEEDED(hr))
-			_state = sld::lib::mf::control::plain::controller::state_t::started;
+			_state = solids::lib::mf::control::plain::controller::state_t::started;
 		PropVariantClear(&var_play);
 		return hr;
 	}
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::control::plain::controller::core::shutdown_source(void)
+HRESULT solids::lib::mf::control::plain::controller::core::shutdown_source(void)
 {
 	HRESULT hr = S_OK;
 	if (_media_source)
@@ -985,7 +985,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::shutdown_source(void)
 		// shut down the source
 		hr = _media_source->Shutdown();
 		// release the source, since all subsequent calls to it will fail
-		sld::lib::mf::safe_release(_media_source);
+		solids::lib::mf::safe_release(_media_source);
 	}
 	else
 	{
@@ -995,7 +995,7 @@ HRESULT sld::lib::mf::control::plain::controller::core::shutdown_source(void)
 }
 
 #ifdef _DEBUG
-const char * sld::lib::mf::control::plain::controller::core::event_type(DWORD evt)
+const char * solids::lib::mf::control::plain::controller::core::event_type(DWORD evt)
 {
 	switch (evt)
 	{

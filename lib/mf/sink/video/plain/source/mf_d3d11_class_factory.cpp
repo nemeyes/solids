@@ -1,28 +1,28 @@
 #include "mf_d3d11_class_factory.h"
 #include "mf_d3d11_media.h"
 
-BOOL sld::lib::mf::sink::video::plain::factory::is_locked(void)
+BOOL solids::lib::mf::sink::video::plain::factory::is_locked(void)
 {
     return (_lock_count == 0) ? FALSE : TRUE;
 }
 
-sld::lib::mf::sink::video::plain::factory::factory(void)
+solids::lib::mf::sink::video::plain::factory::factory(void)
     : _ref_count(0)
 {
 }
 
-sld::lib::mf::sink::video::plain::factory::~factory(void)
+solids::lib::mf::sink::video::plain::factory::~factory(void)
 {
 }
 
 // IUnknown
-ULONG sld::lib::mf::sink::video::plain::factory::AddRef(void)
+ULONG solids::lib::mf::sink::video::plain::factory::AddRef(void)
 {
     return ::InterlockedIncrement(&_ref_count);
 }
 
 // IUnknown
-ULONG sld::lib::mf::sink::video::plain::factory::Release(void)
+ULONG solids::lib::mf::sink::video::plain::factory::Release(void)
 {
     ULONG lRefCount = ::InterlockedDecrement(&_ref_count);
     if (lRefCount == 0)
@@ -31,7 +31,7 @@ ULONG sld::lib::mf::sink::video::plain::factory::Release(void)
 }
 
 // IUnknown
-HRESULT sld::lib::mf::sink::video::plain::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::plain::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
     {
@@ -55,7 +55,7 @@ HRESULT sld::lib::mf::sink::video::plain::factory::QueryInterface(REFIID iid, __
 }
 
 // IClassFactory
-HRESULT sld::lib::mf::sink::video::plain::factory::CreateInstance(_In_opt_ IUnknown* unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
+HRESULT solids::lib::mf::sink::video::plain::factory::CreateInstance(_In_opt_ IUnknown* unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
 {
     if (ppv == NULL)
         return E_POINTER;
@@ -65,11 +65,11 @@ HRESULT sld::lib::mf::sink::video::plain::factory::CreateInstance(_In_opt_ IUnkn
     if (unk != NULL)
         return CLASS_E_NOAGGREGATION;
 
-    return sld::lib::mf::sink::video::plain::media::create_instance(riid, ppv);
+    return solids::lib::mf::sink::video::plain::media::create_instance(riid, ppv);
 }
 
 // IClassFactory
-HRESULT sld::lib::mf::sink::video::plain::factory::LockServer(BOOL lock)
+HRESULT solids::lib::mf::sink::video::plain::factory::LockServer(BOOL lock)
 {
     if (lock == FALSE)
     {

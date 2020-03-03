@@ -1,11 +1,11 @@
 #include "mf_merge_transform_activate.h"
 
-HRESULT sld::lib::mf::transform::merge::activate::create_instance(IMFActivate ** activate)
+HRESULT solids::lib::mf::transform::merge::activate::create_instance(IMFActivate ** activate)
 {
 	if (activate == NULL)
 		return E_POINTER;
 
-	sld::lib::mf::transform::merge::activate * act = new sld::lib::mf::transform::merge::activate();
+	solids::lib::mf::transform::merge::activate * act = new solids::lib::mf::transform::merge::activate();
 	if (act == NULL)
 		return E_OUTOFMEMORY;
 
@@ -30,17 +30,17 @@ HRESULT sld::lib::mf::transform::merge::activate::create_instance(IMFActivate **
 }
 
 ///////////////// IUnknown methods//////////////////////
-ULONG sld::lib::mf::transform::merge::activate::AddRef(void)
+ULONG solids::lib::mf::transform::merge::activate::AddRef(void)
 {
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
-ULONG sld::lib::mf::transform::merge::activate::Release(void)
+ULONG solids::lib::mf::transform::merge::activate::Release(void)
 {
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
+HRESULT solids::lib::mf::transform::merge::activate::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -66,7 +66,7 @@ HRESULT sld::lib::mf::transform::merge::activate::QueryInterface(REFIID iid, __R
 ///////////////// end of IUnknown methods//////////////////////
 
 ///////////////// IMFActivate methods//////////////////////
-HRESULT sld::lib::mf::transform::merge::activate::ActivateObject(__RPC__in REFIID iid, __RPC__deref_out_opt void ** ppv)
+HRESULT solids::lib::mf::transform::merge::activate::ActivateObject(__RPC__in REFIID iid, __RPC__deref_out_opt void ** ppv)
 {
 	HRESULT hr = S_OK;
 	
@@ -74,7 +74,7 @@ HRESULT sld::lib::mf::transform::merge::activate::ActivateObject(__RPC__in REFII
 	{
 		if (_transform == NULL)
 		{
-			hr = sld::lib::mf::transform::merge::transform::CreateInstance(__uuidof(_transform), (void**)&_transform);
+			hr = solids::lib::mf::transform::merge::transform::CreateInstance(__uuidof(_transform), (void**)&_transform);
 			if (FAILED(hr))
 				break;
 		}
@@ -85,44 +85,44 @@ HRESULT sld::lib::mf::transform::merge::activate::ActivateObject(__RPC__in REFII
 	return hr;
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::DetachObject(void)
+HRESULT solids::lib::mf::transform::merge::activate::DetachObject(void)
 {
-	sld::lib::mf::safe_release(_transform);
+	solids::lib::mf::safe_release(_transform);
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::ShutdownObject(void)
+HRESULT solids::lib::mf::transform::merge::activate::ShutdownObject(void)
 {
 	if (_transform != NULL)
-		sld::lib::mf::safe_release(_transform);
+		solids::lib::mf::safe_release(_transform);
 	return S_OK;
 }
 ///////////////// end of IMFActivate methods//////////////////////
 
 ///////////////// IPersistStream methods//////////////////////
-HRESULT sld::lib::mf::transform::merge::activate::GetSizeMax(__RPC__out ULARGE_INTEGER * size)
+HRESULT solids::lib::mf::transform::merge::activate::GetSizeMax(__RPC__out ULARGE_INTEGER * size)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::IsDirty(void)
+HRESULT solids::lib::mf::transform::merge::activate::IsDirty(void)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::Load(__RPC__in_opt IStream * stream)
+HRESULT solids::lib::mf::transform::merge::activate::Load(__RPC__in_opt IStream * stream)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::activate::Save(__RPC__in_opt IStream * stream, BOOL cleardirty)
+HRESULT solids::lib::mf::transform::merge::activate::Save(__RPC__in_opt IStream * stream, BOOL cleardirty)
 {
 	return E_NOTIMPL;
 }
 ///////////////// end of IPersistStream methods//////////////////////
 
 ///////////////// IPersist methods//////////////////////
-HRESULT sld::lib::mf::transform::merge::activate::GetClassID(__RPC__out CLSID * clsid)
+HRESULT solids::lib::mf::transform::merge::activate::GetClassID(__RPC__out CLSID * clsid)
 {
 	if (clsid == NULL)
 		return E_POINTER;
@@ -132,11 +132,11 @@ HRESULT sld::lib::mf::transform::merge::activate::GetClassID(__RPC__out CLSID * 
 }
 ///////////////// end of IPersist methods//////////////////////
 
-sld::lib::mf::transform::merge::activate::activate(void)
+solids::lib::mf::transform::merge::activate::activate(void)
 	: _transform(NULL)
 {}
 
-sld::lib::mf::transform::merge::activate::~activate(void)
+solids::lib::mf::transform::merge::activate::~activate(void)
 {
-	sld::lib::mf::safe_release(_transform);
+	solids::lib::mf::safe_release(_transform);
 }

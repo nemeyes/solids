@@ -9,7 +9,7 @@
 
 #include <sld.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -18,7 +18,7 @@ namespace sld
 			namespace rtsp
 			{
 				class EXP_SLD_RTSP_CLIENT_CLASS client
-					: public sld::lib::base
+					: public solids::lib::base
 				{
 				public:
 					class core;
@@ -55,7 +55,7 @@ namespace sld
 					HANDLE _thread;
 
 				private:
-					sld::lib::net::rtsp::client::core * _live;
+					solids::lib::net::rtsp::client::core * _live;
 
 					char	_url[260];
 					char	_username[260];

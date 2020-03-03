@@ -18,17 +18,17 @@ struct DDRAWINFO
 	DWORD								pmi_size;
 	HRESULT								hr_cb;
 	const GUID*							guid;
-	sld::lib::mf::sink::monitor_t *	pmi;
+	solids::lib::mf::sink::monitor_t *	pmi;
 	HWND								hwnd;
 };
 */
 
-void sld::lib::mf::sink::monitors::term_monitor_info(_Inout_ sld::lib::mf::sink::monitor_t* pmi)
+void solids::lib::mf::sink::monitors::term_monitor_info(_Inout_ solids::lib::mf::sink::monitor_t* pmi)
 {
-	::ZeroMemory(pmi, sizeof(sld::lib::mf::sink::monitor_t));
+	::ZeroMemory(pmi, sizeof(solids::lib::mf::sink::monitor_t));
 }
 
-BOOL sld::lib::mf::sink::monitors::get_monitor_info(UINT uDevID, _Out_ sld::lib::mf::sink::monitor_t * lpmi, _In_ HMONITOR hm)
+BOOL solids::lib::mf::sink::monitors::get_monitor_info(UINT uDevID, _Out_ solids::lib::mf::sink::monitor_t * lpmi, _In_ HMONITOR hm)
 {
 	MONITORINFOEX miInfoEx;
 	miInfoEx.cbSize = sizeof(miInfoEx);
@@ -77,7 +77,7 @@ BOOL sld::lib::mf::sink::monitors::get_monitor_info(UINT uDevID, _Out_ sld::lib:
 	return FALSE;
 }
 
-BOOL sld::lib::mf::sink::monitors::init_monitor(_In_ HMONITOR hMon, BOOL fXclMode)
+BOOL solids::lib::mf::sink::monitors::init_monitor(_In_ HMONITOR hMon, BOOL fXclMode)
 {
 	if (get_monitor_info(_nmonitor, &_monitor[_nmonitor], hMon))
 	{
@@ -91,20 +91,20 @@ BOOL sld::lib::mf::sink::monitors::init_monitor(_In_ HMONITOR hMon, BOOL fXclMod
 	return FALSE;
 }
 
-BOOL CALLBACK sld::lib::mf::sink::monitors::monitor_enum_proc(_In_ HMONITOR hMon, _In_opt_ HDC hDC, _In_ LPRECT pRect, LPARAM dwData)
+BOOL CALLBACK solids::lib::mf::sink::monitors::monitor_enum_proc(_In_ HMONITOR hMon, _In_opt_ HDC hDC, _In_ LPRECT pRect, LPARAM dwData)
 {
-	sld::lib::mf::sink::monitor_enum_proc_info_t * info = (sld::lib::mf::sink::monitor_enum_proc_info_t*)dwData;
+	solids::lib::mf::sink::monitor_enum_proc_info_t * info = (solids::lib::mf::sink::monitor_enum_proc_info_t*)dwData;
 	if (!info)
 		return TRUE;
 
 	return info->monitor_array->init_monitor(hMon, FALSE);
 }
 
-HRESULT sld::lib::mf::sink::monitors::initialize_display_system(_In_ HWND hwnd)
+HRESULT solids::lib::mf::sink::monitors::initialize_display_system(_In_ HWND hwnd)
 {
 	HRESULT hr = S_OK;
 
-	sld::lib::mf::sink::monitor_enum_proc_info_t info;
+	solids::lib::mf::sink::monitor_enum_proc_info_t info;
 
 	info.hwnd = hwnd;
 	info.monitor_array = this;
@@ -120,7 +120,7 @@ HRESULT sld::lib::mf::sink::monitors::initialize_display_system(_In_ HWND hwnd)
 	return(hr);
 }
 
-sld::lib::mf::sink::monitor_t * sld::lib::mf::sink::monitors::find_monitor(_In_ HMONITOR hMon)
+solids::lib::mf::sink::monitor_t * solids::lib::mf::sink::monitors::find_monitor(_In_ HMONITOR hMon)
 {
 	for (DWORD i = 0; i < _nmonitor; i++)
 	{
@@ -132,7 +132,7 @@ sld::lib::mf::sink::monitor_t * sld::lib::mf::sink::monitors::find_monitor(_In_ 
 	return NULL;
 }
 
-HRESULT sld::lib::mf::sink::monitors::match_guid(UINT uDevID, _Out_ DWORD * pdwMatchID)
+HRESULT solids::lib::mf::sink::monitors::match_guid(UINT uDevID, _Out_ DWORD * pdwMatchID)
 {
 	HRESULT hr = S_OK;
 	*pdwMatchID = 0;
@@ -151,16 +151,16 @@ HRESULT sld::lib::mf::sink::monitors::match_guid(UINT uDevID, _Out_ DWORD * pdwM
 	return(hr);
 }
 
-sld::lib::mf::sink::monitor_t & sld::lib::mf::sink::monitors::operator[](int32_t i)
+solids::lib::mf::sink::monitor_t & solids::lib::mf::sink::monitors::operator[](int32_t i)
 {
 	return _monitor[i];
 }
-DWORD sld::lib::mf::sink::monitors::count(void) const
+DWORD solids::lib::mf::sink::monitors::count(void) const
 {
 	return _nmonitor;
 }
 
-void sld::lib::mf::sink::monitors::terminate_display_system(void)
+void solids::lib::mf::sink::monitors::terminate_display_system(void)
 {
 	for (DWORD i = 0; i < _nmonitor; i++)
 	{
@@ -169,13 +169,13 @@ void sld::lib::mf::sink::monitors::terminate_display_system(void)
 	_nmonitor = 0;
 }
 
-sld::lib::mf::sink::monitors::monitors(void)
+solids::lib::mf::sink::monitors::monitors(void)
 	: _nmonitor(0)
 {
 	::ZeroMemory(_monitor, sizeof(_monitor));
 }
 
-sld::lib::mf::sink::monitors::~monitors(void)
+solids::lib::mf::sink::monitors::~monitors(void)
 {
 	terminate_display_system();
 }

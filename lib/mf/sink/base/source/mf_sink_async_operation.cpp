@@ -1,26 +1,26 @@
 #include "mf_sink_async_operation.h"
 
-sld::lib::mf::sink::async_operation::async_operation(int32_t op)
+solids::lib::mf::sink::async_operation::async_operation(int32_t op)
 	: _op(op)
 {}
 
-sld::lib::mf::sink::async_operation::~async_operation(void)
+solids::lib::mf::sink::async_operation::~async_operation(void)
 {
 
 }
 
 // IUnknown methods.
-ULONG sld::lib::mf::sink::async_operation::AddRef(void)
+ULONG solids::lib::mf::sink::async_operation::AddRef(void)
 {
 	return refcount_object::AddRef();
 }
 
-ULONG sld::lib::mf::sink::async_operation::Release(void)
+ULONG solids::lib::mf::sink::async_operation::Release(void)
 {
 	return refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::sink::async_operation::QueryInterface(REFIID iid, void** ppv)
+HRESULT solids::lib::mf::sink::async_operation::QueryInterface(REFIID iid, void** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -35,7 +35,7 @@ HRESULT sld::lib::mf::sink::async_operation::QueryInterface(REFIID iid, void** p
 	return S_OK;
 }
 
-int32_t sld::lib::mf::sink::async_operation::async_operation::op(void)
+int32_t solids::lib::mf::sink::async_operation::async_operation::op(void)
 {
 	return _op;
 }

@@ -4,7 +4,7 @@
 #include "sld_mf_plain_controller.h"
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -28,7 +28,7 @@ namespace sld
 						virtual ~core(void);
 
 						// Playback control
-						int32_t open(sld::lib::mf::control::plain::controller::context_t * context);
+						int32_t open(solids::lib::mf::control::plain::controller::context_t * context);
 						int32_t close(void);
 						int32_t play(void);
 						int32_t pause(void);
@@ -61,7 +61,7 @@ namespace sld
 
 					private:
 						volatile long _refcount;
-						sld::lib::mf::control::plain::controller::context_t * _context;
+						solids::lib::mf::control::plain::controller::context_t * _context;
 						int32_t									_state;
 						IMFMediaSession *						_session;
 
@@ -80,7 +80,7 @@ namespace sld
 						IMFRateSupport *						_rate_support;
 
 						BOOL									_thinning;
-						sld::lib::mf::critical_section		_lock;
+						solids::lib::mf::critical_section		_lock;
 						HANDLE									_close_event;
 
 					};

@@ -1,26 +1,26 @@
 #include "mf_rtsp_source_class_factory.h"
 #include "mf_rtsp_source_scheme_handler.h"
 
-BOOL sld::lib::mf::source::rtsp::factory::is_locked(void)
+BOOL solids::lib::mf::source::rtsp::factory::is_locked(void)
 {
 	return (_lock_count == 0) ? FALSE : TRUE;
 }
 
-sld::lib::mf::source::rtsp::factory::factory(void)
+solids::lib::mf::source::rtsp::factory::factory(void)
 	: _ref_count(0)
 {}
 
-sld::lib::mf::source::rtsp::factory::~factory(void)
+solids::lib::mf::source::rtsp::factory::~factory(void)
 {}
 
 
 ///////////////// IUnknown methods ///////////////////////
-ULONG sld::lib::mf::source::rtsp::factory::AddRef(void)
+ULONG solids::lib::mf::source::rtsp::factory::AddRef(void)
 {
 	return ::InterlockedIncrement(&_ref_count);
 }
 
-ULONG sld::lib::mf::source::rtsp::factory::Release(void)
+ULONG solids::lib::mf::source::rtsp::factory::Release(void)
 {
 	ULONG count = ::InterlockedDecrement(&_ref_count);
 	if (count == 0)
@@ -28,7 +28,7 @@ ULONG sld::lib::mf::source::rtsp::factory::Release(void)
 	return count;
 }
 
-HRESULT sld::lib::mf::source::rtsp::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
+HRESULT solids::lib::mf::source::rtsp::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -48,7 +48,7 @@ HRESULT sld::lib::mf::source::rtsp::factory::QueryInterface(REFIID iid, __RPC__d
 ///////////////// end of IUnknown methods ///////////////////////
 
 ///////////////// IClassFactory methods ///////////////////////
-HRESULT sld::lib::mf::source::rtsp::factory::CreateInstance(_In_opt_ IUnknown * unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
+HRESULT solids::lib::mf::source::rtsp::factory::CreateInstance(_In_opt_ IUnknown * unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
 {
 	if (ppv == NULL)
 	{
@@ -61,10 +61,10 @@ HRESULT sld::lib::mf::source::rtsp::factory::CreateInstance(_In_opt_ IUnknown * 
 		return CLASS_E_NOAGGREGATION;
 	}
 
-	return sld::lib::mf::source::rtsp::handler::create_instance(unk, riid, ppv);
+	return solids::lib::mf::source::rtsp::handler::create_instance(unk, riid, ppv);
 }
 
-HRESULT sld::lib::mf::source::rtsp::factory::LockServer(BOOL lock)
+HRESULT solids::lib::mf::source::rtsp::factory::LockServer(BOOL lock)
 {
 	if (lock == FALSE)
 	{

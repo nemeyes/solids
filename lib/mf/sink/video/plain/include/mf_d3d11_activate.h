@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
     namespace lib
     {
@@ -16,9 +16,9 @@ namespace sld
                     namespace plain
                     {
                         class activate
-                            : sld::lib::mf::base
-                            , sld::lib::mf::refcount_object
-                            , public sld::lib::mf::attributes<IMFActivate>
+                            : solids::lib::mf::base
+                            , solids::lib::mf::refcount_object
+                            , public solids::lib::mf::attributes<IMFActivate>
                             , public IPersistStream
                         {
                         public:

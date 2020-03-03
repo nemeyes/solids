@@ -9,7 +9,7 @@
 
 #include <sld.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -20,7 +20,7 @@ namespace sld
 				namespace plain
 				{
 					class EXP_SLD_MF_CONTROLLER_CLASS controller
-						: public sld::lib::base
+						: public solids::lib::base
 					{
 					public:
 						class core;
@@ -55,7 +55,7 @@ namespace sld
 						virtual ~controller(void);
 
 						// Playback control
-						int32_t open(sld::lib::mf::control::plain::controller::context_t * context);
+						int32_t open(solids::lib::mf::control::plain::controller::context_t * context);
 						int32_t close(void);
 						int32_t play(void);
 						int32_t pause(void);
@@ -64,7 +64,7 @@ namespace sld
 
 
 					private:
-						sld::lib::mf::control::plain::controller::core * _core;
+						solids::lib::mf::control::plain::controller::core * _core;
 					};
 				};
 			};

@@ -18,12 +18,12 @@
 
 #define MIN(a,b) ((a) > (b) ? (b) : (a))
 
-sld::lib::net::rtsp::client::core * sld::lib::net::rtsp::client::core::createNew(sld::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag)
+solids::lib::net::rtsp::client::core * solids::lib::net::rtsp::client::core::createNew(solids::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag)
 {
-	return new sld::lib::net::rtsp::client::core(front, env, url, username, password, transport_option, recv_option, recv_timeout, scale, http_port_number, kill_flag);
+	return new solids::lib::net::rtsp::client::core(front, env, url, username, password, transport_option, recv_option, recv_timeout, scale, http_port_number, kill_flag);
 }
 
-sld::lib::net::rtsp::client::core::core(sld::lib::net::rtsp::client* front, UsageEnvironment& env, const char* url, const char* username, const char* password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool* kill_flag)
+solids::lib::net::rtsp::client::core::core(solids::lib::net::rtsp::client* front, UsageEnvironment& env, const char* url, const char* username, const char* password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool* kill_flag)
 	: RTSPClient(env, url, 1, "RTP/RTSP Client", http_port_number, -1)
 	, _front(front)
 	, _kill_flag(kill_flag)
@@ -60,7 +60,7 @@ sld::lib::net::rtsp::client::core::core(sld::lib::net::rtsp::client* front, Usag
     _transport_option = transport_option;
     _recv_option = recv_option;
 
-	_kill_trigger = envir().taskScheduler().createEventTrigger((TaskFunc*)&(sld::lib::net::rtsp::client::core::kill_trigger));
+	_kill_trigger = envir().taskScheduler().createEventTrigger((TaskFunc*)&(solids::lib::net::rtsp::client::core::kill_trigger));
 	//_task_sched = &_env->taskScheduler();
 	if (username && password && strlen(username)>0 && strlen(password)>0)
         _auth = new Authenticator(username, password);
@@ -72,12 +72,12 @@ sld::lib::net::rtsp::client::core::core(sld::lib::net::rtsp::client* front, Usag
 	_audio_event = ::CreateEvent(NULL, FALSE, FALSE, NULL);
 
 	_video_run = TRUE;
-	_video_thread = (HANDLE)::_beginthreadex(NULL, 0, sld::lib::net::rtsp::client::core::process_video_cb, this, 0, NULL);
+	_video_thread = (HANDLE)::_beginthreadex(NULL, 0, solids::lib::net::rtsp::client::core::process_video_cb, this, 0, NULL);
 	_audio_run = TRUE;
-	_audio_thread = (HANDLE)::_beginthreadex(NULL, 0, sld::lib::net::rtsp::client::core::process_audio_cb, this, 0, NULL);
+	_audio_thread = (HANDLE)::_beginthreadex(NULL, 0, solids::lib::net::rtsp::client::core::process_audio_cb, this, 0, NULL);
 }
 
-sld::lib::net::rtsp::client::core::~core(void)
+solids::lib::net::rtsp::client::core::~core(void)
 {
 	_video_run = FALSE;
 	::SetEvent(_video_event);
@@ -113,63 +113,63 @@ sld::lib::net::rtsp::client::core::~core(void)
 	}
 }
 
-void sld::lib::net::rtsp::client::core::get_options(RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::get_options(RTSPClient::responseHandler * after_func)
 {
     sendOptionsCommand(after_func, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::get_description(RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::get_description(RTSPClient::responseHandler * after_func)
 {
     sendDescribeCommand(after_func, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::setup_media_subsession(MediaSubsession * media_subsession, bool rtp_over_tcp, bool force_multicast_unspecified, RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::setup_media_subsession(MediaSubsession * media_subsession, bool rtp_over_tcp, bool force_multicast_unspecified, RTSPClient::responseHandler * after_func)
 {
     sendSetupCommand(*media_subsession, after_func, False, rtp_over_tcp?True:False, force_multicast_unspecified?True:False, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::start_playing_session(MediaSession * media_session, double start, double end, float scale, RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::start_playing_session(MediaSession * media_session, double start, double end, float scale, RTSPClient::responseHandler * after_func)
 {
     sendPlayCommand(*media_session, after_func, start, end, scale, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::start_playing_session(MediaSession * media_session, const char * abs_start_time, const char * abs_end_time, float scale, RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::start_playing_session(MediaSession * media_session, const char * abs_start_time, const char * abs_end_time, float scale, RTSPClient::responseHandler * after_func)
 {
     sendPlayCommand(*media_session, after_func, abs_start_time, abs_end_time, scale, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::start_pausing_session(void)
+void solids::lib::net::rtsp::client::core::start_pausing_session(void)
 {
 	sendPauseCommand(*_media_session, continue_after_pause, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::teardown_session(MediaSession * media_session, RTSPClient::responseHandler * after_func)
+void solids::lib::net::rtsp::client::core::teardown_session(MediaSession * media_session, RTSPClient::responseHandler * after_func)
 {
     sendTeardownCommand(*media_session, after_func, _auth);
 }
 
-void sld::lib::net::rtsp::client::core::set_user_agent_string(const char * user_agent)
+void solids::lib::net::rtsp::client::core::set_user_agent_string(const char * user_agent)
 {
     setUserAgentString(user_agent);
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_client_creation(RTSPClient * param)
+void solids::lib::net::rtsp::client::core::continue_after_client_creation(RTSPClient * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     self->set_user_agent_string("Magnetar.AI RTSP Client");
     self->get_options(continue_after_options);
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_options(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_options(RTSPClient * param, int result_code, char * result_string)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     delete [] result_string;
     self->get_description(continue_after_describe);
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_describe(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_describe(RTSPClient * param, int result_code, char * result_string)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 
 	do
 	{
@@ -194,12 +194,12 @@ void sld::lib::net::rtsp::client::core::continue_after_describe(RTSPClient * par
 		bool made_progress = false;
 		while ((media_subsession = iter.next()) != 0)
 		{
-			if ((self->_recv_option & sld::lib::net::rtsp::client::media_type_t::audio) && !(self->_recv_option & sld::lib::net::rtsp::client::media_type_t::video))
+			if ((self->_recv_option & solids::lib::net::rtsp::client::media_type_t::audio) && !(self->_recv_option & solids::lib::net::rtsp::client::media_type_t::video))
 			{
 				if (strcmp(media_subsession->mediumName(), "audio")!=0)
 					continue;
 			}
-			if ((self->_recv_option & sld::lib::net::rtsp::client::media_type_t::video) && !(self->_recv_option & sld::lib::net::rtsp::client::media_type_t::audio))
+			if ((self->_recv_option & solids::lib::net::rtsp::client::media_type_t::video) && !(self->_recv_option & solids::lib::net::rtsp::client::media_type_t::audio))
 			{
 				if (strcmp(media_subsession->mediumName(), "video") != 0)
 					continue;
@@ -235,9 +235,9 @@ void sld::lib::net::rtsp::client::core::continue_after_describe(RTSPClient * par
 #endif
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_setup(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_setup(RTSPClient * param, int result_code, char * result_string)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 
     if( result_code==0 )
         self->_made_progress = true;
@@ -248,9 +248,9 @@ void sld::lib::net::rtsp::client::core::continue_after_setup(RTSPClient * param,
     self->setup_streams();
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_play(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_play(RTSPClient * param, int result_code, char * result_string)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 
 	do
 	{
@@ -296,14 +296,14 @@ void sld::lib::net::rtsp::client::core::continue_after_play(RTSPClient * param, 
 #endif
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_pause(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_pause(RTSPClient * param, int result_code, char * result_string)
 {
 
 }
 
-void sld::lib::net::rtsp::client::core::continue_after_teardown(RTSPClient * param, int result_code, char * result_string)
+void solids::lib::net::rtsp::client::core::continue_after_teardown(RTSPClient * param, int result_code, char * result_string)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 
     if( result_string )
         delete [] result_string;
@@ -325,16 +325,16 @@ void sld::lib::net::rtsp::client::core::continue_after_teardown(RTSPClient * par
 	self->close();
 }
 
-void sld::lib::net::rtsp::client::core::close(void)
+void solids::lib::net::rtsp::client::core::close(void)
 {
 	//envir().taskScheduler();
 	envir().taskScheduler().triggerEvent(_kill_trigger, this);
 }
 
-void sld::lib::net::rtsp::client::core::subsession_after_playing(void * param)
+void solids::lib::net::rtsp::client::core::subsession_after_playing(void * param)
 {
 	MediaSubsession * media_subsession = static_cast<MediaSubsession*>(param);
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(media_subsession->miscPtr);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(media_subsession->miscPtr);
 
     Medium::close( media_subsession->sink );
     media_subsession->sink = 0;
@@ -349,10 +349,10 @@ void sld::lib::net::rtsp::client::core::subsession_after_playing(void * param)
 	self->session_after_playing(self);
 }
 
-void sld::lib::net::rtsp::client::core::subsession_bye_handler(void * param)
+void solids::lib::net::rtsp::client::core::subsession_bye_handler(void * param)
 {
 	MediaSubsession * media_subsession = static_cast<MediaSubsession*>(param);
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(media_subsession->miscPtr);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(media_subsession->miscPtr);
 
     //struct timeval time_now;
     //gettimeofday( &time_now, 0 );
@@ -360,9 +360,9 @@ void sld::lib::net::rtsp::client::core::subsession_bye_handler(void * param)
 	self->subsession_after_playing(media_subsession);
 }
 
-void sld::lib::net::rtsp::client::core::session_after_playing(void * param)
+void solids::lib::net::rtsp::client::core::session_after_playing(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 #if 0
 	self->shutdown();
 #else
@@ -370,7 +370,7 @@ void sld::lib::net::rtsp::client::core::session_after_playing(void * param)
 #endif
 }
 
-void sld::lib::net::rtsp::client::core::setup_streams(void)
+void solids::lib::net::rtsp::client::core::setup_streams(void)
 {
 	//static MediaSubsessionIterator * iter = new MediaSubsessionIterator(*_media_session);
 	if (!_iter)
@@ -380,10 +380,10 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
     {
         if( media_subsession->clientPortNum()==0 )
             continue;
-        if(_transport_option== sld::lib::net::rtsp::client::transport_option_t::rtp_over_tcp)
-			setup_media_subsession(media_subsession, true, false, sld::lib::net::rtsp::client::core::continue_after_setup);
+        if(_transport_option== solids::lib::net::rtsp::client::transport_option_t::rtp_over_tcp)
+			setup_media_subsession(media_subsession, true, false, solids::lib::net::rtsp::client::core::continue_after_setup);
         else
-			setup_media_subsession(media_subsession, false, false, sld::lib::net::rtsp::client::core::continue_after_setup);
+			setup_media_subsession(media_subsession, false, false, solids::lib::net::rtsp::client::core::continue_after_setup);
 
 		return;
     }
@@ -407,7 +407,7 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
 		if(media_subsession->readSource()==0) // was not initiated
 			continue;
 
-		sld::lib::net::rtsp::client::buffer_sink * bs = nullptr;
+		solids::lib::net::rtsp::client::buffer_sink * bs = nullptr;
 		if (!strcmp(media_subsession->mediumName(), "video"))
 		{
 			if(!strcmp(media_subsession->codecName(), "H265"))
@@ -453,7 +453,7 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
 				
 				bs = h265_buffer_sink::createNew(this, envir(), vpsspspps[0], vpsspspps_size[0], vpsspspps[1], vpsspspps_size[1], vpsspspps[2], vpsspspps_size[2], 8 * 1024 * 1024);
 
-				_front->on_begin_video(sld::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size);
+				_front->on_begin_video(solids::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size);
 
 				delete [] vpsRecord;
 				delete [] spsRecord;
@@ -486,7 +486,7 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
 				bs = h264_buffer_sink::createNew(this, envir(), (const char*)spspps[0], spspps_size[0], (const char*)spspps[1], spspps_size[1], 4 * 1024 * 1024);
 				delete[] sPropRecord;
 
-				_front->on_begin_video(sld::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size);
+				_front->on_begin_video(solids::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size);
 			}
 			else if (!strcmp(media_subsession->codecName(), "MP4V-ES"))
 			{
@@ -506,7 +506,7 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
 				uint8_t * configStr = parseGeneralConfigStr(media_subsession->fmtp_config(), configStrSize);
 				bs = aac_buffer_sink::createNew(this, envir(), 512 * 1024, media_subsession->numChannels(), frequencyFromconfig, (char*)configStr, configStrSize);
 
-				_front->on_begin_audio(sld::lib::net::rtsp::client::audio_codec_t::aac, configStr, configStrSize, frequencyFromconfig, media_subsession->numChannels());
+				_front->on_begin_audio(solids::lib::net::rtsp::client::audio_codec_t::aac, configStr, configStrSize, frequencyFromconfig, media_subsession->numChannels());
 				if (configStr)
 					delete configStr;
 				configStr = NULL;
@@ -560,7 +560,7 @@ void sld::lib::net::rtsp::client::core::setup_streams(void)
         start_playing_session( _media_session, _init_seek_time, _end_time, _scale, continue_after_play );
 }
 
-void sld::lib::net::rtsp::client::core::shutdown(void)
+void solids::lib::net::rtsp::client::core::shutdown(void)
 {
     if( _shutting_down )
         return;
@@ -588,23 +588,23 @@ void sld::lib::net::rtsp::client::core::shutdown(void)
         continue_after_teardown(this, 0, 0 );
 }
 
-void sld::lib::net::rtsp::client::core::session_timer_handler(void * param)
+void solids::lib::net::rtsp::client::core::session_timer_handler(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     self->_session_timer_task = 0;
 	self->session_after_playing(self);
 }
 
-void sld::lib::net::rtsp::client::core::check_packet_arrival(void * param)
+void solids::lib::net::rtsp::client::core::check_packet_arrival(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     int delay_usec = 100000; //100 ms
-	self->_arrival_check_timer_task = self->envir().taskScheduler().scheduleDelayedTask(delay_usec, (TaskFunc*)&sld::lib::net::rtsp::client::core::check_packet_arrival, self);
+	self->_arrival_check_timer_task = self->envir().taskScheduler().scheduleDelayedTask(delay_usec, (TaskFunc*)&solids::lib::net::rtsp::client::core::check_packet_arrival, self);
 }
 
-void sld::lib::net::rtsp::client::core::check_inter_packet_gaps(void * param)
+void solids::lib::net::rtsp::client::core::check_inter_packet_gaps(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     if( !self->_inter_packet_gap_max_time )
         return;
 
@@ -629,13 +629,13 @@ void sld::lib::net::rtsp::client::core::check_inter_packet_gaps(void * param)
     else
     {
         self->_total_packets_received = total_packets_received;
-		self->_inter_packet_gap_check_timer_task = self->envir().taskScheduler().scheduleDelayedTask(self->_inter_packet_gap_max_time * 1000000, (TaskFunc*)&sld::lib::net::rtsp::client::core::check_inter_packet_gaps, self);
+		self->_inter_packet_gap_check_timer_task = self->envir().taskScheduler().scheduleDelayedTask(self->_inter_packet_gap_max_time * 1000000, (TaskFunc*)&solids::lib::net::rtsp::client::core::check_inter_packet_gaps, self);
     }
 }
 
-void sld::lib::net::rtsp::client::core::check_session_timeout_broken_server(void * param)
+void solids::lib::net::rtsp::client::core::check_session_timeout_broken_server(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
     if( !self->_send_keepalives_to_broken_servers )
         return;
 
@@ -646,12 +646,12 @@ void sld::lib::net::rtsp::client::core::check_session_timeout_broken_server(void
     unsigned delay_sec_until_next_keepalive = session_timeout<=5?1:session_timeout-5;
     //reduce the interval a liteel, to be on the safe side
 
-	self->_session_timeout_broken_server_task = self->envir().taskScheduler().scheduleDelayedTask(delay_sec_until_next_keepalive * 1000000, (TaskFunc*)&sld::lib::net::rtsp::client::core::check_session_timeout_broken_server, self);
+	self->_session_timeout_broken_server_task = self->envir().taskScheduler().scheduleDelayedTask(delay_sec_until_next_keepalive * 1000000, (TaskFunc*)&solids::lib::net::rtsp::client::core::check_session_timeout_broken_server, self);
 }
 
-void sld::lib::net::rtsp::client::core::kill_trigger(void * param)
+void solids::lib::net::rtsp::client::core::kill_trigger(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 	self->_shutting_down = false;
 	self->shutdown();
 
@@ -661,194 +661,194 @@ void sld::lib::net::rtsp::client::core::kill_trigger(void * param)
 	Medium::close(self);
 }
 
-uint8_t* sld::lib::net::rtsp::client::core::get_vps(int32_t& vps_size)
+uint8_t* solids::lib::net::rtsp::client::core::get_vps(int32_t& vps_size)
 {
 	vps_size = _vps_size;
 	return _sps;
 }
 
-uint8_t* sld::lib::net::rtsp::client::core::get_sps(int32_t& sps_size)
+uint8_t* solids::lib::net::rtsp::client::core::get_sps(int32_t& sps_size)
 {
 	sps_size = _sps_size;
 	return _sps;
 }
 
-uint8_t* sld::lib::net::rtsp::client::core::get_pps(int32_t& pps_size)
+uint8_t* solids::lib::net::rtsp::client::core::get_pps(int32_t& pps_size)
 {
 	pps_size = _pps_size;
 	return _pps;
 }
 
-void sld::lib::net::rtsp::client::core::set_vps(uint8_t* vps, int32_t vps_size)
+void solids::lib::net::rtsp::client::core::set_vps(uint8_t* vps, int32_t vps_size)
 {
 	::memset(_vps, 0x00, sizeof(_vps));
 	::memmove(_vps, vps, vps_size);
 	_vps_size = vps_size;
 }
 
-void sld::lib::net::rtsp::client::core::set_sps(uint8_t* sps, int32_t sps_size)
+void solids::lib::net::rtsp::client::core::set_sps(uint8_t* sps, int32_t sps_size)
 {
 	::memset(_sps, 0x00, sizeof(_sps));
 	::memmove(_sps, sps, sps_size);
 	_sps_size = sps_size;
 }
 
-void sld::lib::net::rtsp::client::core::set_pps(uint8_t* pps, int32_t pps_size)
+void solids::lib::net::rtsp::client::core::set_pps(uint8_t* pps, int32_t pps_size)
 {
 	::memset(_pps, 0x00, sizeof(_pps));
 	::memmove(_pps, pps, pps_size);
 	_pps_size = pps_size;
 }
 
-void sld::lib::net::rtsp::client::core::set_audio_extradata(uint8_t* extradata, int32_t size)
+void solids::lib::net::rtsp::client::core::set_audio_extradata(uint8_t* extradata, int32_t size)
 {
 	::memset(_audio_extradata, 0x00, sizeof(_audio_extradata));
 	::memmove(_audio_extradata, extradata, size);
 	_audio_extradata_size = size;
 }
 
-uint8_t* sld::lib::net::rtsp::client::core::get_audio_extradata(int32_t& size)
+uint8_t* solids::lib::net::rtsp::client::core::get_audio_extradata(int32_t& size)
 {
 	size = _audio_extradata_size;
 	return _audio_extradata;
 }
 
-void sld::lib::net::rtsp::client::core::set_audio_channels(int32_t channels)
+void solids::lib::net::rtsp::client::core::set_audio_channels(int32_t channels)
 {
 	_audio_channels = channels;
 }
 
-int32_t	sld::lib::net::rtsp::client::core::get_audio_channels(void)
+int32_t	solids::lib::net::rtsp::client::core::get_audio_channels(void)
 {
 	return _audio_channels;
 }
 
-void sld::lib::net::rtsp::client::core::set_audio_samplerate(int32_t samplerate)
+void solids::lib::net::rtsp::client::core::set_audio_samplerate(int32_t samplerate)
 {
 	_audio_samplerate = samplerate;
 }
 
-int32_t sld::lib::net::rtsp::client::core::get_audio_samplerate(void)
+int32_t solids::lib::net::rtsp::client::core::get_audio_samplerate(void)
 {
 	return _audio_samplerate;
 }
 
-BOOL sld::lib::net::rtsp::client::core::is_vps(int32_t smt, uint8_t nal_unit_type)
+BOOL solids::lib::net::rtsp::client::core::is_vps(int32_t smt, uint8_t nal_unit_type)
 {
 	// VPS NAL units occur in H.265 only:
 	return nal_unit_type == 32;
 }
 
-BOOL sld::lib::net::rtsp::client::core::is_sps(int32_t smt, uint8_t nal_unit_type)
+BOOL solids::lib::net::rtsp::client::core::is_sps(int32_t smt, uint8_t nal_unit_type)
 {
-	if (smt == sld::lib::net::rtsp::client::video_codec_t::avc)
+	if (smt == solids::lib::net::rtsp::client::video_codec_t::avc)
 		return nal_unit_type == 7;
 	else
 		return nal_unit_type == 33;
 }
 
-BOOL sld::lib::net::rtsp::client::core::is_pps(int32_t smt, uint8_t nal_unit_type)
+BOOL solids::lib::net::rtsp::client::core::is_pps(int32_t smt, uint8_t nal_unit_type)
 {
-	if (smt == sld::lib::net::rtsp::client::video_codec_t::avc)
+	if (smt == solids::lib::net::rtsp::client::video_codec_t::avc)
 		return nal_unit_type == 8;
 	else
 		return nal_unit_type == 34;
 }
 
-BOOL sld::lib::net::rtsp::client::core::is_idr(int32_t smt, uint8_t nal_unit_type)
+BOOL solids::lib::net::rtsp::client::core::is_idr(int32_t smt, uint8_t nal_unit_type)
 {
-	if (smt == sld::lib::net::rtsp::client::video_codec_t::avc)
+	if (smt == solids::lib::net::rtsp::client::video_codec_t::avc)
 		return nal_unit_type == 5;
 	else
 		return (nal_unit_type == 19) || (nal_unit_type == 20);
 }
 
-BOOL sld::lib::net::rtsp::client::core::is_vlc(int32_t smt, uint8_t nal_unit_type)
+BOOL solids::lib::net::rtsp::client::core::is_vlc(int32_t smt, uint8_t nal_unit_type)
 {
-	if (smt == sld::lib::net::rtsp::client::video_codec_t::avc)
+	if (smt == solids::lib::net::rtsp::client::video_codec_t::avc)
 		return (nal_unit_type <= 5 && nal_unit_type > 0);
 	else
 		return (nal_unit_type <= 31);
 }
 
-void sld::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size)
+void solids::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size)
 {
 	if (_front)
 		_front->on_begin_video(codec, extradata, extradata_size);
 }
 
-void sld::lib::net::rtsp::client::core::on_recv_video(uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
+void solids::lib::net::rtsp::client::core::on_recv_video(uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
 {
 	if (_front)
 		_front->on_recv_video(bytes, nbytes, pts, duration);
 }
 
-void sld::lib::net::rtsp::client::core::on_end_video(void)
+void solids::lib::net::rtsp::client::core::on_end_video(void)
 {
 	if (_front)
 		_front->on_end_video();
 }
 
-void sld::lib::net::rtsp::client::core::on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels)
+void solids::lib::net::rtsp::client::core::on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels)
 {
 	if (_front)
 		_front->on_begin_audio(codec, extradata, extradata_size, samplerate, channels);
 }
 
-void sld::lib::net::rtsp::client::core::on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
+void solids::lib::net::rtsp::client::core::on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
 {
 	if (_front)
 		_front->on_recv_audio(bytes, nbytes, pts, duration);
 }
 
-void sld::lib::net::rtsp::client::core::on_end_audio(void)
+void solids::lib::net::rtsp::client::core::on_end_audio(void)
 {
 	if (_front)
 		_front->on_end_audio();
 }
 
 
-unsigned sld::lib::net::rtsp::client::core::process_video_cb(void * param)
+unsigned solids::lib::net::rtsp::client::core::process_video_cb(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 	self->process_video();
 	return 0;
 }
 
-unsigned sld::lib::net::rtsp::client::core::process_audio_cb(void * param)
+unsigned solids::lib::net::rtsp::client::core::process_audio_cb(void * param)
 {
-	sld::lib::net::rtsp::client::core * self = static_cast<sld::lib::net::rtsp::client::core*>(param);
+	solids::lib::net::rtsp::client::core * self = static_cast<solids::lib::net::rtsp::client::core*>(param);
 	self->process_audio();
 	return 0;
 }
 
-void sld::lib::net::rtsp::client::core::put_video_sample(int32_t codec, uint8_t * bytes, int32_t nbytes, long long pts)
+void solids::lib::net::rtsp::client::core::put_video_sample(int32_t codec, uint8_t * bytes, int32_t nbytes, long long pts)
 {
 	if (!_video_run)
 		return;
 
-	std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t> sample = std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t>(new sld::lib::net::rtsp::client::core::sample_t(codec, bytes, nbytes, pts));
+	std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t> sample = std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t>(new solids::lib::net::rtsp::client::core::sample_t(codec, bytes, nbytes, pts));
 	{
-		sld::lib::autolock lock(&_video_lock);
+		solids::lib::autolock lock(&_video_lock);
 		_vqueue.push_back(sample);
 		::SetEvent(_video_event);
 	}
 }
 
-void sld::lib::net::rtsp::client::core::put_audio_sample(int32_t codec, uint8_t* bytes, int32_t nbytes, long long pts)
+void solids::lib::net::rtsp::client::core::put_audio_sample(int32_t codec, uint8_t* bytes, int32_t nbytes, long long pts)
 {
 	if (!_audio_run)
 		return;
 
-	std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t> sample = std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t>(new sld::lib::net::rtsp::client::core::sample_t(codec, bytes, nbytes, pts));
+	std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t> sample = std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t>(new solids::lib::net::rtsp::client::core::sample_t(codec, bytes, nbytes, pts));
 	{
-		sld::lib::autolock lock(&_audio_lock);
+		solids::lib::autolock lock(&_audio_lock);
 		_aqueue.push_back(sample);
 		::SetEvent(_audio_event);
 	}
 }
 
-void sld::lib::net::rtsp::client::core::process_video(void)
+void solids::lib::net::rtsp::client::core::process_video(void)
 {
 	BOOL change_vps			= FALSE;
 	BOOL change_sps			= FALSE;
@@ -862,7 +862,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 	{
 		if (::WaitForSingleObject(_video_event, INFINITE) == WAIT_OBJECT_0)
 		{
-			sld::lib::autolock lock(&_video_lock);
+			solids::lib::autolock lock(&_video_lock);
 			while (_vqueue.size() >= 2)
 			{
 				int32_t codec = _vqueue[0]->codec;
@@ -874,13 +874,13 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 
 #if 1
 				/*{
-					sld::lib::autolock lock(&_time_lock);
+					solids::lib::autolock lock(&_time_lock);
 					if (_start_time == -1)
 						_start_time = pts;
 					_front->on_recv_video(bytes, nbytes, pts - _start_time, duration);
 				}*/
 				{
-					sld::lib::autolock lock(&_time_lock);
+					solids::lib::autolock lock(&_time_lock);
 					if (_start_time == -1)
 						_start_time = pts;
 				}
@@ -898,14 +898,14 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 
 				_front->on_recv_video(bytes, nbytes, pts - _start_time, 166777i64);
 #else
-				if (codec == sld::lib::net::rtsp::client::video_codec_t::avc)
+				if (codec == solids::lib::net::rtsp::client::video_codec_t::avc)
 				{
 					int32_t saved_sps_size = 0;
 					unsigned char* saved_sps = get_sps(saved_sps_size);
 					int32_t saved_pps_size = 0;
 					unsigned char* saved_pps = get_pps(saved_pps_size);
 
-					BOOL is_sps = sld::lib::net::rtsp::client::core::is_sps(codec, bytes[4] & 0x1F);
+					BOOL is_sps = solids::lib::net::rtsp::client::core::is_sps(codec, bytes[4] & 0x1F);
 					if (is_sps)
 					{
 						if (saved_sps_size < 1 || !saved_sps)
@@ -923,7 +923,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						}
 					}
 
-					BOOL is_pps = sld::lib::net::rtsp::client::core::is_pps(codec, bytes[4] & 0x1F);
+					BOOL is_pps = solids::lib::net::rtsp::client::core::is_pps(codec, bytes[4] & 0x1F);
 					if (is_pps)
 					{
 						if (saved_pps_size < 1 || !saved_pps)
@@ -941,7 +941,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						}
 					}
 
-					BOOL is_idr = sld::lib::net::rtsp::client::core::is_idr(codec, bytes[4] & 0x1F);
+					BOOL is_idr = solids::lib::net::rtsp::client::core::is_idr(codec, bytes[4] & 0x1F);
 					if (is_idr)
 					{
 						uint8_t extradata[MAX_PATH] = { 0 };
@@ -952,7 +952,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 							if (!recvFirstIDR)
 							{
 								{
-									sld::lib::autolock lock(&_time_lock);
+									solids::lib::autolock lock(&_time_lock);
 									if (_start_time == -1)
 										_start_time = pts;
 								}
@@ -967,7 +967,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 							if (!recvFirstIDR)
 							{
 								{
-									sld::lib::autolock lock(&_time_lock);
+									solids::lib::autolock lock(&_time_lock);
 									if (_start_time == -1)
 										_start_time = pts;
 								}
@@ -982,7 +982,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						//_front->on_recv_video(bytes, nbytes, pts - _start_time, 416666i64/*166777i64*/);
 					}
 				}
-				else if (codec == sld::lib::net::rtsp::client::video_codec_t::hevc)
+				else if (codec == solids::lib::net::rtsp::client::video_codec_t::hevc)
 				{
 					int32_t saved_vps_size = 0;
 					int32_t saved_sps_size = 0;
@@ -990,7 +990,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 					unsigned char* saved_vps = get_vps(saved_vps_size);
 					unsigned char* saved_sps = get_sps(saved_sps_size);
 					unsigned char* saved_pps = get_pps(saved_pps_size);
-					BOOL is_vps = sld::lib::net::rtsp::client::core::is_vps(codec, (bytes[4] >> 1) & 0x3F);
+					BOOL is_vps = solids::lib::net::rtsp::client::core::is_vps(codec, (bytes[4] >> 1) & 0x3F);
 					if (is_vps)
 					{
 						if (saved_vps_size < 1 || !saved_vps)
@@ -1008,7 +1008,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						}
 					}
 
-					BOOL is_sps = sld::lib::net::rtsp::client::core::is_sps(codec, (bytes[4] >> 1) & 0x3F);
+					BOOL is_sps = solids::lib::net::rtsp::client::core::is_sps(codec, (bytes[4] >> 1) & 0x3F);
 					if (is_sps)
 					{
 						if (saved_sps_size < 1 || !saved_sps)
@@ -1026,7 +1026,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						}
 					}
 
-					BOOL is_pps = sld::lib::net::rtsp::client::core::is_pps(codec, (bytes[4] >> 1) & 0x3F);
+					BOOL is_pps = solids::lib::net::rtsp::client::core::is_pps(codec, (bytes[4] >> 1) & 0x3F);
 					if (is_pps)
 					{
 						if (saved_pps_size < 1 || !saved_pps)
@@ -1044,7 +1044,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 						}
 					}
 
-					BOOL is_idr = sld::lib::net::rtsp::client::core::is_idr(codec, (bytes[4] >> 1) & 0x3F);
+					BOOL is_idr = solids::lib::net::rtsp::client::core::is_idr(codec, (bytes[4] >> 1) & 0x3F);
 					if (is_idr)
 					{
 						uint8_t extradata[MAX_PATH] = { 0 };
@@ -1056,7 +1056,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 							if (!recvFirstIDR)
 							{
 								{
-									sld::lib::autolock lock(&_time_lock);
+									solids::lib::autolock lock(&_time_lock);
 									if(_start_time==-1)
 										_start_time = pts;
 								}
@@ -1072,7 +1072,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 							if (!recvFirstIDR)
 							{
 								{
-									sld::lib::autolock lock(&_time_lock);
+									solids::lib::autolock lock(&_time_lock);
 									if (_start_time == -1)
 										_start_time = pts;
 								}
@@ -1094,7 +1094,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 	}
 
 	{
-		sld::lib::autolock lock(&_video_lock);
+		solids::lib::autolock lock(&_video_lock);
 		_vqueue.clear();
 	}
 
@@ -1102,7 +1102,7 @@ void sld::lib::net::rtsp::client::core::process_video(void)
 
 }
 
-void sld::lib::net::rtsp::client::core::process_audio(void)
+void solids::lib::net::rtsp::client::core::process_audio(void)
 {
 	//BOOL recvFirstAudio		= FALSE;
 	//long long audioStartTime= -1;
@@ -1110,7 +1110,7 @@ void sld::lib::net::rtsp::client::core::process_audio(void)
 	{
 		if (::WaitForSingleObject(_audio_event, INFINITE) == WAIT_OBJECT_0)
 		{
-			sld::lib::autolock lock(&_audio_lock);
+			solids::lib::autolock lock(&_audio_lock);
 			while (_aqueue.size() >= 2)
 			{
 				int32_t codec = _aqueue[0]->codec;
@@ -1122,20 +1122,20 @@ void sld::lib::net::rtsp::client::core::process_audio(void)
 
 #if 1
 				/*{
-					sld::lib::autolock lock(&_time_lock);
+					solids::lib::autolock lock(&_time_lock);
 					if (_start_time == -1)
 						_start_time = pts;
 				}
 				_front->on_recv_audio(bytes, nbytes, pts - _start_time, 232199i64);*/
 
 				{
-					sld::lib::autolock lock(&_time_lock);
+					solids::lib::autolock lock(&_time_lock);
 					if (_start_time == -1)
 						_start_time = pts;
 				}
 				_front->on_recv_audio(bytes, nbytes, pts - _start_time, 232199i64);
 #else
-				if (codec == sld::lib::net::rtsp::client::audio_codec_t::aac)
+				if (codec == solids::lib::net::rtsp::client::audio_codec_t::aac)
 				{
 					if (!recvFirstAudio)
 					{
@@ -1145,7 +1145,7 @@ void sld::lib::net::rtsp::client::core::process_audio(void)
 						int32_t samplerate = get_audio_samplerate();
 
 						{
-							sld::lib::autolock lock(&_time_lock);
+							solids::lib::autolock lock(&_time_lock);
 							if (_start_time == -1)
 								_start_time = pts;
 						}
@@ -1165,7 +1165,7 @@ void sld::lib::net::rtsp::client::core::process_audio(void)
 	}
 
 	{
-		sld::lib::autolock lock(&_audio_lock);
+		solids::lib::autolock lock(&_audio_lock);
 		_aqueue.clear();
 	}
 }

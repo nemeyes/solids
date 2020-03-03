@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -18,8 +18,8 @@ namespace sld
 						class stream;
 						class renderer;
 						class media
-							: sld::lib::mf::base
-							, sld::lib::mf::refcount_object
+							: solids::lib::mf::base
+							, solids::lib::mf::refcount_object
 							, public IMFMediaSink
 							, public IMFClockStateSink
 							, public IMFGetService
@@ -83,10 +83,10 @@ namespace sld
 							BOOL					_is_shutdown;
 
 							
-							sld::lib::mf::sink::video::multiview::stream *	_stream;
+							solids::lib::mf::sink::video::multiview::stream *	_stream;
 							IMFPresentationClock *								_clock;
-							sld::lib::mf::scheduler *						_scheduler;
-							sld::lib::mf::sink::video::multiview::renderer * _renderer;
+							solids::lib::mf::scheduler *						_scheduler;
+							solids::lib::mf::sink::video::multiview::renderer * _renderer;
 							TCHAR												_uuid[MAX_PATH];
 						};
 					};

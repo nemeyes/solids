@@ -3,7 +3,7 @@
 #define BOARDER_RATIO_X		0.007
 #define BOARDER_RATIO_Y		0.007
 
-sld::lib::video::sink::d3d11::multiview::renderer::core::core(void)
+solids::lib::video::sink::d3d11::multiview::renderer::core::core(void)
 	: _device(NULL)
 	, _device_context(NULL)
 	, _swap_chain(NULL)
@@ -19,19 +19,19 @@ sld::lib::video::sink::d3d11::multiview::renderer::core::core(void)
 	, _selected_index(0)
 	, _initialized(FALSE)
 	, _is_maximize(FALSE)
-	, _render_type(sld::lib::video::sink::d3d11::multiview::renderer::render_mode_t::original)
+	, _render_type(solids::lib::video::sink::d3d11::multiview::renderer::render_mode_t::original)
 	, _background_srv(NULL)
 	, _background_buffer(NULL)
 {
 
 }
 
-sld::lib::video::sink::d3d11::multiview::renderer::core::~core(void)
+solids::lib::video::sink::d3d11::multiview::renderer::core::~core(void)
 {
 
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::initialize(sld::lib::video::sink::d3d11::multiview::renderer::context_t* ctx)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::initialize(solids::lib::video::sink::d3d11::multiview::renderer::context_t* ctx)
 {
 	_device = ctx->dev;
 	_device_context = ctx->devctx;
@@ -55,7 +55,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::initialize(sld::li
 	_initialized = TRUE;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::release(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::release(void)
 {
 	safe_release(_vs);
 	safe_release(_ps);
@@ -70,12 +70,12 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::release(void)
 	_initialized = FALSE;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::select(int32_t index)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::select(int32_t index)
 {
 	_selected_index = index;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::maximize(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::maximize(void)
 {
 	_is_maximize = !_is_maximize;
 	if (_is_maximize)
@@ -101,12 +101,12 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::maximize(void)
 	_device_context->VSSetConstantBuffers(0, 1, &_pcb_matrix_buffer);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::set_render_mode(int32_t mode)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::set_render_mode(int32_t mode)
 {
 	_render_type = mode;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::set_shader_resource_view(uint32_t index, ID3D11Texture2D * buffer)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::set_shader_resource_view(uint32_t index, ID3D11Texture2D * buffer)
 {
 	D3D11_TEXTURE2D_DESC surfaceDesc;
 	buffer->GetDesc(&surfaceDesc);
@@ -124,12 +124,12 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::set_shader_resourc
 	_device->CreateShaderResourceView(_view_info[index].buffer, &srvDesc, &_view_info[index].shader_resource_view);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::render(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::render(void)
 {
 
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_render_target_view(int32_t type)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_render_target_view(int32_t type)
 {
 	_layout = type;
 	HRESULT hr = S_OK;
@@ -142,7 +142,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_render_targ
 	safe_release(backBuffer);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_shader(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_shader(void)
 {
 	D3DReadFileToBlob(L"mv_vertex_shader.cso", &_vs_buffer);
 	D3DReadFileToBlob(L"mv_pixel_shader.cso", &_ps_buffer);
@@ -154,10 +154,10 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_shader(void
 	_device_context->PSSetShader(_ps, 0, 0);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buffer(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buffer(void)
 {
 	int32_t	vertex_count = _view_count * 3 + 1; /// +1 : Background , * 3 : view area, image area, focus area
-	sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t * v = new sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t[vertex_count * 4];
+	solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t * v = new solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t[vertex_count * 4];
 
 
 	//View area
@@ -165,10 +165,10 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buff
 	for (int i = 0; i < _view_count; i++)
 	{
 		start_index = i * 4;
-		v[start_index] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[0], _view_info[i].position[2], 0, 0);
-		v[start_index + 1] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[1], _view_info[i].position[2], _view_info[i].active_video_ratio[0], 0);
-		v[start_index + 2] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[0], _view_info[i].position[3], 0, _view_info[i].active_video_ratio[1]);
-		v[start_index + 3] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[1], _view_info[i].position[3], _view_info[i].active_video_ratio[0], _view_info[i].active_video_ratio[1]);
+		v[start_index] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[0], _view_info[i].position[2], 0, 0);
+		v[start_index + 1] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[1], _view_info[i].position[2], _view_info[i].active_video_ratio[0], 0);
+		v[start_index + 2] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[0], _view_info[i].position[3], 0, _view_info[i].active_video_ratio[1]);
+		v[start_index + 3] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i].position[1], _view_info[i].position[3], _view_info[i].active_video_ratio[0], _view_info[i].active_video_ratio[1]);
 	}
 
 	//Image area (via aspect ratio)
@@ -230,10 +230,10 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buff
 			}
 
 			start_index = (i + _view_count) * 4;
-			v[start_index] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_left, determined_video_area_top, 0, 0);
-			v[start_index + 1] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_right, determined_video_area_top, _view_info[i].active_video_ratio[0], 0);
-			v[start_index + 2] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_left, determined_video_area_bottom, 0, _view_info[i].active_video_ratio[1]);
-			v[start_index + 3] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_right, determined_video_area_bottom, _view_info[i].active_video_ratio[0], _view_info[i].active_video_ratio[1]);
+			v[start_index] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_left, determined_video_area_top, 0, 0);
+			v[start_index + 1] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_right, determined_video_area_top, _view_info[i].active_video_ratio[0], 0);
+			v[start_index + 2] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_left, determined_video_area_bottom, 0, _view_info[i].active_video_ratio[1]);
+			v[start_index + 3] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(determined_video_area_right, determined_video_area_bottom, _view_info[i].active_video_ratio[0], _view_info[i].active_video_ratio[1]);
 		}
 	}
 
@@ -244,17 +244,17 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buff
 	for (int i = 2 * _view_count; i < 3 * _view_count; i++)
 	{
 		start_index = i * 4;
-		v[start_index] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[0] - BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[2] + BOARDER_RATIO_Y, -1, -1);
-		v[start_index + 1] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[1] + BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[2] + BOARDER_RATIO_Y, -1, -1);
-		v[start_index + 2] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[0] - BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[3] - BOARDER_RATIO_Y, -1, -1);
-		v[start_index + 3] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[1] + BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[3] - BOARDER_RATIO_Y, -1, -1);
+		v[start_index] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[0] - BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[2] + BOARDER_RATIO_Y, -1, -1);
+		v[start_index + 1] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[1] + BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[2] + BOARDER_RATIO_Y, -1, -1);
+		v[start_index + 2] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[0] - BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[3] - BOARDER_RATIO_Y, -1, -1);
+		v[start_index + 3] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(_view_info[i - 2 * _view_count].position[1] + BOARDER_RATIO_X, _view_info[i - 2 * _view_count].position[3] - BOARDER_RATIO_Y, -1, -1);
 	}
 
 	//BackGround
-	v[_view_count * 3 * 4] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(-1, 1, 0, 0);
-	v[_view_count * 3 * 4 + 1] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(1, 1, 1, 0);
-	v[_view_count * 3 * 4 + 2] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(-1, -1, 0, 1);
-	v[_view_count * 3 * 4 + 3] = sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(1, -1, 1, 1);
+	v[_view_count * 3 * 4] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(-1, 1, 0, 0);
+	v[_view_count * 3 * 4 + 1] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(1, 1, 1, 0);
+	v[_view_count * 3 * 4 + 2] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(-1, -1, 0, 1);
+	v[_view_count * 3 * 4 + 3] = solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t(1, -1, 1, 1);
 
 
 
@@ -262,7 +262,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buff
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t) * vertex_count * 4;
+	vertexBufferDesc.ByteWidth = sizeof(solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t) * vertex_count * 4;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -274,14 +274,14 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_vertex_buff
 	HRESULT hr = _device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &_vertex_buffer);
 
 	//Set the vertex buffer
-	UINT stride = sizeof(sld::lib::video::sink::d3d11::multiview::renderer::core::vertex_t);
+	UINT stride = sizeof(solids::lib::video::sink::d3d11::multiview::renderer::core::vertex_t);
 	UINT offset = 0;
 	_device_context->IASetVertexBuffers(0, 1, &_vertex_buffer, &stride, &offset);
 
 	delete[] v;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_index_buffer(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_index_buffer(void)
 {
 	int32_t	vertex_count = _view_count * 3 + 1; /// +1 : Background , * 3 : view area, image area, focus area
 	DWORD* indices = new DWORD[vertex_count * 6];
@@ -321,14 +321,14 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_index_buffe
 	delete[] indices;
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_input_layout(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_input_layout(void)
 {
 	_device->CreateInputLayout(input_element_desc, ARRAYSIZE(input_element_desc), _vs_buffer->GetBufferPointer(), _vs_buffer->GetBufferSize(), &_vertex_layout);
 	_device_context->IASetInputLayout(_vertex_layout);
 	_device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_view_port(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_view_port(void)
 {
 	D3D11_VIEWPORT viewport;
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -342,7 +342,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_view_port(v
 	_device_context->RSSetViewports(1, &viewport);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_sample_state(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_sample_state(void)
 {
 	D3D11_SAMPLER_DESC sampDesc;
 	ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -358,13 +358,13 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_sample_stat
 	HRESULT hr = _device->CreateSamplerState(&sampDesc, &_sampler_state);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_constant_buffer(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_constant_buffer(void)
 {
 	D3D11_BUFFER_DESC cbbd;
 	ZeroMemory(&cbbd, sizeof(D3D11_BUFFER_DESC));
 
 	cbbd.Usage = D3D11_USAGE_DEFAULT;
-	cbbd.ByteWidth = sizeof(sld::lib::video::sink::d3d11::multiview::renderer::core::matrix_t);
+	cbbd.ByteWidth = sizeof(solids::lib::video::sink::d3d11::multiview::renderer::core::matrix_t);
 	cbbd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cbbd.CPUAccessFlags = 0;
 	cbbd.MiscFlags = 0;
@@ -372,7 +372,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_constant_bu
 	HRESULT hr = _device->CreateBuffer(&cbbd, NULL, &_pcb_matrix_buffer);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_matrix(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_matrix(void)
 {
 	_world_matrix = DirectX::XMMatrixIdentity();
 	_cam_position = DirectX::XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
@@ -385,7 +385,7 @@ void sld::lib::video::sink::d3d11::multiview::renderer::core::create_matrix(void
 	_device_context->VSSetConstantBuffers(0, 1, &_pcb_matrix_buffer);
 }
 
-void sld::lib::video::sink::d3d11::multiview::renderer::core::create_background_srv(void)
+void solids::lib::video::sink::d3d11::multiview::renderer::core::create_background_srv(void)
 {
 	D3D11_TEXTURE2D_DESC surfaceDesc;
 	surfaceDesc.Width = 1;

@@ -12,7 +12,7 @@
 
 #include "sld_rtsp_client.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -22,7 +22,7 @@ namespace sld
 			{
 				class client::core : public RTSPClient
 				{
-					friend class sld::lib::net::rtsp::client::buffer_sink;
+					friend class solids::lib::net::rtsp::client::buffer_sink;
 				public:
 					typedef struct _sample_t
 					{
@@ -59,7 +59,7 @@ namespace sld
 						}
 					} sample_t;
 
-					static sld::lib::net::rtsp::client::core * createNew(sld::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag);
+					static solids::lib::net::rtsp::client::core * createNew(solids::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag);
 
 					static void continue_after_client_creation(RTSPClient * param);
 					static void continue_after_options(RTSPClient * param, int result_code, char * result_string);
@@ -94,7 +94,7 @@ namespace sld
 					static BOOL is_vlc(int32_t codec, uint8_t nalu_type);
 
 				protected:
-					core(sld::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag);
+					core(solids::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag);
 					~core(void);
 
 				private:
@@ -139,7 +139,7 @@ namespace sld
 
 
 				private:
-					sld::lib::net::rtsp::client * _front;
+					solids::lib::net::rtsp::client * _front;
 					int32_t						_transport_option;
 					int32_t						_recv_option;
 
@@ -201,8 +201,8 @@ namespace sld
 					CRITICAL_SECTION			_time_lock;
 					long long					_start_time;
 
-					std::vector<std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t>> _vqueue;
-					std::vector<std::shared_ptr<sld::lib::net::rtsp::client::core::sample_t>> _aqueue;
+					std::vector<std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t>> _vqueue;
+					std::vector<std::shared_ptr<solids::lib::net::rtsp::client::core::sample_t>> _aqueue;
 				};
 			};
 		};

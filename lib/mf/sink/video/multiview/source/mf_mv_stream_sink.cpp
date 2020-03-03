@@ -1,6 +1,6 @@
 #include "mf_mv_stream_sink.h"
 
-GUID const * const sld::lib::mf::sink::video::multiview::stream::_video_formats[] =
+GUID const * const solids::lib::mf::sink::video::multiview::stream::_video_formats[] =
 {
 	&MFVideoFormat_NV12,
 	&MFVideoFormat_IYUV,
@@ -23,9 +23,9 @@ GUID const * const sld::lib::mf::sink::video::multiview::stream::_video_formats[
 	&MFVideoFormat_420O
 };
 
-const DWORD sld::lib::mf::sink::video::multiview::stream::_nvideo_formats = sizeof(sld::lib::mf::sink::video::multiview::stream::_video_formats) / sizeof(sld::lib::mf::sink::video::multiview::stream::_video_formats[0]);
-const MFRatio sld::lib::mf::sink::video::multiview::stream::_default_fps = { 30, 1 };
-const sld::lib::mf::sink::video::multiview::stream::format_entry_t sld::lib::mf::sink::video::multiview::stream::_dxgi_format_mapping[] =
+const DWORD solids::lib::mf::sink::video::multiview::stream::_nvideo_formats = sizeof(solids::lib::mf::sink::video::multiview::stream::_video_formats) / sizeof(solids::lib::mf::sink::video::multiview::stream::_video_formats[0]);
+const MFRatio solids::lib::mf::sink::video::multiview::stream::_default_fps = { 30, 1 };
+const solids::lib::mf::sink::video::multiview::stream::format_entry_t solids::lib::mf::sink::video::multiview::stream::_dxgi_format_mapping[] =
 {
 	{ MFVideoFormat_RGB32,      DXGI_FORMAT_B8G8R8X8_UNORM },
 	{ MFVideoFormat_ARGB32,     DXGI_FORMAT_R8G8B8A8_UNORM },
@@ -47,7 +47,7 @@ const sld::lib::mf::sink::video::multiview::stream::format_entry_t sld::lib::mf:
 #define MAX_PAST_FRAMES         3
 
 
-BOOL sld::lib::mf::sink::video::multiview::stream::_valid_state_mat[sld::lib::mf::sink::video::multiview::stream::state_t::count][sld::lib::mf::sink::async_operation::type_t::count] =
+BOOL solids::lib::mf::sink::video::multiview::stream::_valid_state_mat[solids::lib::mf::sink::video::multiview::stream::state_t::count][solids::lib::mf::sink::async_operation::type_t::count] =
 {
     // States:    Operations:
     //            SetType   Start     Restart   Pause     Stop      Sample    Marker
@@ -70,14 +70,14 @@ BOOL sld::lib::mf::sink::video::multiview::stream::_valid_state_mat[sld::lib::mf
 #pragma warning( push )
 #pragma warning( disable : 4355 )  // 'this' used in base member initializer list
 
-sld::lib::mf::sink::video::multiview::stream::stream(DWORD id, sld::lib::mf::critical_section & lock, sld::lib::mf::scheduler * sched)
+solids::lib::mf::sink::video::multiview::stream::stream(DWORD id, solids::lib::mf::critical_section & lock, solids::lib::mf::scheduler * sched)
 	: _stream_id(id)
     , _lock(lock)
 	, _state(state_t::type_not_set)
     , _is_shutdown(FALSE)
     , _work_queue_id(0)
-    , _work_queue_cb(this, &sld::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback)
-	, _consume_data(sld::lib::mf::sink::video::multiview::stream::consume_state_t::process_samples)
+    , _work_queue_cb(this, &solids::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback)
+	, _consume_data(solids::lib::mf::sink::video::multiview::stream::consume_state_t::process_samples)
     , _stime(0)
     , _nwritten(0)
     , _noutstanding_sample_requests(0)
@@ -103,18 +103,18 @@ sld::lib::mf::sink::video::multiview::stream::stream(DWORD id, sld::lib::mf::cri
 // CStreamSink destructor
 //-------------------------------------------------------------------
 
-sld::lib::mf::sink::video::multiview::stream::~stream(void)
+solids::lib::mf::sink::video::multiview::stream::~stream(void)
 {
 }
 
 // IUnknown methods
 
-ULONG sld::lib::mf::sink::video::multiview::stream::AddRef(void)
+ULONG solids::lib::mf::sink::video::multiview::stream::AddRef(void)
 {
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::multiview::stream::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
     if (!ppv)
     {
@@ -153,9 +153,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::QueryInterface(REFIID iid,
     return S_OK;
 }
 
-ULONG sld::lib::mf::sink::video::multiview::stream::Release(void)
+ULONG solids::lib::mf::sink::video::multiview::stream::Release(void)
 {
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
 /// IMFStreamSink methods
@@ -165,7 +165,7 @@ ULONG sld::lib::mf::sink::video::multiview::stream::Release(void)
 // Description: Discards all samples that were not processed yet.
 //-------------------------------------------------------------------
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::Flush(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::Flush(void)
 {
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -186,9 +186,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::Flush(void)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetIdentifier(__RPC__out DWORD* id)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetIdentifier(__RPC__out DWORD* id)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (!id)
 		return E_POINTER;
@@ -200,9 +200,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetIdentifier(__RPC__out D
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaSink(__RPC__deref_out_opt IMFMediaSink ** ppms)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetMediaSink(__RPC__deref_out_opt IMFMediaSink ** ppms)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (!ppms)
 		return E_POINTER;
@@ -216,9 +216,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaSink(__RPC__deref_
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeHandler(__RPC__deref_out_opt IMFMediaTypeHandler** handler)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetMediaTypeHandler(__RPC__deref_out_opt IMFMediaTypeHandler** handler)
 {
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
 
     if (handler == NULL)
         return E_POINTER;
@@ -230,9 +230,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeHandler(__RPC_
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::PlaceMarker(MFSTREAMSINK_MARKER_TYPE marker_type, __RPC__in const PROPVARIANT * marker_value, __RPC__in const PROPVARIANT * context_value)
+HRESULT solids::lib::mf::sink::video::multiview::stream::PlaceMarker(MFSTREAMSINK_MARKER_TYPE marker_type, __RPC__in const PROPVARIANT * marker_value, __RPC__in const PROPVARIANT * context_value)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = S_OK;
 	IMarker * marker = NULL;
@@ -256,7 +256,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::PlaceMarker(MFSTREAMSINK_M
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::ProcessSample(__RPC__in_opt IMFSample* pSample)
+HRESULT solids::lib::mf::sink::video::multiview::stream::ProcessSample(__RPC__in_opt IMFSample* pSample)
 {
     if (_noutstanding_sample_requests == 0)  
 		return MF_E_INVALIDREQUEST;
@@ -295,11 +295,11 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::ProcessSample(__RPC__in_op
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * unk_state)
+HRESULT solids::lib::mf::sink::video::multiview::stream::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * unk_state)
 {
     HRESULT hr = S_OK;
 
-    sld::lib::mf::auto_lock lock(&_lock);
+    solids::lib::mf::auto_lock lock(&_lock);
     hr = check_shutdown();
 
 	if (SUCCEEDED(hr))
@@ -308,9 +308,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::BeginGetEvent(IMFAsyncCall
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::EndGetEvent(IMFAsyncResult * result, _Out_  IMFMediaEvent ** ppevent)
+HRESULT solids::lib::mf::sink::video::multiview::stream::EndGetEvent(IMFAsyncResult * result, _Out_  IMFMediaEvent ** ppevent)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = S_OK;
 	hr = check_shutdown();
@@ -320,13 +320,13 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::EndGetEvent(IMFAsyncResult
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetEvent(DWORD flags, __RPC__deref_out_opt IMFMediaEvent ** ppevent)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetEvent(DWORD flags, __RPC__deref_out_opt IMFMediaEvent ** ppevent)
 {
 	HRESULT hr = S_OK;
 	IMFMediaEventQueue * queue = NULL;
 
 	{ // scope for lock
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		hr = check_shutdown();
 		if (SUCCEEDED(hr))
@@ -345,9 +345,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetEvent(DWORD flags, __RP
     return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::QueueEvent(MediaEventType met, __RPC__in REFGUID guid_extended_type, HRESULT status, __RPC__in_opt const PROPVARIANT * value)
+HRESULT solids::lib::mf::sink::video::multiview::stream::QueueEvent(MediaEventType met, __RPC__in REFGUID guid_extended_type, HRESULT status, __RPC__in_opt const PROPVARIANT * value)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = S_OK;
 	hr = check_shutdown();
@@ -357,9 +357,9 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::QueueEvent(MediaEventType 
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetCurrentMediaType(_Outptr_ IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetCurrentMediaType(_Outptr_ IMFMediaType ** ppmt)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (!ppmt)
 		return E_POINTER;
@@ -384,7 +384,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetCurrentMediaType(_Outpt
 // Name: GetMajorType
 // Description: Return the major type GUID.
 //-------------------------------------------------------------------
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetMajorType(__RPC__out GUID * guid_major_type)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetMajorType(__RPC__out GUID * guid_major_type)
 {
 	if (!guid_major_type)
 		return E_POINTER;
@@ -399,7 +399,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetMajorType(__RPC__out GU
 	return _current_type->GetGUID(MF_MT_MAJOR_TYPE, guid_major_type);
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeByIndex(DWORD index, _Outptr_ IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetMediaTypeByIndex(DWORD index, _Outptr_ IMFMediaType ** ppmt)
 {
 	HRESULT hr = S_OK;
 	do
@@ -450,7 +450,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeByIndex(DWORD 
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeCount(__RPC__out DWORD * tc)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetMediaTypeCount(__RPC__out DWORD * tc)
 {
 	HRESULT hr = S_OK;
 	do
@@ -472,7 +472,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetMediaTypeCount(__RPC__o
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::IsMediaTypeSupported(IMFMediaType * pmt, _Outptr_opt_result_maybenull_ IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::sink::video::multiview::stream::IsMediaTypeSupported(IMFMediaType * pmt, _Outptr_opt_result_maybenull_ IMFMediaType ** ppmt)
 {
 	HRESULT hr = S_OK;
 	GUID sub_type = GUID_NULL;
@@ -527,7 +527,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::IsMediaTypeSupported(IMFMe
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::SetCurrentMediaType(IMFMediaType * pmt)
+HRESULT solids::lib::mf::sink::video::multiview::stream::SetCurrentMediaType(IMFMediaType * pmt)
 {
 	if (!pmt)
 		return E_POINTER;
@@ -536,7 +536,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::SetCurrentMediaType(IMFMed
 	MFRatio fps = { 0, 0 };
 	GUID guid_sub_type = GUID_NULL;
 
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 	do
 	{
 		hr = check_shutdown();
@@ -650,7 +650,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::SetCurrentMediaType(IMFMed
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::GetService(__RPC__in REFGUID guid_service, __RPC__in REFIID iid, __RPC__deref_out_opt LPVOID * ppv)
+HRESULT solids::lib::mf::sink::video::multiview::stream::GetService(__RPC__in REFGUID guid_service, __RPC__in REFIID iid, __RPC__deref_out_opt LPVOID * ppv)
 {
 	IMFGetService * get_service = NULL;
 	HRESULT hr = _sink->QueryInterface(IID_PPV_ARGS(&get_service));
@@ -661,16 +661,16 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::GetService(__RPC__in REFGU
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::set_uuid(LPCTSTR uuid)
+HRESULT solids::lib::mf::sink::video::multiview::stream::set_uuid(LPCTSTR uuid)
 {
 	wcsncpy_s(_uuid, uuid, wcslen(uuid));
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::process(IMFSample * sample)
+HRESULT solids::lib::mf::sink::video::multiview::stream::process(IMFSample * sample)
 {
 	HRESULT hr = S_OK;
-	if (_consume_data == sld::lib::mf::sink::video::multiview::stream::consume_state_t::drop_samples)
+	if (_consume_data == solids::lib::mf::sink::video::multiview::stream::consume_state_t::drop_samples)
 		return hr;
 
 	do
@@ -703,7 +703,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::process(IMFSample * sample
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::get_max_rate(BOOL thin, float * rate)
+HRESULT solids::lib::mf::sink::video::multiview::stream::get_max_rate(BOOL thin, float * rate)
 {
 	HRESULT hr = S_OK;
 	DWORD monitor_refresh_rate = 0;
@@ -751,11 +751,11 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::get_max_rate(BOOL thin, fl
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::initialize(IMFMediaSink * parent, sld::lib::mf::sink::video::multiview::renderer * renderer)
+HRESULT solids::lib::mf::sink::video::multiview::stream::initialize(IMFMediaSink * parent, solids::lib::mf::sink::video::multiview::renderer * renderer)
 {
 	HRESULT hr = S_OK;
 	if (SUCCEEDED(hr))
-		hr = sld::lib::mf::attributes<IMFAttributes>::initialize();
+		hr = solids::lib::mf::attributes<IMFAttributes>::initialize();
 
 	// Create the event queue helper.
 	if (SUCCEEDED(hr))
@@ -782,7 +782,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::initialize(IMFMediaSink * 
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::release(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::release(void)
 {
 	_is_shutdown = TRUE;
 	if (_event_queue)
@@ -791,26 +791,26 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::release(void)
 	MFUnlockWorkQueue(_work_queue_id);
 	_samples_to_process.clear();
 
-	sld::lib::mf::safe_release(_sink);
-	sld::lib::mf::safe_release(_event_queue);
-	sld::lib::mf::safe_release(_renderer);
-	sld::lib::mf::safe_release(_current_type);
+	solids::lib::mf::safe_release(_sink);
+	solids::lib::mf::safe_release(_event_queue);
+	solids::lib::mf::safe_release(_renderer);
+	solids::lib::mf::safe_release(_current_type);
 
 	return MF_E_SHUTDOWN;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::pause(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::pause(void)
 {
-	HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::pause);
+	HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::pause);
 	if (SUCCEEDED(hr))
 	{
 		_state = state_t::paused;
-		hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::pause);
+		hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::pause);
 	}
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::preroll(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::preroll(void)
 {
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -828,13 +828,13 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::preroll(void)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::restart(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::restart(void)
 {
-	HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::restart);
+	HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::restart);
 	if (SUCCEEDED(hr))
 	{
 		_state = state_t::started;
-		hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::restart);
+		hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::restart);
 	}
 	return hr;
 }
@@ -863,12 +863,12 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::restart(void)
 //    return MF_E_SHUTDOWN;
 //}
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::start(MFTIME start)
+HRESULT solids::lib::mf::sink::video::multiview::stream::start(MFTIME start)
 {
 	HRESULT hr = S_OK;
 	do
 	{
-		hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::start);
+		hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::start);
 		if (FAILED(hr))
 			break;
 
@@ -876,7 +876,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::start(MFTIME start)
 			_stime = start;        // We're starting from a "new" position, Cache the start time.
 
 		_state = state_t::started;
-		hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::start);
+		hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::start);
 
 	} while (FALSE);
 
@@ -884,18 +884,18 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::start(MFTIME start)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::stop(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::stop(void)
 {
-	HRESULT hr = validate_operation(sld::lib::mf::sink::async_operation::type_t::stop);
+	HRESULT hr = validate_operation(solids::lib::mf::sink::async_operation::type_t::stop);
 	if (SUCCEEDED(hr))
 	{
 		_state = state_t::stopped;
-		hr = queue_async_operation(sld::lib::mf::sink::async_operation::type_t::stop);
+		hr = queue_async_operation(solids::lib::mf::sink::async_operation::type_t::stop);
 	}
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_process_sample(sld::lib::mf::sink::async_operation * operation)
+HRESULT solids::lib::mf::sink::video::multiview::stream::dispatch_process_sample(solids::lib::mf::sink::async_operation * operation)
 {
 	assert(operation != NULL);
 
@@ -918,7 +918,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_process_sample(sl
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::multiview::stream::check_shutdown(void) const
 {
 	if (_is_shutdown)
 		return MF_E_SHUTDOWN;
@@ -926,20 +926,20 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::check_shutdown(void) const
 		return S_OK;
 }
 
-inline HRESULT sld::lib::mf::sink::video::multiview::stream::get_fps(IMFMediaType * type, MFRatio * ratio)
+inline HRESULT solids::lib::mf::sink::video::multiview::stream::get_fps(IMFMediaType * type, MFRatio * ratio)
 {
 	return MFGetAttributeRatio(type, MF_MT_FRAME_RATE, (UINT32*)&ratio->Numerator, (UINT32*)&ratio->Denominator);
 }
 
-BOOL sld::lib::mf::sink::video::multiview::stream::need_more_samples(void)
+BOOL solids::lib::mf::sink::video::multiview::stream::need_more_samples(void)
 {
 	const DWORD samples_in_flight = _samples_to_process.get_count() + _noutstanding_sample_requests;
 	return samples_in_flight < SAMPLE_QUEUE_HIWATER_THRESHOLD;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback(IMFAsyncResult * ar)
+HRESULT solids::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback(IMFAsyncResult * ar)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (FAILED(hr))
@@ -950,13 +950,13 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback
 	hr = ar->GetState(&state);
 	if (SUCCEEDED(hr))
 	{
-		sld::lib::mf::sink::async_operation * aop = (sld::lib::mf::sink::async_operation*)state;
+		solids::lib::mf::sink::async_operation * aop = (solids::lib::mf::sink::async_operation*)state;
 
 		int32_t op = aop->op();
 		switch (op)
 		{
-		case sld::lib::mf::sink::async_operation::type_t::start:
-		case sld::lib::mf::sink::async_operation::type_t::restart:
+		case solids::lib::mf::sink::async_operation::type_t::start:
+		case solids::lib::mf::sink::async_operation::type_t::restart:
 			hr = QueueEvent(MEStreamSinkStarted, GUID_NULL, hr, NULL); // Send MEStreamSinkStarted.
 			if (SUCCEEDED(hr))
 			{
@@ -969,7 +969,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback
 				hr = process_samples_from_queue(_consume_data);
 
 			break;
-		case sld::lib::mf::sink::async_operation::type_t::stop:
+		case solids::lib::mf::sink::async_operation::type_t::stop:
 			_renderer->SetFullscreen(FALSE);
 			Flush();
 
@@ -978,23 +978,23 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::dispatch_workitem_callback
 
 			break;
 
-		case sld::lib::mf::sink::async_operation::type_t::pause:
+		case solids::lib::mf::sink::async_operation::type_t::pause:
 			hr = QueueEvent(MEStreamSinkPaused, GUID_NULL, hr, NULL);
 			break;
 
-		case sld::lib::mf::sink::async_operation::type_t::process_sample:
-		case sld::lib::mf::sink::async_operation::type_t::place_marker:
+		case solids::lib::mf::sink::async_operation::type_t::process_sample:
+		case solids::lib::mf::sink::async_operation::type_t::place_marker:
 			if (!(_waiting_for_clock_start))
 				hr = dispatch_process_sample(aop);
 			break;
 		}
 	}
 
-	sld::lib::mf::safe_release(state);
+	solids::lib::mf::safe_release(state);
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::process_samples_from_queue(int32_t consume_state)
+HRESULT solids::lib::mf::sink::video::multiview::stream::process_samples_from_queue(int32_t consume_state)
 {
 	HRESULT hr = S_OK;
 	IUnknown * unk = NULL;
@@ -1046,33 +1046,33 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::process_samples_from_queue
 			}
 		}
 
-		sld::lib::mf::safe_release(unk);
-		sld::lib::mf::safe_release(pmarker);
-		sld::lib::mf::safe_release(sample);
-		sld::lib::mf::safe_release(outsample);
+		solids::lib::mf::safe_release(unk);
+		solids::lib::mf::safe_release(pmarker);
+		solids::lib::mf::safe_release(sample);
+		solids::lib::mf::safe_release(outsample);
 
 		if (!process_more_samples)
 			break;
 	}
-	sld::lib::mf::safe_release(unk);
+	solids::lib::mf::safe_release(unk);
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::queue_async_operation(int32_t op)
+HRESULT solids::lib::mf::sink::video::multiview::stream::queue_async_operation(int32_t op)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::sink::async_operation * aop = new sld::lib::mf::sink::async_operation(op); // Created with ref count = 1
+	solids::lib::mf::sink::async_operation * aop = new solids::lib::mf::sink::async_operation(op); // Created with ref count = 1
 	if (!aop)
 		hr = E_OUTOFMEMORY;
 
 	if (SUCCEEDED(hr))
 		hr = MFPutWorkItem(_work_queue_id, &_work_queue_cb, aop);
 
-	sld::lib::mf::safe_release(aop);  // Releases ref count
+	solids::lib::mf::safe_release(aop);  // Releases ref count
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::request_sample(void)
+HRESULT solids::lib::mf::sink::video::multiview::stream::request_sample(void)
 {
 	HRESULT hr = S_OK;
 	while (need_more_samples())
@@ -1087,7 +1087,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::request_sample(void)
 	}
 	return hr;
 }
-HRESULT sld::lib::mf::sink::video::multiview::stream::send_marker_event(IMarker* marker, int32_t consume_state)
+HRESULT solids::lib::mf::sink::video::multiview::stream::send_marker_event(IMarker* marker, int32_t consume_state)
 {
 	HRESULT hr = S_OK;
 	HRESULT status = S_OK;  // Status code for marker event.
@@ -1110,7 +1110,7 @@ HRESULT sld::lib::mf::sink::video::multiview::stream::send_marker_event(IMarker*
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::stream::validate_operation(int32_t op)
+HRESULT solids::lib::mf::sink::video::multiview::stream::validate_operation(int32_t op)
 {
     HRESULT hr = S_OK;
     BOOL transition = _valid_state_mat[_state][op];

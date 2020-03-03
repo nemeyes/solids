@@ -4,7 +4,7 @@
 #include "h2645_buffer_sink.h"
 #include "rtsp_client.h"
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -13,13 +13,13 @@ namespace sld
 			namespace rtsp
 			{
 				class client::h265_buffer_sink
-					: public sld::lib::net::rtsp::client::h2645_buffer_sink
+					: public solids::lib::net::rtsp::client::h2645_buffer_sink
 				{
 				public:
-					static sld::lib::net::rtsp::client::h265_buffer_sink * createNew(sld::lib::net::rtsp::client::core * front, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
+					static solids::lib::net::rtsp::client::h265_buffer_sink * createNew(solids::lib::net::rtsp::client::core * front, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
 
 				protected:
-					h265_buffer_sink(sld::lib::net::rtsp::client::core * front, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
+					h265_buffer_sink(solids::lib::net::rtsp::client::core * front, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size);
 					virtual ~h265_buffer_sink(void);
 				};
 			};

@@ -13,14 +13,14 @@
 #define MAX_VIDEO_BUFFER_COUNT	MIN_VIDEO_BUFFER_COUNT*100
 #define MAX_AUDIO_BUFFER_COUNT	MIN_AUDIO_BUFFER_COUNT*100
 
-sld::lib::mf::source::rtsp::source::source(void)
+solids::lib::mf::source::rtsp::source::source(void)
 	: _work_queue_id(MFASYNC_CALLBACK_QUEUE_STANDARD)
-	, _work_queue_cb(this, &sld::lib::mf::source::rtsp::source::dispatch_workitem_cb)
-	, _state(sld::lib::mf::source::rtsp::source::state_t::invalid)
+	, _work_queue_cb(this, &solids::lib::mf::source::rtsp::source::dispatch_workitem_cb)
+	, _state(solids::lib::mf::source::rtsp::source::state_t::invalid)
 #if defined(WITH_FFRTSPCLIENT)
-	, _video_codec(sld::lib::net::rtsp::ff::client::video_codec_t::unknown)
+	, _video_codec(solids::lib::net::rtsp::ff::client::video_codec_t::unknown)
 #else
-	, _video_codec(sld::lib::net::rtsp::client::video_codec_t::unknown)
+	, _video_codec(solids::lib::net::rtsp::client::video_codec_t::unknown)
 #endif
 	, _video_wait_idr(FALSE)
 	, _video_start_time(-1)
@@ -30,17 +30,17 @@ sld::lib::mf::source::rtsp::source::source(void)
 	::InitializeSRWLock(&_samples_lock);
 }
 
-sld::lib::mf::source::rtsp::source::~source(void)
+solids::lib::mf::source::rtsp::source::~source(void)
 {
 	Shutdown();
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_instance(sld::lib::mf::source::rtsp::source ** source)
+HRESULT solids::lib::mf::source::rtsp::source::create_instance(solids::lib::mf::source::rtsp::source ** source)
 {
 	HRESULT hr = E_FAIL;
 	do
 	{
-		sld::lib::mf::source::rtsp::source * psource = new sld::lib::mf::source::rtsp::source();
+		solids::lib::mf::source::rtsp::source * psource = new solids::lib::mf::source::rtsp::source();
 		if (psource == NULL)
 			break;
 		hr = psource->initialize();
@@ -50,7 +50,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_instance(sld::lib::mf::source
 		*source = psource;
 		(*source)->AddRef();
 
-		sld::lib::mf::safe_release(psource);
+		solids::lib::mf::safe_release(psource);
 
 		hr = S_OK;
 
@@ -59,7 +59,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_instance(sld::lib::mf::source
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::QueryInterface(REFIID iid, void ** ppv)
+HRESULT solids::lib::mf::source::rtsp::source::QueryInterface(REFIID iid, void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -78,20 +78,20 @@ HRESULT sld::lib::mf::source::rtsp::source::QueryInterface(REFIID iid, void ** p
 	return S_OK;
 }
 
-ULONG sld::lib::mf::source::rtsp::source::AddRef(void)
+ULONG solids::lib::mf::source::rtsp::source::AddRef(void)
 { 
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
-ULONG sld::lib::mf::source::rtsp::source::Release(void)
+ULONG solids::lib::mf::source::rtsp::source::Release(void)
 { 
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * state)
+HRESULT solids::lib::mf::source::rtsp::source::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * state)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 	do
 	{
 		hr = check_shutdown();
@@ -107,10 +107,10 @@ HRESULT sld::lib::mf::source::rtsp::source::BeginGetEvent(IMFAsyncCallback * cal
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::EndGetEvent(IMFAsyncResult * result, IMFMediaEvent ** evt)
+HRESULT solids::lib::mf::source::rtsp::source::EndGetEvent(IMFAsyncResult * result, IMFMediaEvent ** evt)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 	do
 	{
 		hr = check_shutdown();
@@ -126,7 +126,7 @@ HRESULT sld::lib::mf::source::rtsp::source::EndGetEvent(IMFAsyncResult * result,
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::GetEvent(DWORD flags, IMFMediaEvent ** evt)
+HRESULT solids::lib::mf::source::rtsp::source::GetEvent(DWORD flags, IMFMediaEvent ** evt)
 {
 	// NOTE: 
 	// GetEvent can block indefinitely, so we don't hold the critical 
@@ -137,7 +137,7 @@ HRESULT sld::lib::mf::source::rtsp::source::GetEvent(DWORD flags, IMFMediaEvent 
 
 	do
 	{
-		sld::lib::mf::auto_lock mutex(&_lock);
+		solids::lib::mf::auto_lock mutex(&_lock);
 		hr = check_shutdown();
 		if (FAILED(hr))
 			break;
@@ -154,10 +154,10 @@ HRESULT sld::lib::mf::source::rtsp::source::GetEvent(DWORD flags, IMFMediaEvent 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::QueueEvent(MediaEventType met, REFGUID guid_ext_type, HRESULT status, const PROPVARIANT * value)
+HRESULT solids::lib::mf::source::rtsp::source::QueueEvent(MediaEventType met, REFGUID guid_ext_type, HRESULT status, const PROPVARIANT * value)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 	do
 	{
 		hr = check_shutdown();
@@ -173,13 +173,13 @@ HRESULT sld::lib::mf::source::rtsp::source::QueueEvent(MediaEventType met, REFGU
 //-------------------------------------------------------------------
 // IMFMediaSource methods
 //-------------------------------------------------------------------
-HRESULT sld::lib::mf::source::rtsp::source::CreatePresentationDescriptor(IMFPresentationDescriptor ** pd)
+HRESULT solids::lib::mf::source::rtsp::source::CreatePresentationDescriptor(IMFPresentationDescriptor ** pd)
 {
 	if (!pd)
 		return E_POINTER;
 
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -204,13 +204,13 @@ HRESULT sld::lib::mf::source::rtsp::source::CreatePresentationDescriptor(IMFPres
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::GetCharacteristics(DWORD * characteristics)
+HRESULT solids::lib::mf::source::rtsp::source::GetCharacteristics(DWORD * characteristics)
 {
 	if (!characteristics)
 		return E_POINTER;
 
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -224,10 +224,10 @@ HRESULT sld::lib::mf::source::rtsp::source::GetCharacteristics(DWORD * character
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::Pause(void)
+HRESULT solids::lib::mf::source::rtsp::source::Pause(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -235,31 +235,31 @@ HRESULT sld::lib::mf::source::rtsp::source::Pause(void)
 		if (FAILED(hr))
 			break;
 
-		hr = queue_async_operation(sld::lib::mf::source::rtsp::async_operation::type_t::pause);
+		hr = queue_async_operation(solids::lib::mf::source::rtsp::async_operation::type_t::pause);
 
 	} while (FALSE);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::Shutdown(void)
+HRESULT solids::lib::mf::source::rtsp::source::Shutdown(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 	
 #if defined(WITH_FFRTSPCLIENT)
-	sld::lib::net::rtsp::ff::client::stop();
+	solids::lib::net::rtsp::ff::client::stop();
 #else
-	sld::lib::net::rtsp::client::stop();
+	solids::lib::net::rtsp::client::stop();
 #endif
-	ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+	ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 	do
 	{
 		hr = check_shutdown();
 		if (FAILED(hr))
 			break;
 
-		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
+		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
 		for (iter = _streams.begin(); iter != _streams.end(); iter++)
 		{
 			stream = iter->second;
@@ -280,12 +280,12 @@ HRESULT sld::lib::mf::source::rtsp::source::Shutdown(void)
 
 	release_samples();
 
-	_state = sld::lib::mf::source::rtsp::source::state_t::shutdown;
+	_state = solids::lib::mf::source::rtsp::source::state_t::shutdown;
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::Start(IMFPresentationDescriptor * pd, const GUID * guid_time_fmt, const PROPVARIANT * position)
+HRESULT solids::lib::mf::source::rtsp::source::Start(IMFPresentationDescriptor * pd, const GUID * guid_time_fmt, const PROPVARIANT * position)
 {
 	HRESULT hr = S_OK;
 
@@ -299,12 +299,12 @@ HRESULT sld::lib::mf::source::rtsp::source::Start(IMFPresentationDescriptor * pd
 		return MF_E_UNSUPPORTED_TIME_FORMAT;
 	if (position->vt == VT_I8)
 	{
-		if ((_state != sld::lib::mf::source::rtsp::source::state_t::stopped) || (position->hVal.QuadPart!=0))
+		if ((_state != solids::lib::mf::source::rtsp::source::state_t::stopped) || (position->hVal.QuadPart!=0))
 			return MF_E_INVALIDREQUEST;
 	}
 
-	sld::lib::mf::auto_lock mutex(&_lock);
-	sld::lib::mf::source::rtsp::async_operation  * aop = NULL;
+	solids::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::source::rtsp::async_operation  * aop = NULL;
 	do
 	{
 		hr = check_shutdown();
@@ -319,7 +319,7 @@ HRESULT sld::lib::mf::source::rtsp::source::Start(IMFPresentationDescriptor * pd
 		if (FAILED(hr))
 			break;
 
-		aop = new sld::lib::mf::source::rtsp::start_async_operation(pd);
+		aop = new solids::lib::mf::source::rtsp::start_async_operation(pd);
 		aop->data(*position);
 		hr = queue_async_operation(aop);
 
@@ -329,10 +329,10 @@ HRESULT sld::lib::mf::source::rtsp::source::Start(IMFPresentationDescriptor * pd
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::Stop(void)
+HRESULT solids::lib::mf::source::rtsp::source::Stop(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -344,36 +344,36 @@ HRESULT sld::lib::mf::source::rtsp::source::Stop(void)
 		if (FAILED(hr))
 			break;
 
-		hr = queue_async_operation(sld::lib::mf::source::rtsp::async_operation::type_t::stop);
+		hr = queue_async_operation(solids::lib::mf::source::rtsp::async_operation::type_t::stop);
 
 	} while (FALSE);
 	
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::begin_open(LPCWSTR url, IMFAsyncCallback * callback, IUnknown * state) 
+HRESULT solids::lib::mf::source::rtsp::source::begin_open(LPCWSTR url, IMFAsyncCallback * callback, IUnknown * state) 
 {
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	if (!url)
 		return E_POINTER;
 	if (!callback)
 		return E_POINTER;
-	if (_state != sld::lib::mf::source::rtsp::source::state_t::invalid)
+	if (_state != solids::lib::mf::source::rtsp::source::state_t::invalid)
 		return MF_E_INVALIDREQUEST;
 
 	HRESULT hr = E_FAIL;
 	do
 	{
 		char * ascii_url = NULL;
-		sld::lib::stringhelper::convert_wide2multibyte((LPWSTR)url, &ascii_url);
+		solids::lib::stringhelper::convert_wide2multibyte((LPWSTR)url, &ascii_url);
 
 		if (ascii_url)
 		{
 #if defined(WITH_FFRTSPCLIENT)
-			sld::lib::net::rtsp::ff::client::play(ascii_url, sld::lib::net::rtsp::ff::client::transport_t::rtp_over_tcp, 10);
+			solids::lib::net::rtsp::ff::client::play(ascii_url, solids::lib::net::rtsp::ff::client::transport_t::rtp_over_tcp, 10);
 #else
-			sld::lib::net::rtsp::client::play(ascii_url, NULL, NULL, sld::lib::net::rtsp::client::transport_option_t::rtp_over_tcp, sld::lib::net::rtsp::client::media_type_t::video | sld::lib::net::rtsp::client::media_type_t::audio, 10);
+			solids::lib::net::rtsp::client::play(ascii_url, NULL, NULL, solids::lib::net::rtsp::client::transport_option_t::rtp_over_tcp, solids::lib::net::rtsp::client::media_type_t::video | solids::lib::net::rtsp::client::media_type_t::audio, 10);
 #endif
 			free(ascii_url);
 			ascii_url = NULL;
@@ -384,15 +384,15 @@ HRESULT sld::lib::mf::source::rtsp::source::begin_open(LPCWSTR url, IMFAsyncCall
 		hr = MFCreateAsyncResult(NULL, callback, state, &_begin_open_result);
 
 		//_disable_audio = false;
-		_state = sld::lib::mf::source::rtsp::source::state_t::opening;
+		_state = solids::lib::mf::source::rtsp::source::state_t::opening;
 	} while (FALSE);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::end_open(IMFAsyncResult * result) 
+HRESULT solids::lib::mf::source::rtsp::source::end_open(IMFAsyncResult * result) 
 {
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	HRESULT hr = S_OK;
 	hr = result->GetStatus();
@@ -401,16 +401,16 @@ HRESULT sld::lib::mf::source::rtsp::source::end_open(IMFAsyncResult * result)
 	{
 		// The source is not designed to recover after failing to open. Switch to shut-down state.
 #if defined(WITH_FFRTSPCLIENT)
-		sld::lib::net::rtsp::ff::client::stop();
+		solids::lib::net::rtsp::ff::client::stop();
 #else
-		sld::lib::net::rtsp::client::stop();
+		solids::lib::net::rtsp::client::stop();
 #endif
 		Shutdown();
 	}
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::queue_async_operation(sld::lib::mf::source::rtsp::async_operation * aop)
+HRESULT solids::lib::mf::source::rtsp::source::queue_async_operation(solids::lib::mf::source::rtsp::async_operation * aop)
 {
 	HRESULT hr = S_OK;
 	if (!aop)
@@ -422,10 +422,10 @@ HRESULT sld::lib::mf::source::rtsp::source::queue_async_operation(sld::lib::mf::
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::queue_async_operation(int32_t op)
+HRESULT solids::lib::mf::source::rtsp::source::queue_async_operation(int32_t op)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::source::rtsp::async_operation * aop= new sld::lib::mf::source::rtsp::async_operation(op);
+	solids::lib::mf::source::rtsp::async_operation * aop= new solids::lib::mf::source::rtsp::async_operation(op);
 
 	if (!aop)
 		hr = E_OUTOFMEMORY;
@@ -437,7 +437,7 @@ HRESULT sld::lib::mf::source::rtsp::source::queue_async_operation(int32_t op)
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::initialize(void)
+HRESULT solids::lib::mf::source::rtsp::source::initialize(void)
 {
 	HRESULT hr = E_FAIL;
 	hr = MFCreateEventQueue(&_event_queue);
@@ -446,7 +446,7 @@ HRESULT sld::lib::mf::source::rtsp::source::initialize(void)
 }
 
 /*
-HRESULT sld::lib::mf::source::rtsp::source::release(void)
+HRESULT solids::lib::mf::source::rtsp::source::release(void)
 {
 	if (_event_queue)
 		_event_queue->Shutdown();
@@ -457,9 +457,9 @@ HRESULT sld::lib::mf::source::rtsp::source::release(void)
 }
 */
 
-HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult * ar)
+HRESULT solids::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult * ar)
 {
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (FAILED(hr))
@@ -469,29 +469,29 @@ HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult 
 	hr = ar->GetState(&state);
 	if (SUCCEEDED(hr))
 	{
-		sld::lib::mf::source::rtsp::async_operation * aop = (sld::lib::mf::source::rtsp::async_operation*)state;
+		solids::lib::mf::source::rtsp::async_operation * aop = (solids::lib::mf::source::rtsp::async_operation*)state;
 		int32_t op = aop->op();
 		switch (op)
 		{
-			case sld::lib::mf::source::rtsp::async_operation::type_t::start:
+			case solids::lib::mf::source::rtsp::async_operation::type_t::start:
 			{
 				HRESULT hr = S_OK;
 				IMFPresentationDescriptor * pd = NULL;
 				BOOL sent_events = FALSE;
 
-				sld::lib::mf::source::rtsp::start_async_operation * saop = static_cast<sld::lib::mf::source::rtsp::start_async_operation*>(aop);
+				solids::lib::mf::source::rtsp::start_async_operation * saop = static_cast<solids::lib::mf::source::rtsp::start_async_operation*>(aop);
 				saop->presentation_descriptor(&pd);
 
 				BOOL was_selected = FALSE;
 				BOOL selected = FALSE;
 				DWORD stream_id = 0;
 				IMFStreamDescriptor * sd = NULL;
-				ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+				ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 
 				IMFMediaEvent* evt = NULL;
 				do
 				{
-					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
+					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
 					int32_t index = 0;
 					for (iter = _streams.begin(); iter != _streams.end(); iter++, index++)
 					{
@@ -550,20 +550,20 @@ HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult 
 						(void)_event_queue->QueueEventParamVar(MESourceStarted, GUID_NULL, hr, NULL);
 					}
 
-					_state = sld::lib::mf::source::rtsp::source::state_t::started;
+					_state = solids::lib::mf::source::rtsp::source::state_t::started;
 				} while (FALSE);
 
 				safe_release(pd);
 				safe_release(evt);
 				break;
 			}
-			case sld::lib::mf::source::rtsp::async_operation::type_t::stop:
+			case solids::lib::mf::source::rtsp::async_operation::type_t::stop:
 			{
 				hr = S_OK;
-				ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+				ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 				do
 				{
-					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
+					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
 					for (iter = _streams.begin(); iter != _streams.end(); iter++)
 					{
 						stream = iter->second;
@@ -578,27 +578,27 @@ HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult 
 						break;
 
 					release_samples();
-					_state = sld::lib::mf::source::rtsp::source::state_t::stopped;
+					_state = solids::lib::mf::source::rtsp::source::state_t::stopped;
 
 				} while (FALSE);
 
 				(void)_event_queue->QueueEventParamVar(MESourceStopped, GUID_NULL, S_OK, NULL);
 				break;
 			}
-			case sld::lib::mf::source::rtsp::async_operation::type_t::pause:
+			case solids::lib::mf::source::rtsp::async_operation::type_t::pause:
 			{
 				hr = S_OK;
-				ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+				ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 
 				do
 				{
-					if (_state != sld::lib::mf::source::rtsp::source::state_t::started)
+					if (_state != solids::lib::mf::source::rtsp::source::state_t::started)
 					{
 						hr = MF_E_INVALID_STATE_TRANSITION;
 						break;
 					}
 
-					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
+					std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
 					for (iter = _streams.begin(); iter != _streams.end(); iter++)
 					{
 						stream = iter->second;
@@ -609,7 +609,7 @@ HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult 
 							break;
 					}
 
-					_state = sld::lib::mf::source::rtsp::source::state_t::paused;
+					_state = solids::lib::mf::source::rtsp::source::state_t::paused;
 
 				} while (FALSE);
 
@@ -626,20 +626,20 @@ HRESULT sld::lib::mf::source::rtsp::source::dispatch_workitem_cb(IMFAsyncResult 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::check_shutdown(void) const
+HRESULT solids::lib::mf::source::rtsp::source::check_shutdown(void) const
 {
-	return _state == sld::lib::mf::source::rtsp::source::state_t::shutdown ? MF_E_SHUTDOWN : S_OK;
+	return _state == solids::lib::mf::source::rtsp::source::state_t::shutdown ? MF_E_SHUTDOWN : S_OK;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::is_initialized(void) const
+HRESULT solids::lib::mf::source::rtsp::source::is_initialized(void) const
 {
-	if (_state == sld::lib::mf::source::rtsp::source::state_t::opening || _state == sld::lib::mf::source::rtsp::source::state_t::invalid)
+	if (_state == solids::lib::mf::source::rtsp::source::state_t::opening || _state == solids::lib::mf::source::rtsp::source::state_t::invalid)
 		return MF_E_NOT_INITIALIZED;
 	else
 		return S_OK;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::validate_presentation_descriptor(IMFPresentationDescriptor * pd)
+HRESULT solids::lib::mf::source::rtsp::source::validate_presentation_descriptor(IMFPresentationDescriptor * pd)
 {
 	HRESULT hr = S_OK;
 	BOOL selected = FALSE;
@@ -669,17 +669,17 @@ HRESULT sld::lib::mf::source::rtsp::source::validate_presentation_descriptor(IMF
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::initialize_presentation_descriptor(void)
+HRESULT solids::lib::mf::source::rtsp::source::initialize_presentation_descriptor(void)
 {
 	HRESULT hr = S_OK;
 
-	if (_state != sld::lib::mf::source::rtsp::source::state_t::opening)
+	if (_state != solids::lib::mf::source::rtsp::source::state_t::opening)
 		return hr;
 
 	do
 	{
-		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
-		iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
+		iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 		if (iter == _streams.end())
 			return hr;
 		DWORD nstream = DWORD(_streams.size());
@@ -689,7 +689,7 @@ HRESULT sld::lib::mf::source::rtsp::source::initialize_presentation_descriptor(v
 		DWORD index = 0;
 		for (iter = _streams.begin(); iter != _streams.end(); iter++, index++)
 		{
-			ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = iter->second;
+			ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = iter->second;
 			stream->GetStreamDescriptor(&ppsd[index]);
 		}
 
@@ -711,7 +711,7 @@ HRESULT sld::lib::mf::source::rtsp::source::initialize_presentation_descriptor(v
 			delete[] ppsd;
 		}
 
-		_state = sld::lib::mf::source::rtsp::source::state_t::stopped;
+		_state = solids::lib::mf::source::rtsp::source::state_t::stopped;
 
 		hr = complete_open(S_OK);
 
@@ -720,7 +720,7 @@ HRESULT sld::lib::mf::source::rtsp::source::initialize_presentation_descriptor(v
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_audio_aac_mediatype(IMFMediaType ** mt, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t sampleformat, int32_t channels)
+HRESULT solids::lib::mf::source::rtsp::source::create_audio_aac_mediatype(IMFMediaType ** mt, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t sampleformat, int32_t channels)
 {
 	HRESULT hr = S_OK;
 
@@ -749,19 +749,19 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_aac_mediatype(IMFMediaT
 
 		switch (sampleformat)
 		{
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16 :
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16 :
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32 :
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32 :
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
 		}
@@ -783,7 +783,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_aac_mediatype(IMFMediaT
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_audio_mp3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels)
+HRESULT solids::lib::mf::source::rtsp::source::create_audio_mp3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -811,19 +811,19 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_mp3_mediatype(IMFMediaT
 
 		switch (sampleformat)
 		{
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
 		}
@@ -838,7 +838,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_mp3_mediatype(IMFMediaT
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_audio_ac3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels)
+HRESULT solids::lib::mf::source::rtsp::source::create_audio_ac3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -866,19 +866,19 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_ac3_mediatype(IMFMediaT
 
 		switch (sampleformat)
 		{
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s16:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s32:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_s64:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 32);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
+		case solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_dbl:
 			hr = pmt->SetUINT32(MF_MT_AUDIO_BITS_PER_SAMPLE, 64);
 			break;
 		}
@@ -893,7 +893,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_ac3_mediatype(IMFMediaT
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -959,7 +959,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMedia
 }
 
 
-HRESULT sld::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -1022,28 +1022,28 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMedia
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size)
 {
 	HRESULT hr = S_OK;
 	IMFMediaType * mt = NULL;
 	ATL::CComPtr<IMFStreamDescriptor> sd = NULL;
-	ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+	ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 	ATL::CComPtr<IMFMediaTypeHandler> handler = NULL;
 	do
 	{
 		switch (codec)
 		{
-		case sld::lib::mf::source::rtsp::source::video_codec_t::avc:
+		case solids::lib::mf::source::rtsp::source::video_codec_t::avc:
 			hr = create_video_h264_mediatype(&mt, extradata, extradata_size);
 			break;
-		case sld::lib::mf::source::rtsp::source::video_codec_t::hevc:
+		case solids::lib::mf::source::rtsp::source::video_codec_t::hevc:
 			hr = create_video_hevc_mediatype(&mt, extradata, extradata_size);
 			break;
 		}
 		if (FAILED(hr))
 			break;
 
-		hr = MFCreateStreamDescriptor(sld::lib::mf::source::rtsp::source::media_type_t::video, 1, &mt, &sd);
+		hr = MFCreateStreamDescriptor(solids::lib::mf::source::rtsp::source::media_type_t::video, 1, &mt, &sd);
 		if (FAILED(hr))
 			break;
 
@@ -1055,12 +1055,12 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec
 		if (FAILED(hr))
 			break;
 
-		stream.Attach(new sld::lib::mf::source::rtsp::stream());
-		hr = stream->initialize(this, sd, sld::lib::mf::source::rtsp::source::media_type_t::video);
+		stream.Attach(new solids::lib::mf::source::rtsp::stream());
+		hr = stream->initialize(this, sd, solids::lib::mf::source::rtsp::source::media_type_t::video);
 		if (FAILED(hr))
 			break;
 
-		_streams.insert(std::make_pair(sld::lib::mf::source::rtsp::source::media_type_t::video, stream));
+		_streams.insert(std::make_pair(solids::lib::mf::source::rtsp::source::media_type_t::video, stream));
 
 		//hr = initialize_presentation_descriptor();
 
@@ -1072,32 +1072,32 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_audio_mediatype(int32_t codec, int32_t samplerate, int32_t sampleformat, int32_t channels, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_audio_mediatype(int32_t codec, int32_t samplerate, int32_t sampleformat, int32_t channels, uint8_t * extradata, int32_t extradata_size)
 {
 	HRESULT hr = S_OK;
 
 	IMFMediaType * mt = NULL;
 	ATL::CComPtr<IMFStreamDescriptor> sd = NULL;
-	ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+	ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 	ATL::CComPtr<IMFMediaTypeHandler> handler = NULL;
 	do
 	{
 		switch (codec)
 		{
-		case sld::lib::mf::source::rtsp::source::audio_codec_t::aac:
+		case solids::lib::mf::source::rtsp::source::audio_codec_t::aac:
 			hr = create_audio_aac_mediatype(&mt, extradata, extradata_size, samplerate, sampleformat, channels);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_codec_t::mp3:
+		case solids::lib::mf::source::rtsp::source::audio_codec_t::mp3:
 			hr = create_audio_mp3_mediatype(&mt, samplerate, sampleformat, channels);
 			break;
-		case sld::lib::mf::source::rtsp::source::audio_codec_t::ac3:
+		case solids::lib::mf::source::rtsp::source::audio_codec_t::ac3:
 			hr = create_audio_mp3_mediatype(&mt, samplerate, sampleformat, channels);
 			break;
 		}
 		if (FAILED(hr))
 			break;
 
-		hr = MFCreateStreamDescriptor(sld::lib::mf::source::rtsp::source::media_type_t::audio, 1, &mt, &sd);
+		hr = MFCreateStreamDescriptor(solids::lib::mf::source::rtsp::source::media_type_t::audio, 1, &mt, &sd);
 		if (FAILED(hr))
 			break;
 
@@ -1109,12 +1109,12 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_mediatype(int32_t codec
 		if (FAILED(hr))
 			break;
 
-		stream.Attach(new sld::lib::mf::source::rtsp::stream());
-		hr = stream->initialize(this, sd, sld::lib::mf::source::rtsp::source::media_type_t::audio);
+		stream.Attach(new solids::lib::mf::source::rtsp::stream());
+		hr = stream->initialize(this, sd, solids::lib::mf::source::rtsp::source::media_type_t::audio);
 		if (FAILED(hr))
 			break;
 
-		_streams.insert(std::make_pair(sld::lib::mf::source::rtsp::source::media_type_t::audio, stream));
+		_streams.insert(std::make_pair(solids::lib::mf::source::rtsp::source::media_type_t::audio, stream));
 
 	} while (0);
 
@@ -1123,7 +1123,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_mediatype(int32_t codec
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_video_sample(IMFSample** sample, const uint8_t* extradata, int32_t extradata_size, const uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_sample(IMFSample** sample, const uint8_t* extradata, int32_t extradata_size, const uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFSample> psample = NULL;
@@ -1198,7 +1198,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_sample(IMFSample** samp
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_video_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFSample> psample = NULL;
@@ -1275,7 +1275,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_video_sample(IMFSample ** sam
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::create_audio_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
+HRESULT solids::lib::mf::source::rtsp::source::create_audio_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFSample> psample = NULL;
@@ -1344,7 +1344,7 @@ HRESULT sld::lib::mf::source::rtsp::source::create_audio_sample(IMFSample ** sam
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::complete_open(const HRESULT hr_status)
+HRESULT solids::lib::mf::source::rtsp::source::complete_open(const HRESULT hr_status)
 {
 	HRESULT hr = S_OK;
 
@@ -1368,21 +1368,21 @@ HRESULT sld::lib::mf::source::rtsp::source::complete_open(const HRESULT hr_statu
 	return hr;
 }
 
-void sld::lib::mf::source::rtsp::source::error_handle(const HRESULT hr)
+void solids::lib::mf::source::rtsp::source::error_handle(const HRESULT hr)
 {
-	if (_state == sld::lib::mf::source::rtsp::source::state_t::opening)
+	if (_state == solids::lib::mf::source::rtsp::source::state_t::opening)
 	{
 		complete_open(hr);
 	}
-	else if(_state!= sld::lib::mf::source::rtsp::source::state_t::shutdown)
+	else if(_state!= solids::lib::mf::source::rtsp::source::state_t::shutdown)
 	{
 		QueueEvent(MEError, GUID_NULL, hr, NULL);
 	}
 }
 
-void sld::lib::mf::source::rtsp::source::release_samples(void)
+void solids::lib::mf::source::rtsp::source::release_samples(void)
 {
-	sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+	solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 
 	std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator iter;
 	for (iter = _samples.begin(); iter != _samples.end(); iter++)
@@ -1398,22 +1398,22 @@ void sld::lib::mf::source::rtsp::source::release_samples(void)
 	_samples.clear();
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::get_video_sample(IMFSample ** sample)
+HRESULT solids::lib::mf::source::rtsp::source::get_video_sample(IMFSample ** sample)
 {
 	HRESULT hr = S_OK;
 
-	ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+	ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 	{
 		auto_lock lock(&_stream_lock);
-		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
-		stream_iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
+		stream_iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 		if (stream_iter != _streams.end())
 			stream = stream_iter->second;
 	}
 
-	sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+	solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 	std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator iter;// _samples
-	iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+	iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 	if (iter != _samples.end())
 	{
 		std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>> * vq = iter->second;
@@ -1428,21 +1428,21 @@ HRESULT sld::lib::mf::source::rtsp::source::get_video_sample(IMFSample ** sample
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::source::get_audio_sample(IMFSample ** sample)
+HRESULT solids::lib::mf::source::rtsp::source::get_audio_sample(IMFSample ** sample)
 {
 	HRESULT hr = S_OK;
-	ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+	ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 	{
 		auto_lock lock(&_stream_lock);
-		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
-		stream_iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
+		stream_iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 		if (stream_iter != _streams.end())
 			stream = stream_iter->second;
 	}
 
-	sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+	solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 	std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator iter;
-	iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+	iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 	if (iter != _samples.end())
 	{
 		std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>> * aq = iter->second;
@@ -1455,7 +1455,7 @@ HRESULT sld::lib::mf::source::rtsp::source::get_audio_sample(IMFSample ** sample
 		}
 
 		/*
-		if (stream && _state == sld::lib::mf::source::rtsp::source::state_t::started && !stream->is_buffering() && aq->size() <= MIN_AUDIO_BUFFER_COUNT)
+		if (stream && _state == solids::lib::mf::source::rtsp::source::state_t::started && !stream->is_buffering() && aq->size() <= MIN_AUDIO_BUFFER_COUNT)
 		{
 			hr = QueueEvent(MEBufferingStarted, GUID_NULL, hr, NULL);
 			if (SUCCEEDED(hr))
@@ -1466,25 +1466,25 @@ HRESULT sld::lib::mf::source::rtsp::source::get_audio_sample(IMFSample ** sample
 	return hr;
 }
 
-void sld::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_t* extradata, int32_t extradata_size)
+void solids::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_t* extradata, int32_t extradata_size)
 {
 	HRESULT hr = S_OK;
 	IMFMediaType * pmt = NULL;
 	IMFStreamDescriptor * psd = NULL;
 
-	std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
-	iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+	std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
+	iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 	if (iter == _streams.end())
 	{
 		create_video_mediatype(codec, extradata, extradata_size);
 
-		sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+		solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 		std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator sample_iter;
-		sample_iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+		sample_iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 		if (sample_iter == _samples.end())
 		{
 			std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>* vp = new std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>();
-			_samples.insert(std::make_pair(sld::lib::mf::source::rtsp::source::media_type_t::video, vp));
+			_samples.insert(std::make_pair(solids::lib::mf::source::rtsp::source::media_type_t::video, vp));
 		}
 	}
 
@@ -1499,7 +1499,7 @@ void sld::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_t* 
 	_video_start_time = -1;
 }
 
-void sld::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
+void solids::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
 
@@ -1509,7 +1509,7 @@ void sld::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t n
 	//::OutputDebugStringA(debug);
 	do
 	{
-		if (_video_codec == sld::lib::mf::source::rtsp::source::video_codec_t::avc)
+		if (_video_codec == solids::lib::mf::source::rtsp::source::video_codec_t::avc)
 		{
 			//if ((bytes[4] & 0x1F) == 0x07)
 			//	recvIDR = TRUE;
@@ -1518,7 +1518,7 @@ void sld::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t n
 			if ((bytes[4] & 0x1F) == 0x05)
 				recvIDR = TRUE;
 		}
-		else if (_video_codec == sld::lib::mf::source::rtsp::source::video_codec_t::hevc)
+		else if (_video_codec == solids::lib::mf::source::rtsp::source::video_codec_t::hevc)
 		{
 			//if (((bytes[4] >> 1) & 0x3F) == 0x20)	// vps
 			//	recvIDR = TRUE;
@@ -1544,26 +1544,26 @@ void sld::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t n
 		if (FAILED(hr))
 			return;
 
-		ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+		ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 		{
 			auto_lock lock(&_stream_lock);
-			std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
-			stream_iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+			std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
+			stream_iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 			if (stream_iter != _streams.end())
 				stream = stream_iter->second;
 		}
 
 		{
-			sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+			solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 			std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator iter;// _samples
-			iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::video);
+			iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 			if (iter != _samples.end())
 			{
 				std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>* vq = iter->second;
 				if (vq)
 				{
 					vq->push_back(sample);
-					if (_state == sld::lib::mf::source::rtsp::source::state_t::started)
+					if (_state == solids::lib::mf::source::rtsp::source::state_t::started)
 					{
 						if (stream->is_buffering())
 						{
@@ -1593,33 +1593,33 @@ void sld::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_t n
 	} while (0);
 }
 
-void sld::lib::mf::source::rtsp::source::on_end_video(void)
+void solids::lib::mf::source::rtsp::source::on_end_video(void)
 {
 
 }
 
-void sld::lib::mf::source::rtsp::source::on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels)
+void solids::lib::mf::source::rtsp::source::on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels)
 {
 	HRESULT hr = S_OK;
 	{
-		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator iter;
-		iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+		std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator iter;
+		iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 		if (iter == _streams.end())
 		{
-			create_audio_mediatype(codec, samplerate, sld::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt, channels, extradata, extradata_size);
-			sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+			create_audio_mediatype(codec, samplerate, solids::lib::mf::source::rtsp::source::audio_sample_t::fmt_flt, channels, extradata, extradata_size);
+			solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 			std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator sample_iter;
-			sample_iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+			sample_iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 			if (sample_iter == _samples.end())
 			{
 				std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>* ap = new std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>();
-				_samples.insert(std::make_pair(sld::lib::mf::source::rtsp::source::media_type_t::audio, ap));
+				_samples.insert(std::make_pair(solids::lib::mf::source::rtsp::source::media_type_t::audio, ap));
 			}
 		}
 	}
 }
 
-void sld::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
+void solids::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
 	//char debug[MAX_PATH] = { 0 };
@@ -1632,20 +1632,20 @@ void sld::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t n
 		if (FAILED(hr))
 			return;
 
-		ATL::CComPtr<sld::lib::mf::source::rtsp::stream> stream = NULL;
+		ATL::CComPtr<solids::lib::mf::source::rtsp::stream> stream = NULL;
 		{
 			auto_lock lock(&_stream_lock);
-			std::map<int32_t, ATL::CAdapt<ATL::CComPtr<sld::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
-			stream_iter = _streams.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+			std::map<int32_t, ATL::CAdapt<ATL::CComPtr<solids::lib::mf::source::rtsp::stream>>>::iterator stream_iter;
+			stream_iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 			if (stream_iter != _streams.end())
 				stream = stream_iter->second;
 
 		}
 
 		{
-			sld::lib::exclusive_scopedlock mutex(&_samples_lock);
+			solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 			std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator iter;// _samples
-			iter = _samples.find(sld::lib::mf::source::rtsp::source::media_type_t::audio);
+			iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::audio);
 			if (iter != _samples.end())
 			{
 				std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>* aq = iter->second;
@@ -1654,7 +1654,7 @@ void sld::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t n
 					aq->push_back(sample);
 					if (aq->size() > MIN_AUDIO_BUFFER_COUNT)
 					{
-						if (stream->is_buffering() && _state == sld::lib::mf::source::rtsp::source::state_t::started)
+						if (stream->is_buffering() && _state == solids::lib::mf::source::rtsp::source::state_t::started)
 						{
 							hr = QueueEvent(MEBufferingStopped, GUID_NULL, hr, NULL);
 							if (SUCCEEDED(hr))
@@ -1663,7 +1663,7 @@ void sld::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t n
 					}
 					else
 					{
-						if (!stream->is_buffering() && _state == sld::lib::mf::source::rtsp::source::state_t::started)
+						if (!stream->is_buffering() && _state == solids::lib::mf::source::rtsp::source::state_t::started)
 						{
 							hr = QueueEvent(MEBufferingStarted, GUID_NULL, hr, NULL);
 							if (SUCCEEDED(hr))
@@ -1679,13 +1679,13 @@ void sld::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t n
 	} while (0);
 }
 
-void sld::lib::mf::source::rtsp::source::on_end_audio(void)
+void solids::lib::mf::source::rtsp::source::on_end_audio(void)
 {
 
 }
 
 
-long long sld::lib::mf::source::rtsp::source::elapsed_100nanoseconds(void)
+long long solids::lib::mf::source::rtsp::source::elapsed_100nanoseconds(void)
 {
 	LARGE_INTEGER elapsed_microseconds;
 	LARGE_INTEGER now;

@@ -1,18 +1,18 @@
 #include "mf_rtsp_source_scheme_handler.h"
 #include "mf_rtsp_source.h"
 
-sld::lib::mf::source::rtsp::handler::handler(void)
+solids::lib::mf::source::rtsp::handler::handler(void)
 	: _result(NULL)
 	, _source(NULL)
 {}
 
-sld::lib::mf::source::rtsp::handler::~handler(void)
+solids::lib::mf::source::rtsp::handler::~handler(void)
 {
-	sld::lib::mf::safe_release(_source);
-	sld::lib::mf::safe_release(_result);
+	solids::lib::mf::safe_release(_source);
+	solids::lib::mf::safe_release(_result);
 }
 
-HRESULT sld::lib::mf::source::rtsp::handler::create_instance(IUnknown * unk, REFIID iid, void ** ppv)
+HRESULT solids::lib::mf::source::rtsp::handler::create_instance(IUnknown * unk, REFIID iid, void ** ppv)
 {
 	HRESULT hr = S_OK;
 	if (!ppv)
@@ -20,10 +20,10 @@ HRESULT sld::lib::mf::source::rtsp::handler::create_instance(IUnknown * unk, REF
 	if (unk)
 		return CLASS_E_NOAGGREGATION;
 
-	sld::lib::mf::source::rtsp::handler* handler = NULL;
+	solids::lib::mf::source::rtsp::handler* handler = NULL;
 	do
 	{
-		handler = new sld::lib::mf::source::rtsp::handler();
+		handler = new solids::lib::mf::source::rtsp::handler();
 		if (!handler)
 		{
 			hr = E_OUTOFMEMORY;
@@ -41,7 +41,7 @@ HRESULT sld::lib::mf::source::rtsp::handler::create_instance(IUnknown * unk, REF
 }
 
 // IUnknown
-HRESULT sld::lib::mf::source::rtsp::handler::QueryInterface(REFIID iid, void ** ppv)
+HRESULT solids::lib::mf::source::rtsp::handler::QueryInterface(REFIID iid, void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -61,18 +61,18 @@ HRESULT sld::lib::mf::source::rtsp::handler::QueryInterface(REFIID iid, void ** 
 	return S_OK;
 }
 
-ULONG sld::lib::mf::source::rtsp::handler::AddRef(void)
+ULONG solids::lib::mf::source::rtsp::handler::AddRef(void)
 {
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
-ULONG sld::lib::mf::source::rtsp::handler::Release(void)
+ULONG solids::lib::mf::source::rtsp::handler::Release(void)
 {
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
 // IMFSchemeHandler
-HRESULT sld::lib::mf::source::rtsp::handler::BeginCreateObject(LPCWSTR url, DWORD flags, IPropertyStore *, IUnknown ** unk_cancel_cookie, IMFAsyncCallback * callback, IUnknown * state)
+HRESULT solids::lib::mf::source::rtsp::handler::BeginCreateObject(LPCWSTR url, DWORD flags, IPropertyStore *, IUnknown ** unk_cancel_cookie, IMFAsyncCallback * callback, IUnknown * state)
 {
 	HRESULT hr = S_OK;
 
@@ -84,13 +84,13 @@ HRESULT sld::lib::mf::source::rtsp::handler::BeginCreateObject(LPCWSTR url, DWOR
 		return E_INVALIDARG;
 
 	IMFAsyncResult * result = NULL;
-	sld::lib::mf::source::rtsp::source * source = NULL;
+	solids::lib::mf::source::rtsp::source * source = NULL;
 	do
 	{
 		if (unk_cancel_cookie)
 			*unk_cancel_cookie = NULL;
 
-		sld::lib::mf::source::rtsp::source::create_instance(&source);
+		solids::lib::mf::source::rtsp::source::create_instance(&source);
 		hr = source->initialize();
 		if (FAILED(hr))
 			break;
@@ -109,18 +109,18 @@ HRESULT sld::lib::mf::source::rtsp::handler::BeginCreateObject(LPCWSTR url, DWOR
 
 	} while (FALSE);
 
-	sld::lib::mf::safe_release(result);
-	sld::lib::mf::safe_release(source);
+	solids::lib::mf::safe_release(result);
+	solids::lib::mf::safe_release(source);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::handler::CancelObjectCreation(IUnknown * unk)
+HRESULT solids::lib::mf::source::rtsp::handler::CancelObjectCreation(IUnknown * unk)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::source::rtsp::handler::EndCreateObject(IMFAsyncResult * result, MF_OBJECT_TYPE * ot, IUnknown ** ppv)
+HRESULT solids::lib::mf::source::rtsp::handler::EndCreateObject(IMFAsyncResult * result, MF_OBJECT_TYPE * ot, IUnknown ** ppv)
 {
 	HRESULT hr = S_OK;
 	if (!result)
@@ -146,13 +146,13 @@ HRESULT sld::lib::mf::source::rtsp::handler::EndCreateObject(IMFAsyncResult * re
 
 	} while (FALSE);
 
-	sld::lib::mf::safe_release(_source);
-	sld::lib::mf::safe_release(_result);
+	solids::lib::mf::safe_release(_source);
+	solids::lib::mf::safe_release(_result);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::handler::Invoke(IMFAsyncResult * result)
+HRESULT solids::lib::mf::source::rtsp::handler::Invoke(IMFAsyncResult * result)
 {
 	HRESULT hr = S_OK;
 

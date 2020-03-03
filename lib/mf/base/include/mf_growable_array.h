@@ -1,7 +1,7 @@
 #ifndef _SLD_MF_GROWABLE_ARRAY_H_
 #define _SLD_MF_GROWABLE_ARRAY_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

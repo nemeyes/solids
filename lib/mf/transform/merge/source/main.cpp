@@ -5,17 +5,17 @@
 #include "mf_merge_transform_activate.h"
 
 HMODULE g_module = NULL;
-volatile long sld::lib::mf::base::_obj_count = 0;
-volatile long sld::lib::mf::transform::merge::factory::_lock_count = 0;
+volatile long solids::lib::mf::base::_obj_count = 0;
+volatile long solids::lib::mf::transform::merge::factory::_lock_count = 0;
 
 STDAPI CreateMFMergeTransformActivate(IMFActivate ** activate)
 {
-	return sld::lib::mf::transform::merge::activate::create_instance(activate);
+	return solids::lib::mf::transform::merge::activate::create_instance(activate);
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-	return ((sld::lib::mf::base::get_obj_count() == 0) && (sld::lib::mf::transform::merge::factory::is_locked() == FALSE)) ? S_OK : S_FALSE;
+	return ((solids::lib::mf::base::get_obj_count() == 0) && (solids::lib::mf::transform::merge::factory::is_locked() == FALSE)) ? S_OK : S_FALSE;
 }
 
 STDAPI DllGetClassObject(_In_ REFCLSID clsid, _In_ REFIID iid, _Outptr_ void ** ppv)
@@ -23,7 +23,7 @@ STDAPI DllGetClassObject(_In_ REFCLSID clsid, _In_ REFIID iid, _Outptr_ void ** 
 	if (clsid != CLSID_MF_MERGE_TRANSFORM)
 		return CLASS_E_CLASSNOTAVAILABLE;
 
-	sld::lib::mf::transform::merge::factory* fctr = new sld::lib::mf::transform::merge::factory();
+	solids::lib::mf::transform::merge::factory* fctr = new solids::lib::mf::transform::merge::factory();
 	if (!fctr)
 		return E_OUTOFMEMORY;
 
@@ -56,11 +56,11 @@ STDAPI DllRegisterServer(void)
 	do
 	{
 #if defined(_DEBUG)
-		hr = sld::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM, TEXT("MFT Merge Debug"), TEXT("Both"));
-		hr = sld::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM_ACTIVATE, TEXT("MFT Merge Debug Activate"), TEXT("Both"));
+		hr = solids::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM, TEXT("MFT Merge Debug"), TEXT("Both"));
+		hr = solids::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM_ACTIVATE, TEXT("MFT Merge Debug Activate"), TEXT("Both"));
 #else
-		hr = sld::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM, TEXT("MFT Merge"), TEXT("Both"));
-		hr = sld::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM_ACTIVATE, TEXT("MFT Merge Activate"), TEXT("Both"));
+		hr = solids::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM, TEXT("MFT Merge"), TEXT("Both"));
+		hr = solids::lib::mf::register_object(g_module, CLSID_MF_MERGE_TRANSFORM_ACTIVATE, TEXT("MFT Merge Activate"), TEXT("Both"));
 #endif
 		hr = MFTRegister(
 			CLSID_MF_MERGE_TRANSFORM,
@@ -78,7 +78,7 @@ STDAPI DllRegisterServer(void)
 
 STDAPI DllUnregisterServer(void)
 {
-	if(sld::lib::mf::unregister_object(CLSID_MF_MERGE_TRANSFORM)==S_OK)
+	if(solids::lib::mf::unregister_object(CLSID_MF_MERGE_TRANSFORM)==S_OK)
 		return MFTUnregister(CLSID_MF_MERGE_TRANSFORM);
 	return S_FALSE;
 }

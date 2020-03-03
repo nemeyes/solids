@@ -36,7 +36,7 @@
     <ClInclude Include="include\mf_merge_transform_activate.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\dll_main.cpp" />
+    <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\mf_merge_transform.cpp" />
     <ClCompile Include="source\mf_class_factory.cpp" />
     <ClCompile Include="source\mf_merge_transform_activate.cpp" />

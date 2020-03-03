@@ -6,7 +6,7 @@
 #include "mf_d3d11_stream.h"
 #include "mf_d3d11_renderer.h"
 
-namespace sld
+namespace solids
 {
     namespace lib
     {
@@ -19,8 +19,8 @@ namespace sld
                     namespace plain
                     {
                         class media
-                            : sld::lib::mf::base
-                            , sld::lib::mf::refcount_object
+                            : solids::lib::mf::base
+                            , solids::lib::mf::refcount_object
                             , public IMFMediaSink
                             , public IMFClockStateSink
                             , public IMFGetService
@@ -74,14 +74,14 @@ namespace sld
                             HRESULT check_shutdown(void) const;
 
                         private:
-                            static sld::lib::mf::critical_section        _lock_stream_and_scheduler;
+                            static solids::lib::mf::critical_section        _lock_stream_and_scheduler;
                             const DWORD                                     _stream_id;
-                            sld::lib::mf::critical_section               _lock;
+                            solids::lib::mf::critical_section               _lock;
                             BOOL                                            _is_shutdown;
-                            sld::lib::mf::sink::video::plain::stream *   _stream;
+                            solids::lib::mf::sink::video::plain::stream *   _stream;
                             IMFPresentationClock *                          _clock;
-                            sld::lib::mf::scheduler *                    _scheduler;
-                            sld::lib::mf::sink::video::plain::renderer * _renderer;
+                            solids::lib::mf::scheduler *                    _scheduler;
+                            solids::lib::mf::sink::video::plain::renderer * _renderer;
                         };
                     };
                 };

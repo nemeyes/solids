@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace sld
+namespace solids
 {
 	template<class T>
 	class queue

@@ -4,7 +4,7 @@
 #include <mf_base.h>
 #include <mf_refcount_object.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -15,7 +15,7 @@ namespace sld
 				namespace rtsp
 				{
 					class factory
-						: sld::lib::mf::base
+						: solids::lib::mf::base
 						, public IClassFactory
 					{
 					public:

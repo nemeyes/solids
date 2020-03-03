@@ -4,8 +4,8 @@
 #include "mf_d3d11_media.h"
 
 HMODULE g_hModule = NULL;
-volatile long sld::lib::mf::base::_obj_count = 0;
-volatile long sld::lib::mf::sink::video::plain::factory::_lock_count = 0;
+volatile long solids::lib::mf::base::_obj_count = 0;
+volatile long solids::lib::mf::sink::video::plain::factory::_lock_count = 0;
 
 HRESULT CreateObjectKeyName(const GUID& guid, _Out_writes_(cchMax) TCHAR* pszName, DWORD cchMax)
 {
@@ -126,17 +126,17 @@ HRESULT UnregisterObject(GUID guid)
 
 STDAPI CreateMFD3D11Renderer(REFIID riid, void** ppvObject)
 {
-    return sld::lib::mf::sink::video::plain::media::create_instance(riid, ppvObject);
+    return solids::lib::mf::sink::video::plain::media::create_instance(riid, ppvObject);
 }
 
 STDAPI CreateMFD3D11RendererActivate(HWND hwnd, IMFActivate** ppActivate)
 {
-    return sld::lib::mf::sink::video::plain::activate::create_instance(hwnd, ppActivate);
+    return solids::lib::mf::sink::video::plain::activate::create_instance(hwnd, ppActivate);
 }
 
 STDAPI DllCanUnloadNow(void)
 {
-    return (sld::lib::mf::base::get_obj_count() == 0 && sld::lib::mf::sink::video::plain::factory::is_locked() == FALSE) ? S_OK : S_FALSE;
+    return (solids::lib::mf::base::get_obj_count() == 0 && solids::lib::mf::sink::video::plain::factory::is_locked() == FALSE) ? S_OK : S_FALSE;
 }
 
 STDAPI DllGetClassObject(_In_ REFCLSID clsid, _In_ REFIID riid, _Outptr_ void** ppvObject)
@@ -146,7 +146,7 @@ STDAPI DllGetClassObject(_In_ REFCLSID clsid, _In_ REFIID riid, _Outptr_ void** 
         return CLASS_E_CLASSNOTAVAILABLE;
     }
 
-    sld::lib::mf::sink::video::plain::factory * pFactory = new sld::lib::mf::sink::video::plain::factory();
+    solids::lib::mf::sink::video::plain::factory * pFactory = new solids::lib::mf::sink::video::plain::factory();
     if (pFactory == NULL)
     {
         return E_OUTOFMEMORY;
@@ -156,7 +156,7 @@ STDAPI DllGetClassObject(_In_ REFCLSID clsid, _In_ REFIID riid, _Outptr_ void** 
 
     HRESULT hr = pFactory->QueryInterface(riid, ppvObject);
 
-    sld::lib::mf::safe_release(pFactory);
+    solids::lib::mf::safe_release(pFactory);
     
     return hr;
 }

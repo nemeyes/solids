@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -14,7 +14,7 @@ namespace sld
 				namespace merge
 				{
 					class factory
-						: public sld::lib::mf::base
+						: public solids::lib::mf::base
 						, public IClassFactory
 					{
 					public:

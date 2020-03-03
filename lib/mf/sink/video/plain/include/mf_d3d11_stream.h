@@ -5,7 +5,7 @@
 #include <mf_sink_async_operation.h>
 #include "mf_d3d11_renderer.h"
 
-namespace sld
+namespace solids
 {
     namespace lib
     {
@@ -18,13 +18,13 @@ namespace sld
                     namespace plain
                     {
                         class stream
-                            : sld::lib::mf::base
-                            , sld::lib::mf::refcount_object
+                            : solids::lib::mf::base
+                            , solids::lib::mf::refcount_object
                             , public IMFStreamSink
                             , public IMFMediaTypeHandler
                             , public IMFGetService
-                            , public sld::lib::mf::scheduler_callback_t
-                            , public sld::lib::mf::attributes<IMFAttributes>
+                            , public solids::lib::mf::scheduler_callback_t
+                            , public solids::lib::mf::attributes<IMFAttributes>
                         {
                         public:
                             typedef struct _state_t
@@ -55,7 +55,7 @@ namespace sld
                                 DXGI_FORMAT     dxgi_format;
                             } format_entry_t;
 
-                            stream(DWORD dwStreamId, sld::lib::mf::critical_section * cs, sld::lib::mf::scheduler * sched);
+                            stream(DWORD dwStreamId, solids::lib::mf::critical_section * cs, solids::lib::mf::scheduler * sched);
                             virtual ~stream(void);
 
                             // IUnknown
@@ -92,7 +92,7 @@ namespace sld
                             HRESULT process(IMFSample * sample);
 
                             HRESULT get_max_rate(BOOL fThin, float * pflRate);
-                            HRESULT initialize(IMFMediaSink* pParent, sld::lib::mf::sink::video::plain::renderer * presenter);
+                            HRESULT initialize(IMFMediaSink* pParent, solids::lib::mf::sink::video::plain::renderer * presenter);
                             HRESULT release(void);
                             BOOL    is_active(void) const;
                             HRESULT pause(void);
@@ -102,7 +102,7 @@ namespace sld
                             HRESULT stop(void);
 
                         private:
-                            HRESULT dispatch_process_sample(sld::lib::mf::sink::async_operation * pOp);
+                            HRESULT dispatch_process_sample(solids::lib::mf::sink::async_operation * pOp);
                             HRESULT check_shutdown(void) const;
                             HRESULT get_fps(IMFMediaType* pType, MFRatio* pRatio);
                             BOOL    need_more_samples(void);
@@ -122,11 +122,11 @@ namespace sld
                             static BOOL                                             _valid_state_mat[state_t::count][async_operation::type_t::count];
 
                             const DWORD                                             _stream_id;
-                            sld::lib::mf::critical_section *                     _lock;
+                            solids::lib::mf::critical_section *                     _lock;
                             int32_t                                                 _state;
                             BOOL                                                    _is_shutdown;
                             DWORD                                                   _work_queue_id;
-                            sld::lib::mf::async_callback<sld::lib::mf::sink::video::plain::stream> _work_queue_cb;
+                            solids::lib::mf::async_callback<solids::lib::mf::sink::video::plain::stream> _work_queue_cb;
                             int32_t                                                 _consume_data;
                             MFTIME                                                  _start_time;
                             DWORD                                                   _nwritten;
@@ -134,14 +134,14 @@ namespace sld
                             IMFMediaSink *                                          _media;
                             IMFMediaEventQueue *                                    _event_queue;
                             IMFByteStream *                                         _byte_stream;
-                            sld::lib::mf::sink::video::plain::renderer *         _renderer;
-                            sld::lib::mf::scheduler *                            _scheduler;
+                            solids::lib::mf::sink::video::plain::renderer *         _renderer;
+                            solids::lib::mf::scheduler *                            _scheduler;
                             IMFMediaType *                                          _current_type;
                             BOOL                                                    _prerolling;
                             BOOL                                                    _waiting_for_on_clock_start;
-                            sld::lib::mf::thread_safe_queue<IUnknown>            _samples_to_process;             // Queue to hold samples and markers. Applies to: ProcessSample, PlaceMarker
+                            solids::lib::mf::thread_safe_queue<IUnknown>            _samples_to_process;             // Queue to hold samples and markers. Applies to: ProcessSample, PlaceMarker
                             UINT32                                                  _uninterlace_mode;
-                            sld::lib::mf::sink::video::plain::stream::fraction_t _image_bytes_pp;
+                            solids::lib::mf::sink::video::plain::stream::fraction_t _image_bytes_pp;
                             DXGI_FORMAT                                             _dxgi_format;
                         };
                     };

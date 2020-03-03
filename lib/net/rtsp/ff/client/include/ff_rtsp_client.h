@@ -8,7 +8,7 @@ extern "C" {
 	#include <libavformat/avformat.h>
 }
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -27,7 +27,7 @@ namespace sld
 							static const int32_t audio = 1;
 						} stream_index_t;
 
-						core(sld::lib::net::rtsp::ff::client* front);
+						core(solids::lib::net::rtsp::ff::client* front);
 						~core(void);
 
 						int32_t play(const char * url, int32_t transport, int32_t stimeout);
@@ -38,7 +38,7 @@ namespace sld
 						void process(void);
 
 					private:
-						sld::lib::net::rtsp::ff::client* _front;
+						solids::lib::net::rtsp::ff::client* _front;
 
 						AVFormatContext* _fmt_ctx;
 						int32_t				_stream_index[2];

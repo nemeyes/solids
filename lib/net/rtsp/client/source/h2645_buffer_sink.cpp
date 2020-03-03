@@ -2,8 +2,8 @@
 #include "h2645_buffer_sink.h"
 #include <H264VideoRTPSource.hh>
 
-sld::lib::net::rtsp::client::h2645_buffer_sink::h2645_buffer_sink(sld::lib::net::rtsp::client::core* front, int32_t codec, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size)
-	: sld::lib::net::rtsp::client::buffer_sink(front, sld::lib::net::rtsp::client::media_type_t::video, codec, env, buffer_size)
+solids::lib::net::rtsp::client::h2645_buffer_sink::h2645_buffer_sink(solids::lib::net::rtsp::client::core* front, int32_t codec, UsageEnvironment & env, const char * vps, unsigned vps_size, const char * sps, unsigned sps_size, const char * pps, unsigned pps_size, unsigned buffer_size)
+	: solids::lib::net::rtsp::client::buffer_sink(front, solids::lib::net::rtsp::client::media_type_t::video, codec, env, buffer_size)
 	, _receive_first_frame(false)
 {
 	if (vps != nullptr && vps_size > 0)
@@ -42,7 +42,7 @@ sld::lib::net::rtsp::client::h2645_buffer_sink::h2645_buffer_sink(sld::lib::net:
 	::memset(_vspps_buffer, 0x00, sizeof(_vspps_buffer));
 }
 
-sld::lib::net::rtsp::client::h2645_buffer_sink::~h2645_buffer_sink(void)
+solids::lib::net::rtsp::client::h2645_buffer_sink::~h2645_buffer_sink(void)
 {
 	if (_vspps[0] != nullptr)
 		::free((void*)_vspps[0]);
@@ -52,7 +52,7 @@ sld::lib::net::rtsp::client::h2645_buffer_sink::~h2645_buffer_sink(void)
 		::free((void*)_vspps[2]);
 }
 
-void sld::lib::net::rtsp::client::h2645_buffer_sink::after_getting_frame(unsigned frame_size, unsigned truncated_bytes, struct timeval presentation_time, unsigned duration_msec)
+void solids::lib::net::rtsp::client::h2645_buffer_sink::after_getting_frame(unsigned frame_size, unsigned truncated_bytes, struct timeval presentation_time, unsigned duration_msec)
 {
     const unsigned char start_code[4] = {0x00, 0x00, 0x00, 0x01};
 	//if (!_front->ignore_sdp())

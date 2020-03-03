@@ -9,7 +9,7 @@
 
 #include <sld.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -22,7 +22,7 @@ namespace sld
 					namespace plain
 					{
 						class EXP_SLD_D3D11_CLASS renderer
-							: public sld::lib::base
+							: public solids::lib::base
 						{
 							class core;
 						public:
@@ -60,7 +60,7 @@ namespace sld
 							BOOL			check_swap_chain(void);
 
 						private:
-							sld::lib::video::sink::d3d11::plain::renderer::core * _core;
+							solids::lib::video::sink::d3d11::plain::renderer::core * _core;
 						};
 					};
 				};

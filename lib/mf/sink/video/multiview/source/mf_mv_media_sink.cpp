@@ -3,10 +3,10 @@
 #include "mf_mv_stream_sink.h"
 #include "mf_mv_renderer.h"
 
-const int32_t sld::lib::mf::sink::video::multiview::media::sink_stream_id = 1;
-sld::lib::mf::critical_section sld::lib::mf::sink::video::multiview::media::_lock_streamsink_and_scheduler;
+const int32_t solids::lib::mf::sink::video::multiview::media::sink_stream_id = 1;
+solids::lib::mf::critical_section solids::lib::mf::sink::video::multiview::media::_lock_streamsink_and_scheduler;
 
-HRESULT sld::lib::mf::sink::video::multiview::media::create_instance(_In_ REFIID iid, _COM_Outptr_ void ** ppsink)
+HRESULT solids::lib::mf::sink::video::multiview::media::create_instance(_In_ REFIID iid, _COM_Outptr_ void ** ppsink)
 {
 	if (!ppsink)
 		return E_POINTER;
@@ -14,7 +14,7 @@ HRESULT sld::lib::mf::sink::video::multiview::media::create_instance(_In_ REFIID
 	*ppsink = NULL;
 
 	HRESULT hr = S_OK;
-	sld::lib::mf::sink::video::multiview::media * pmedia = new sld::lib::mf::sink::video::multiview::media();
+	solids::lib::mf::sink::video::multiview::media * pmedia = new solids::lib::mf::sink::video::multiview::media();
 
 	if (!pmedia)
 		hr = E_OUTOFMEMORY;
@@ -25,16 +25,16 @@ HRESULT sld::lib::mf::sink::video::multiview::media::create_instance(_In_ REFIID
 	if (SUCCEEDED(hr))
 		hr = pmedia->QueryInterface(iid, ppsink);
 
-	sld::lib::mf::safe_release(pmedia);
+	solids::lib::mf::safe_release(pmedia);
 	return hr;
 }
 
-ULONG sld::lib::mf::sink::video::multiview::media::AddRef(void)
+ULONG solids::lib::mf::sink::video::multiview::media::AddRef(void)
 {
-	return sld::lib::mf::refcount_object::AddRef();
+	return solids::lib::mf::refcount_object::AddRef();
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
+HRESULT solids::lib::mf::sink::video::multiview::media::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -62,19 +62,19 @@ HRESULT sld::lib::mf::sink::video::multiview::media::QueryInterface(REFIID iid, 
     return S_OK;
 }
 
-ULONG sld::lib::mf::sink::video::multiview::media::Release(void)
+ULONG solids::lib::mf::sink::video::multiview::media::Release(void)
 {
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::AddStreamSink(DWORD dwStreamSinkIdentifier, __RPC__in_opt IMFMediaType* pMediaType, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
+HRESULT solids::lib::mf::sink::video::multiview::media::AddStreamSink(DWORD dwStreamSinkIdentifier, __RPC__in_opt IMFMediaType* pMediaType, __RPC__deref_out_opt IMFStreamSink** ppStreamSink)
 {
     return MF_E_STREAMSINKS_FIXED;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetCharacteristics(__RPC__out DWORD * characteristics)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetCharacteristics(__RPC__out DWORD * characteristics)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (characteristics == NULL)
 		return E_POINTER;
@@ -86,9 +86,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetCharacteristics(__RPC__o
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetPresentationClock(__RPC__deref_out_opt IMFPresentationClock ** pppc)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetPresentationClock(__RPC__deref_out_opt IMFPresentationClock ** pppc)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (pppc == NULL)
 		return E_POINTER;
@@ -109,9 +109,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetPresentationClock(__RPC_
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkById(DWORD ssid, __RPC__deref_out_opt IMFStreamSink ** ppss)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetStreamSinkById(DWORD ssid, __RPC__deref_out_opt IMFStreamSink ** ppss)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (ppss == NULL)
 		return E_POINTER;
@@ -128,9 +128,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkById(DWORD ssi
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkByIndex(DWORD index, __RPC__deref_out_opt IMFStreamSink ** ppss)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetStreamSinkByIndex(DWORD index, __RPC__deref_out_opt IMFStreamSink ** ppss)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (ppss == NULL)
 		return E_POINTER;
@@ -147,9 +147,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkByIndex(DWORD 
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkCount(__RPC__out DWORD * ssc)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetStreamSinkCount(__RPC__out DWORD * ssc)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	if (!ssc)
 		return E_POINTER;
@@ -161,14 +161,14 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetStreamSinkCount(__RPC__o
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::RemoveStreamSink(DWORD dwStreamSinkIdentifier)
+HRESULT solids::lib::mf::sink::video::multiview::media::RemoveStreamSink(DWORD dwStreamSinkIdentifier)
 {
     return MF_E_STREAMSINKS_FIXED;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::SetPresentationClock(__RPC__in_opt IMFPresentationClock * pc)
+HRESULT solids::lib::mf::sink::video::multiview::media::SetPresentationClock(__RPC__in_opt IMFPresentationClock * pc)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -199,9 +199,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::SetPresentationClock(__RPC_
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::Shutdown(void)
+HRESULT solids::lib::mf::sink::video::multiview::media::Shutdown(void)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = MF_E_SHUTDOWN;
 	_is_shutdown = TRUE;
@@ -223,9 +223,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::Shutdown(void)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::OnClockPause(MFTIME st)
+HRESULT solids::lib::mf::sink::video::multiview::media::OnClockPause(MFTIME st)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -234,9 +234,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::OnClockPause(MFTIME st)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::OnClockRestart(MFTIME st)
+HRESULT solids::lib::mf::sink::video::multiview::media::OnClockRestart(MFTIME st)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -245,7 +245,7 @@ HRESULT sld::lib::mf::sink::video::multiview::media::OnClockRestart(MFTIME st)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::OnClockSetRate(MFTIME st, float rate)
+HRESULT solids::lib::mf::sink::video::multiview::media::OnClockSetRate(MFTIME st, float rate)
 {
 	if (_scheduler)
 		_scheduler->set_clock_rate(rate);
@@ -253,9 +253,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::OnClockSetRate(MFTIME st, f
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::OnClockStart(MFTIME st, LONGLONG offset)
+HRESULT solids::lib::mf::sink::video::multiview::media::OnClockStart(MFTIME st, LONGLONG offset)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (FAILED(hr))
@@ -279,9 +279,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::OnClockStart(MFTIME st, LON
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::OnClockStop(MFTIME st)
+HRESULT solids::lib::mf::sink::video::multiview::media::OnClockStop(MFTIME st)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = check_shutdown();
 	if (SUCCEEDED(hr))
@@ -298,7 +298,7 @@ HRESULT sld::lib::mf::sink::video::multiview::media::OnClockStop(MFTIME st)
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::GetService(__RPC__in REFGUID guid_service, __RPC__in REFIID iid, __RPC__deref_out_opt LPVOID * ppv)
+HRESULT solids::lib::mf::sink::video::multiview::media::GetService(__RPC__in REFGUID guid_service, __RPC__in REFIID iid, __RPC__deref_out_opt LPVOID * ppv)
 {
 	HRESULT hr = S_OK;
 
@@ -313,9 +313,9 @@ HRESULT sld::lib::mf::sink::video::multiview::media::GetService(__RPC__in REFGUI
 
 	return hr;
 }
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::NotifyPreroll(MFTIME hnsUpcomingStartTime)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::NotifyPreroll(MFTIME hnsUpcomingStartTime)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 
 	HRESULT hr = S_OK;
 	hr = check_shutdown();
@@ -325,39 +325,39 @@ STDMETHODIMP sld::lib::mf::sink::video::multiview::media::NotifyPreroll(MFTIME h
 	return hr;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::SetViewCount(INT count)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::SetViewCount(INT count)
 {
 	if (_renderer)
 		_renderer->set_view_count(count);
 	return NOERROR;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::EnableCoordinatedCSConverter(BOOL enable)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::EnableCoordinatedCSConverter(BOOL enable)
 {
 	if (_renderer)
 		_renderer->enable_coordinated_cs_converter(enable);
 	return NOERROR;
 }
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::SetViewPosition(INT index, FLOAT* position)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::SetViewPosition(INT index, FLOAT* position)
 {
 	if (_renderer)
 		_renderer->set_view_position(index, position);
 	return NOERROR;
 }
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::SetSelected(INT index)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::SetSelected(INT index)
 {
 	if (_renderer)
 		_renderer->set_selected(index);
 	return NOERROR;
 }
 
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::Maximize(void)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::Maximize(void)
 {
 	if (_renderer)
 		_renderer->maximize();
 	return NOERROR;
 }
-STDMETHODIMP sld::lib::mf::sink::video::multiview::media::ChangeRenderType(void)
+STDMETHODIMP solids::lib::mf::sink::video::multiview::media::ChangeRenderType(void)
 {
 	if (_renderer)
 		_renderer->change_render_type();
@@ -367,7 +367,7 @@ STDMETHODIMP sld::lib::mf::sink::video::multiview::media::ChangeRenderType(void)
 //-------------------------------------------------------------------
 // CMediaSink constructor.
 //-------------------------------------------------------------------
-sld::lib::mf::sink::video::multiview::media::media(void)
+solids::lib::mf::sink::video::multiview::media::media(void)
 	: _stream_id(1)
 	, _lock() 
 	, _is_shutdown(FALSE)
@@ -382,11 +382,11 @@ sld::lib::mf::sink::video::multiview::media::media(void)
 // CMediaSink destructor.
 //-------------------------------------------------------------------
 
-sld::lib::mf::sink::video::multiview::media::~media(void)
+solids::lib::mf::sink::video::multiview::media::~media(void)
 {
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::check_shutdown(void) const
+HRESULT solids::lib::mf::sink::video::multiview::media::check_shutdown(void) const
 {
     if (_is_shutdown)
         return MF_E_SHUTDOWN;
@@ -394,7 +394,7 @@ HRESULT sld::lib::mf::sink::video::multiview::media::check_shutdown(void) const
         return S_OK;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::initialize(void)
+HRESULT solids::lib::mf::sink::video::multiview::media::initialize(void)
 {
 	HRESULT hr = S_OK;
 	IMFMediaSink * sink = NULL;
@@ -408,14 +408,14 @@ HRESULT sld::lib::mf::sink::video::multiview::media::initialize(void)
 			break;
 		}
 
-		_stream = new sld::lib::mf::sink::video::multiview::stream(_stream_id, _lock_streamsink_and_scheduler, _scheduler);
+		_stream = new solids::lib::mf::sink::video::multiview::stream(_stream_id, _lock_streamsink_and_scheduler, _scheduler);
 		if (!_stream)
 		{
 			hr = E_OUTOFMEMORY;
 			break;
 		}
 
-		_renderer = new sld::lib::mf::sink::video::multiview::renderer(this);
+		_renderer = new solids::lib::mf::sink::video::multiview::renderer(this);
 		if (!_renderer)
 		{
 			hr = E_OUTOFMEMORY;
@@ -436,11 +436,11 @@ HRESULT sld::lib::mf::sink::video::multiview::media::initialize(void)
 	if (FAILED(hr))
 		Shutdown();
 
-	sld::lib::mf::safe_release(sink);
+	solids::lib::mf::safe_release(sink);
 	return hr;
 }
 
-HRESULT sld::lib::mf::sink::video::multiview::media::QueueEvent(MediaEventType met, __RPC__in REFGUID guidExtendedType, HRESULT hrStatus, __RPC__in_opt const PROPVARIANT* pvValue)
+HRESULT solids::lib::mf::sink::video::multiview::media::QueueEvent(MediaEventType met, __RPC__in REFGUID guidExtendedType, HRESULT hrStatus, __RPC__in_opt const PROPVARIANT* pvValue)
 {
 	return _stream->QueueEvent(met, guidExtendedType, hrStatus, pvValue);
 }

@@ -1,14 +1,14 @@
 #include "mf_merge_transform.h"
 
 //#include "mf_module_interface.h"
-HRESULT sld::lib::mf::transform::merge::transform::CreateInstance(REFIID riid, void ** ppv)
+HRESULT solids::lib::mf::transform::merge::transform::CreateInstance(REFIID riid, void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
 	*ppv = NULL;
 
 	HRESULT hr = S_OK;
-	sld::lib::mf::transform::merge::transform * transform = new sld::lib::mf::transform::merge::transform(); // Created with ref count = 1.
+	solids::lib::mf::transform::merge::transform * transform = new solids::lib::mf::transform::merge::transform(); // Created with ref count = 1.
 
 	if (transform == NULL)
 		hr = E_OUTOFMEMORY;
@@ -16,12 +16,12 @@ HRESULT sld::lib::mf::transform::merge::transform::CreateInstance(REFIID riid, v
 	if (SUCCEEDED(hr))
 		hr = transform->QueryInterface(riid, ppv);
 
-	sld::lib::mf::safe_release(transform);
+	solids::lib::mf::safe_release(transform);
 
 	return hr;
 }
 
-sld::lib::mf::transform::merge::transform::transform(void)
+solids::lib::mf::transform::merge::transform::transform(void)
 	: _input_stream_count(MIN_INPUT_STREAM_COUNT)
 	, _is_output_type_set(FALSE)
 	, _selected_id(0)
@@ -46,7 +46,7 @@ sld::lib::mf::transform::merge::transform::transform(void)
 	}
 }
 
-sld::lib::mf::transform::merge::transform::~transform(void)
+solids::lib::mf::transform::merge::transform::~transform(void)
 {
 	if (_input_stream_ids)
 		delete[] _input_stream_ids;
@@ -55,7 +55,7 @@ sld::lib::mf::transform::merge::transform::~transform(void)
 }
 
 // IUnknown
-HRESULT sld::lib::mf::transform::merge::transform::QueryInterface(REFIID iid, void** ppv)
+HRESULT solids::lib::mf::transform::merge::transform::QueryInterface(REFIID iid, void** ppv)
 {
 	if (NULL == ppv)
 	{
@@ -82,17 +82,17 @@ HRESULT sld::lib::mf::transform::merge::transform::QueryInterface(REFIID iid, vo
 	return S_OK;
 }
 
-ULONG sld::lib::mf::transform::merge::transform::AddRef(void)
+ULONG solids::lib::mf::transform::merge::transform::AddRef(void)
 {
 	return refcount_object::AddRef();
 }
 
-ULONG sld::lib::mf::transform::merge::transform::Release(void)
+ULONG solids::lib::mf::transform::merge::transform::Release(void)
 {
 	return refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetStreamLimits(DWORD * inputMinimum, DWORD * inputMaximum, DWORD * outputMinimum, DWORD * outputMaximum)
+HRESULT solids::lib::mf::transform::merge::transform::GetStreamLimits(DWORD * inputMinimum, DWORD * inputMaximum, DWORD * outputMinimum, DWORD * outputMaximum)
 {
 	if (inputMinimum)	
 		*inputMinimum = MIN_INPUT_STREAM_COUNT;
@@ -105,7 +105,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetStreamLimits(DWORD * input
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetStreamCount(DWORD * inputStreams, DWORD * outputStreams)
+HRESULT solids::lib::mf::transform::merge::transform::GetStreamCount(DWORD * inputStreams, DWORD * outputStreams)
 {
 	if (inputStreams)		
 		*inputStreams = _input_stream_count;
@@ -114,7 +114,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetStreamCount(DWORD * inputS
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetStreamIDs(DWORD inputIDSize, DWORD * inputIDs, DWORD outputIDSize, DWORD * outputIDs)
+HRESULT solids::lib::mf::transform::merge::transform::GetStreamIDs(DWORD inputIDSize, DWORD * inputIDs, DWORD outputIDSize, DWORD * outputIDs)
 {
 	if (inputIDs)
 	{
@@ -126,7 +126,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetStreamIDs(DWORD inputIDSiz
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetInputStreamInfo(DWORD inputStreamID, MFT_INPUT_STREAM_INFO * streamInfo)
+HRESULT solids::lib::mf::transform::merge::transform::GetInputStreamInfo(DWORD inputStreamID, MFT_INPUT_STREAM_INFO * streamInfo)
 {
 	HRESULT hr = S_OK;
 	if (streamInfo == NULL)
@@ -144,7 +144,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputStreamInfo(DWORD inpu
 	return hr;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetOutputStreamInfo(DWORD outputStreamID, MFT_OUTPUT_STREAM_INFO * streamInfo)
+HRESULT solids::lib::mf::transform::merge::transform::GetOutputStreamInfo(DWORD outputStreamID, MFT_OUTPUT_STREAM_INFO * streamInfo)
 {
 	HRESULT hr = S_OK;
 	if (streamInfo == NULL)
@@ -153,7 +153,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputStreamInfo(DWORD out
 		return MF_E_INVALIDSTREAMNUMBER;
 	
 	{																							
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		streamInfo->dwFlags = MFT_OUTPUT_STREAM_WHOLE_SAMPLES | MFT_OUTPUT_STREAM_REMOVABLE | MFT_OUTPUT_STREAM_PROVIDES_SAMPLES;
 		streamInfo->cbSize = 0;
@@ -162,22 +162,22 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputStreamInfo(DWORD out
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetAttributes(IMFAttributes ** attributes)
+HRESULT solids::lib::mf::transform::merge::transform::GetAttributes(IMFAttributes ** attributes)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetInputStreamAttributes(DWORD inputStreamID, IMFAttributes ** attributes)
+HRESULT solids::lib::mf::transform::merge::transform::GetInputStreamAttributes(DWORD inputStreamID, IMFAttributes ** attributes)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetOutputStreamAttributes(DWORD outputStreamID, IMFAttributes ** attributes)
+HRESULT solids::lib::mf::transform::merge::transform::GetOutputStreamAttributes(DWORD outputStreamID, IMFAttributes ** attributes)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::DeleteInputStream(DWORD streamID)
+HRESULT solids::lib::mf::transform::merge::transform::DeleteInputStream(DWORD streamID)
 {
 	BOOL found = FALSE; 
 	if (_input_stream_count == MIN_INPUT_STREAM_COUNT)
@@ -204,7 +204,7 @@ HRESULT sld::lib::mf::transform::merge::transform::DeleteInputStream(DWORD strea
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::AddInputStreams(DWORD streamSize, DWORD * streamIDs)
+HRESULT solids::lib::mf::transform::merge::transform::AddInputStreams(DWORD streamSize, DWORD * streamIDs)
 {
 	if (streamSize + _input_stream_count > MAX_INPUT_STREAM_COUNT)
 		return E_INVALIDARG;
@@ -224,7 +224,7 @@ HRESULT sld::lib::mf::transform::merge::transform::AddInputStreams(DWORD streamS
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetInputAvailableType(DWORD inputStreamID, DWORD typeIndex, IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::transform::merge::transform::GetInputAvailableType(DWORD inputStreamID, DWORD typeIndex, IMFMediaType ** ppmt)
 {
 	return E_NOTIMPL;	//MFT does not have a list of preferred input types
 /*
@@ -248,7 +248,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputAvailableType(DWORD i
 */
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetOutputAvailableType(DWORD outputStreamID, DWORD typeIndex, IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::transform::merge::transform::GetOutputAvailableType(DWORD outputStreamID, DWORD typeIndex, IMFMediaType ** ppmt)
 {
 	//return E_NOTIMPL;	// MFT does not have a list of preferred output types
 	if (ppmt == NULL)
@@ -259,7 +259,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputAvailableType(DWORD 
 		return MF_E_NO_MORE_TYPES;
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 #if 0 
 		if (_output_type)
 		{
@@ -282,7 +282,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputAvailableType(DWORD 
 	}
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::SetInputType(DWORD id, IMFMediaType * mt, DWORD flags)
+HRESULT solids::lib::mf::transform::merge::transform::SetInputType(DWORD id, IMFMediaType * mt, DWORD flags)
 {
 	if ((flags & MFT_SET_TYPE_TEST_ONLY) && (mt == NULL))
 		return E_INVALIDARG;
@@ -291,7 +291,7 @@ HRESULT sld::lib::mf::transform::merge::transform::SetInputType(DWORD id, IMFMed
 
 	if ((flags & MFT_SET_TYPE_TEST_ONLY) && (mt != NULL))
 	{
-		if (SUCCEEDED(is_type_acceptable(sld::lib::mf::transform::merge::transform::direction_t::input, id, mt)))
+		if (SUCCEEDED(is_type_acceptable(solids::lib::mf::transform::merge::transform::direction_t::input, id, mt)))
 			return S_OK;
 		else
 			return MF_E_INVALIDMEDIATYPE;
@@ -301,20 +301,20 @@ HRESULT sld::lib::mf::transform::merge::transform::SetInputType(DWORD id, IMFMed
 		return E_INVALIDARG;
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 		for (DWORD i = 0; i < _input_stream_count; i++)
 		{
 			if ((id == _input_stream_ids[i]) && _input_buffer[i] != NULL)
 				return MF_E_TRANSFORM_CANNOT_CHANGE_MEDIATYPE_WHILE_PROCESSING;
 		}
-		if (SUCCEEDED(is_type_acceptable(sld::lib::mf::transform::merge::transform::direction_t::input, id, mt)))
-			return set_media_type(sld::lib::mf::transform::merge::transform::direction_t::input, id, mt);
+		if (SUCCEEDED(is_type_acceptable(solids::lib::mf::transform::merge::transform::direction_t::input, id, mt)))
+			return set_media_type(solids::lib::mf::transform::merge::transform::direction_t::input, id, mt);
 		else
 			return MF_E_INVALIDMEDIATYPE;
 	}
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::SetOutputType(DWORD id, IMFMediaType * mt, DWORD flags)
+HRESULT solids::lib::mf::transform::merge::transform::SetOutputType(DWORD id, IMFMediaType * mt, DWORD flags)
 {
 	if (_output_type == mt)
 		return S_OK;
@@ -326,7 +326,7 @@ HRESULT sld::lib::mf::transform::merge::transform::SetOutputType(DWORD id, IMFMe
 
 	if ((flags & MFT_SET_TYPE_TEST_ONLY) && (mt != NULL))
 	{
-		if (SUCCEEDED(is_type_acceptable(sld::lib::mf::transform::merge::transform::direction_t::output, id, mt)))
+		if (SUCCEEDED(is_type_acceptable(solids::lib::mf::transform::merge::transform::direction_t::output, id, mt)))
 			return S_OK;
 		else
 			return MF_E_INVALIDMEDIATYPE;
@@ -336,20 +336,20 @@ HRESULT sld::lib::mf::transform::merge::transform::SetOutputType(DWORD id, IMFMe
 		return E_INVALIDARG;
 	
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 		//If we have output, the client cannot change the type now.
 		//if (_output_buffer != NULL)
 		//	return MF_E_TRANSFORM_CANNOT_CHANGE_MEDIATYPE_WHILE_PROCESSING;
 		HRESULT hr = S_OK;
-		if (SUCCEEDED(is_type_acceptable(sld::lib::mf::transform::merge::transform::direction_t::output, id, mt)))
-			return set_media_type(sld::lib::mf::transform::merge::transform::direction_t::output, id, mt);
+		if (SUCCEEDED(is_type_acceptable(solids::lib::mf::transform::merge::transform::direction_t::output, id, mt)))
+			return set_media_type(solids::lib::mf::transform::merge::transform::direction_t::output, id, mt);
 		else
 			return MF_E_INVALIDMEDIATYPE;
 	}
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetInputCurrentType(DWORD id, IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::transform::merge::transform::GetInputCurrentType(DWORD id, IMFMediaType ** ppmt)
 {
 	if (ppmt == NULL)
 		return E_POINTER;
@@ -359,7 +359,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputCurrentType(DWORD id,
 		return MF_E_INVALIDSTREAMNUMBER;
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		if (_input_type[index] == NULL)
 			return 	MF_E_TRANSFORM_TYPE_NOT_SET;
@@ -369,7 +369,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputCurrentType(DWORD id,
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetOutputCurrentType(DWORD id, IMFMediaType ** ppmt)
+HRESULT solids::lib::mf::transform::merge::transform::GetOutputCurrentType(DWORD id, IMFMediaType ** ppmt)
 {
 	if (ppmt == NULL)
 		return E_POINTER;
@@ -377,7 +377,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputCurrentType(DWORD id
 		return MF_E_INVALIDSTREAMNUMBER;
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		if (_output_type == NULL)
 			return 	MF_E_TRANSFORM_TYPE_NOT_SET;
@@ -387,7 +387,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputCurrentType(DWORD id
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetInputStatus(DWORD id, DWORD * flags)
+HRESULT solids::lib::mf::transform::merge::transform::GetInputStatus(DWORD id, DWORD * flags)
 {
 	if (flags == NULL)
 		return E_POINTER;
@@ -396,7 +396,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputStatus(DWORD id, DWOR
 		return MF_E_INVALIDSTREAMNUMBER;
 	
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		if (_input_updated[index] == FALSE)
 			*flags = MFT_INPUT_STATUS_ACCEPT_DATA;
@@ -406,7 +406,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetInputStatus(DWORD id, DWOR
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::GetOutputStatus(DWORD * flags)
+HRESULT solids::lib::mf::transform::merge::transform::GetOutputStatus(DWORD * flags)
 {
 	if (flags == NULL)
 		return E_POINTER;
@@ -414,7 +414,7 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputStatus(DWORD * flags
 	*flags = MFT_OUTPUT_STATUS_SAMPLE_READY;
 	do
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		if (_overlapped == TRUE)
 			break;
@@ -434,17 +434,17 @@ HRESULT sld::lib::mf::transform::merge::transform::GetOutputStatus(DWORD * flags
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::SetOutputBounds(LONGLONG lowerBound, LONGLONG upperBound)
+HRESULT solids::lib::mf::transform::merge::transform::SetOutputBounds(LONGLONG lowerBound, LONGLONG upperBound)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::ProcessEvent(DWORD isid, IMFMediaEvent* evt)
+HRESULT solids::lib::mf::transform::merge::transform::ProcessEvent(DWORD isid, IMFMediaEvent* evt)
 {
 	return E_NOTIMPL;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::ProcessMessage(MFT_MESSAGE_TYPE msg, ULONG_PTR param)
+HRESULT solids::lib::mf::transform::merge::transform::ProcessMessage(MFT_MESSAGE_TYPE msg, ULONG_PTR param)
 {
 	HRESULT hr = S_OK;
 	switch (msg)
@@ -480,7 +480,7 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessMessage(MFT_MESSAGE_TY
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::ProcessInput(DWORD isid, IMFSample * sample, DWORD flags)
+HRESULT solids::lib::mf::transform::merge::transform::ProcessInput(DWORD isid, IMFSample * sample, DWORD flags)
 {
 	HRESULT hr = S_OK;
 
@@ -506,7 +506,7 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessInput(DWORD isid, IMFS
 #endif
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		DWORD flag = 0;
 		GetOutputStatus(&flag);
@@ -514,7 +514,7 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessInput(DWORD isid, IMFS
 			return MF_E_NOTACCEPTING;
 
 		if (_input_buffer[index] != NULL)
-			sld::lib::mf::safe_release(_input_buffer[index]);
+			solids::lib::mf::safe_release(_input_buffer[index]);
 
 		sample->GetBufferByIndex(0, &_input_buffer[index]); 
 		if (_input_updated[index] == TRUE)
@@ -531,7 +531,7 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessInput(DWORD isid, IMFS
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::ProcessOutput(DWORD flags, DWORD outputBufferCount, MFT_OUTPUT_DATA_BUFFER * outputSamples, DWORD * status)
+HRESULT solids::lib::mf::transform::merge::transform::ProcessOutput(DWORD flags, DWORD outputBufferCount, MFT_OUTPUT_DATA_BUFFER * outputSamples, DWORD * status)
 {
 	HRESULT hr = S_OK;
 	static int cnt = 0;
@@ -543,7 +543,7 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessOutput(DWORD flags, DW
 		return E_INVALIDARG;
 
 	{
-		sld::lib::mf::auto_lock lock(&_lock);
+		solids::lib::mf::auto_lock lock(&_lock);
 
 		LONGLONG hnsDuration = 0;
 		LONGLONG hnsTime = 0;
@@ -601,13 +601,13 @@ HRESULT sld::lib::mf::transform::merge::transform::ProcessOutput(DWORD flags, DW
 				_is_first_sample = FALSE;
 				set_active_video_info(&sample);
 			}
-			sld::lib::mf::safe_release(sample);
+			solids::lib::mf::safe_release(sample);
 		}
 	}
 	return S_OK;
 }
 
-HRESULT	sld::lib::mf::transform::merge::transform::is_valid_input_stream(DWORD isid) const
+HRESULT	solids::lib::mf::transform::merge::transform::is_valid_input_stream(DWORD isid) const
 {
 	for (DWORD i = 0 ; i < _input_stream_count ; i++)
 		if(_input_stream_ids[i] == isid)
@@ -615,9 +615,9 @@ HRESULT	sld::lib::mf::transform::merge::transform::is_valid_input_stream(DWORD i
 	return S_FALSE;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::is_type_acceptable(int32_t dir, DWORD id, IMFMediaType * mt) const
+HRESULT solids::lib::mf::transform::merge::transform::is_type_acceptable(int32_t dir, DWORD id, IMFMediaType * mt) const
 {	
-	if (dir == sld::lib::mf::transform::merge::transform::direction_t::input)
+	if (dir == solids::lib::mf::transform::merge::transform::direction_t::input)
 	{
 		DWORD index = get_input_stream_index(id);
 		{	// Audio Decoder와의 Type Negotiation에서 SUB_TYPE 가 MFAudioFormat_PCM 가 되어야 함
@@ -658,26 +658,26 @@ HRESULT sld::lib::mf::transform::merge::transform::is_type_acceptable(int32_t di
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::set_media_type(const int32_t dir, const DWORD id, IMFMediaType * mt)
+HRESULT solids::lib::mf::transform::merge::transform::set_media_type(const int32_t dir, const DWORD id, IMFMediaType * mt)
 {
 	HRESULT hr = S_OK;
 
 	DWORD index = 0 ;
-	if (dir == sld::lib::mf::transform::merge::transform::direction_t::input)
+	if (dir == solids::lib::mf::transform::merge::transform::direction_t::input)
 		index = get_input_stream_index(id);
 
 	if (mt)
 	{	
-		if (dir == sld::lib::mf::transform::merge::transform::direction_t::input)
+		if (dir == solids::lib::mf::transform::merge::transform::direction_t::input)
 		{
-			sld::lib::mf::safe_release(_input_type[index]);
+			solids::lib::mf::safe_release(_input_type[index]);
 			_input_type[index] = mt;
 			_input_type[index]->AddRef();
 			_is_input_type_set[index] = true;
 		}
 		else
 		{
-			sld::lib::mf::safe_release(_output_type);
+			solids::lib::mf::safe_release(_output_type);
 			_output_type = mt;
 			_output_type->AddRef();
 			_is_output_type_set = true;
@@ -685,7 +685,7 @@ HRESULT sld::lib::mf::transform::merge::transform::set_media_type(const int32_t 
 	}
 	else
 	{
-		if (dir == sld::lib::mf::transform::merge::transform::direction_t::input)
+		if (dir == solids::lib::mf::transform::merge::transform::direction_t::input)
 		{
 			_input_type[index] = NULL;
 			_is_input_type_set[index] = FALSE;
@@ -699,7 +699,7 @@ HRESULT sld::lib::mf::transform::merge::transform::set_media_type(const int32_t 
 	return hr;
 }
 
-DWORD sld::lib::mf::transform::merge::transform::get_input_stream_index(DWORD id) const
+DWORD solids::lib::mf::transform::merge::transform::get_input_stream_index(DWORD id) const
 {
 	for (DWORD i = 0; i < _input_stream_count; i++)
 		if (_input_stream_ids[i] == id)
@@ -707,7 +707,7 @@ DWORD sld::lib::mf::transform::merge::transform::get_input_stream_index(DWORD id
 	return NO_INDEX;
 }
 
-void sld::lib::mf::transform::merge::transform::set_active_video_info(IMFSample** sample)
+void solids::lib::mf::transform::merge::transform::set_active_video_info(IMFSample** sample)
 {
 	HRESULT hr = S_OK;
 	if (_ratios == NULL)
@@ -730,9 +730,9 @@ void sld::lib::mf::transform::merge::transform::set_active_video_info(IMFSample*
 	}
 }
 
-HRESULT sld::lib::mf::transform::merge::transform::SetEnableID(UINT id)
+HRESULT solids::lib::mf::transform::merge::transform::SetEnableID(UINT id)
 {
-	sld::lib::mf::auto_lock lock(&_lock);
+	solids::lib::mf::auto_lock lock(&_lock);
 	{
 		DWORD index = get_input_stream_index(id);
 		if (index == NO_INDEX)
@@ -741,7 +741,7 @@ HRESULT sld::lib::mf::transform::merge::transform::SetEnableID(UINT id)
 	}
 	return S_OK;
 }
-HRESULT sld::lib::mf::transform::merge::transform::SetSeletedOnly(BOOL enable)
+HRESULT solids::lib::mf::transform::merge::transform::SetSeletedOnly(BOOL enable)
 {
 	_selected_only = enable;
 	return S_OK;

@@ -5,7 +5,7 @@
 #include <mf_video_display.h>
 #include <sld_d3d11_mv_renderer.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -20,13 +20,13 @@ namespace sld
 						class d3d11_renderer;
 						class media;
 						class renderer
-							: sld::lib::mf::base
-							, sld::lib::mf::refcount_object
+							: solids::lib::mf::base
+							, solids::lib::mf::refcount_object
 							, public IMFVideoDisplayControl
 							, public IMFGetService
 						{
 						public:
-							renderer(sld::lib::mf::sink::video::multiview::media * media_sink);
+							renderer(solids::lib::mf::sink::video::multiview::media * media_sink);
 							virtual ~renderer(void);
 
 							// IUnknown
@@ -89,7 +89,7 @@ namespace sld
 							HRESULT update_dxgi_swap_chain(void);
 
 						private:
-							sld::lib::mf::critical_section		_lock;
+							solids::lib::mf::critical_section		_lock;
 							BOOL									_is_shutdown;
 							BOOL									_enable_coordinated_cs_converter;
 
@@ -98,7 +98,7 @@ namespace sld
 							D3D11_VIDEO_PROCESSOR_STREAM			_stream_data;
 
 							int32_t									_view_count;
-							sld::lib::video::sink::d3d11::multiview::renderer::view_session_t * _view_info;
+							solids::lib::video::sink::d3d11::multiview::renderer::view_session_t * _view_info;
 
 							ID3D11VideoContext *					_d3d11_video_context;
 							HWND									_hwnd;
@@ -126,13 +126,13 @@ namespace sld
 							BOOL									_can_process_next_sample;
 							//RECT									_back_buffer;
 
-							sld::lib::video::sink::d3d11::multiview::renderer::context_t _d3d_render_ctx;
-							sld::lib::video::sink::d3d11::multiview::renderer * _d3d_renderer;
+							solids::lib::video::sink::d3d11::multiview::renderer::context_t _d3d_render_ctx;
+							solids::lib::video::sink::d3d11::multiview::renderer * _d3d_renderer;
 
 							int32_t									_current_time;
 							BOOL									_first_sample;
 							
-							sld::lib::mf::sink::video::multiview::media * _ms;
+							solids::lib::mf::sink::video::multiview::media * _ms;
 							BOOL									_maximize;
 							int32_t									_selected;
 							int32_t									_render_type;

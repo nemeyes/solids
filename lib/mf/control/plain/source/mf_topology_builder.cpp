@@ -1,6 +1,6 @@
 #include "mf_topology_builder.h"
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_source(const wchar_t * url, IMFMediaSource ** mediaSource)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_source(const wchar_t * url, IMFMediaSource ** mediaSource)
 {
 	HRESULT hr = S_OK;
 	MF_OBJECT_TYPE objType = MF_OBJECT_INVALID;
@@ -35,7 +35,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_source(const wch
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_topology(IMFTopology* topology, IMFMediaSource* mediaSource, DWORD streamIndex, IMFPresentationDescriptor* presentDescriptor, sld::lib::mf::control::plain::controller::context_t* context, IUnknown** pDeviceManager)
+HRESULT solids::lib::mf::control::plain::topology::builder::add_branch_to_partial_topology(IMFTopology* topology, IMFMediaSource* mediaSource, DWORD streamIndex, IMFPresentationDescriptor* presentDescriptor, solids::lib::mf::control::plain::controller::context_t* context, IUnknown** pDeviceManager)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFStreamDescriptor> streamDescriptor = NULL;
@@ -54,7 +54,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 		if (streamSelected)
 		{
 			/////////////////create a source node for this stream///////////////////
-			hr = sld::lib::mf::control::plain::topology::builder::create_stream_source_node(mediaSource, presentDescriptor, streamDescriptor, &srcNode);
+			hr = solids::lib::mf::control::plain::topology::builder::create_stream_source_node(mediaSource, presentDescriptor, streamDescriptor, &srcNode);
 			
 						/////////////////create a output node for renderer///////////////////
 			ATL::CComPtr<IMFMediaTypeHandler> mediaTypeHandler = NULL;
@@ -88,7 +88,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 					hr = create_audio_decoder_node(mediaType, &trnsNode);
 					BREAK_ON_FAIL(hr);
 #else
-					hr = sld::lib::mf::control::plain::topology::builder::create_audio_renderer_activate(&rendererActivate);
+					hr = solids::lib::mf::control::plain::topology::builder::create_audio_renderer_activate(&rendererActivate);
 					BREAK_ON_FAIL(hr);
 
 					ATL::CComPtr<IMFMediaSink> media_sink;
@@ -102,7 +102,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 					hr = media_sink->GetStreamSinkByIndex((stream_sink_count - 1), &stream_sink);
 					BREAK_ON_FAIL(hr);
 
-					hr = sld::lib::mf::control::plain::topology::builder::create_audio_decoder_node(mediaType, &trnsNode);
+					hr = solids::lib::mf::control::plain::topology::builder::create_audio_decoder_node(mediaType, &trnsNode);
 					BREAK_ON_FAIL(hr);
 
 #if 0
@@ -113,7 +113,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 					hr = stream_sink->GetIdentifier(&id);
 					BREAK_ON_FAIL(hr);
 
-					hr = sld::lib::mf::control::plain::topology::builder::create_stream_sink_node(stream_sink, id, &snkNode);
+					hr = solids::lib::mf::control::plain::topology::builder::create_stream_sink_node(stream_sink, id, &snkNode);
 					BREAK_ON_FAIL(hr);
 					
 					//hr = sink_node->SetUINT32(MF_TOPONODE_CONNECT_METHOD, MF_CONNECT_ALLOW_CONVERTER);
@@ -138,7 +138,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 					hr = create_video_decoder_node(mediaType, NULL, &trnsNode);
 					BREAK_ON_FAIL(hr);
 #else
-					hr = sld::lib::mf::control::plain::topology::builder::create_video_renderer_activate(context->hwnd, &rendererActivate);
+					hr = solids::lib::mf::control::plain::topology::builder::create_video_renderer_activate(context->hwnd, &rendererActivate);
 					BREAK_ON_FAIL(hr);
 
 					ATL::CComPtr<IMFMediaSink> mediaSink;
@@ -186,7 +186,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 					BREAK_ON_FAIL(hr);
 
 					LONG_PTR ptrDeviceManager = reinterpret_cast<ULONG_PTR>(*pDeviceManager);
-					hr = sld::lib::mf::control::plain::topology::builder::create_video_decoder_node(mediaType, ptrDeviceManager, &trnsNode);
+					hr = solids::lib::mf::control::plain::topology::builder::create_video_decoder_node(mediaType, ptrDeviceManager, &trnsNode);
 					BREAK_ON_FAIL(hr);
 
 #if 1
@@ -250,7 +250,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::add_branch_to_partial_t
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_stream_source_node(IMFMediaSource * mediaSource, IMFPresentationDescriptor * presentDescriptor, IMFStreamDescriptor * streamDescriptor, IMFTopologyNode ** node)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_stream_source_node(IMFMediaSource * mediaSource, IMFPresentationDescriptor * presentDescriptor, IMFStreamDescriptor * streamDescriptor, IMFTopologyNode ** node)
 {
 	HRESULT hr = S_OK;
 	do
@@ -279,7 +279,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_stream_source_no
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_video_renderer_activate(HWND hwnd, IMFActivate ** activate)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_video_renderer_activate(HWND hwnd, IMFActivate ** activate)
 {
 	if (activate == NULL)
 		return E_POINTER;
@@ -302,7 +302,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_video_renderer_a
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_audio_renderer_activate(IMFActivate ** activate)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_audio_renderer_activate(IMFActivate ** activate)
 {
 	if (activate == NULL)
 		return E_POINTER;
@@ -326,7 +326,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_audio_renderer_a
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_merger_activate(IMFActivate ** activate)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_merger_activate(IMFActivate ** activate)
 {
 	if (activate == NULL)
 		return E_POINTER;
@@ -348,7 +348,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_merger_activate(
 
 	return hr;
 }
-HRESULT sld::lib::mf::control::plain::topology::builder::create_video_decoder_node(IMFMediaType * mediaType, ULONG_PTR pDeviceManager, IMFTopologyNode ** node)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_video_decoder_node(IMFMediaType * mediaType, ULONG_PTR pDeviceManager, IMFTopologyNode ** node)
 {
 	HRESULT hr;
 
@@ -423,7 +423,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_video_decoder_no
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_audio_decoder_node(IMFMediaType * mediaType, IMFTopologyNode ** node)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_audio_decoder_node(IMFMediaType * mediaType, IMFTopologyNode ** node)
 {
 	HRESULT hr;
 	
@@ -464,7 +464,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_audio_decoder_no
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::create_stream_sink_node(IUnknown * streamSink, DWORD streamNumber, IMFTopologyNode ** node)
+HRESULT solids::lib::mf::control::plain::topology::builder::create_stream_sink_node(IUnknown * streamSink, DWORD streamNumber, IMFTopologyNode ** node)
 {
 	HRESULT hr;
 	hr = MFCreateTopologyNode(MF_TOPOLOGY_OUTPUT_NODE, node);
@@ -482,7 +482,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::create_stream_sink_node
 	return hr;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::find_video_decoder(REFCLSID subtype, IMFTransform ** decoder)
+HRESULT solids::lib::mf::control::plain::topology::builder::find_video_decoder(REFCLSID subtype, IMFTransform ** decoder)
 {
 	HRESULT hr;
 	UINT32 flags = MFT_ENUM_FLAG_SORTANDFILTER;
@@ -524,7 +524,7 @@ HRESULT sld::lib::mf::control::plain::topology::builder::find_video_decoder(REFC
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::control::plain::topology::builder::find_audio_decoder(REFCLSID subtype, IMFTransform ** decoder)
+HRESULT solids::lib::mf::control::plain::topology::builder::find_audio_decoder(REFCLSID subtype, IMFTransform ** decoder)
 {
 	HRESULT hr;
 	UINT32 flags = MFT_ENUM_FLAG_SORTANDFILTER;

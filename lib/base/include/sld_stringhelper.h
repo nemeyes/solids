@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

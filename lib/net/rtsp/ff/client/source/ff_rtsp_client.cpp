@@ -1,7 +1,7 @@
 #include "ff_rtsp_client.h"
 #include <process.h>
 
-sld::lib::net::rtsp::ff::client::core::core(sld::lib::net::rtsp::ff::client* front)
+solids::lib::net::rtsp::ff::client::core::core(solids::lib::net::rtsp::ff::client* front)
 	: _front(front)
 	, _fmt_ctx(nullptr)
 	, _thread(INVALID_HANDLE_VALUE)
@@ -10,12 +10,12 @@ sld::lib::net::rtsp::ff::client::core::core(sld::lib::net::rtsp::ff::client* fro
 
 }
 
-sld::lib::net::rtsp::ff::client::core::~core(void)
+solids::lib::net::rtsp::ff::client::core::~core(void)
 {
 
 }
 
-int32_t sld::lib::net::rtsp::ff::client::core::play(const char * url, int32_t transport, int32_t stimeout)
+int32_t solids::lib::net::rtsp::ff::client::core::play(const char * url, int32_t transport, int32_t stimeout)
 {
 	if (url && strlen(url)>0)
 		strncpy_s(_url, url, strlen(url));
@@ -23,11 +23,11 @@ int32_t sld::lib::net::rtsp::ff::client::core::play(const char * url, int32_t tr
 	_session_timeout = stimeout;
 
 	_run = TRUE;
-	_thread = (HANDLE)::_beginthreadex(NULL, 0, sld::lib::net::rtsp::ff::client::core::process_cb, this, 0, NULL);
-	return sld::lib::net::rtsp::ff::client::err_code_t::success;
+	_thread = (HANDLE)::_beginthreadex(NULL, 0, solids::lib::net::rtsp::ff::client::core::process_cb, this, 0, NULL);
+	return solids::lib::net::rtsp::ff::client::err_code_t::success;
 }
 
-int32_t sld::lib::net::rtsp::ff::client::core::stop(void)
+int32_t solids::lib::net::rtsp::ff::client::core::stop(void)
 {
 	_run = FALSE;
 	if (_thread != NULL && _thread != INVALID_HANDLE_VALUE)
@@ -38,10 +38,10 @@ int32_t sld::lib::net::rtsp::ff::client::core::stop(void)
 			_thread = INVALID_HANDLE_VALUE;
 		}
 	}
-	return sld::lib::net::rtsp::ff::client::err_code_t::success;
+	return solids::lib::net::rtsp::ff::client::err_code_t::success;
 }
 
-void sld::lib::net::rtsp::ff::client::core::process(void)
+void solids::lib::net::rtsp::ff::client::core::process(void)
 {
 	int ret = 0;
 	_fmt_ctx = ::avformat_alloc_context();
@@ -55,10 +55,10 @@ void sld::lib::net::rtsp::ff::client::core::process(void)
 
 	switch (_transport)
 	{
-	case sld::lib::net::rtsp::ff::client::transport_t::rtp_over_tcp:
+	case solids::lib::net::rtsp::ff::client::transport_t::rtp_over_tcp:
 		::av_dict_set(&dic, "rtsp_transport", "tcp", 0);
 		break;
-	case sld::lib::net::rtsp::ff::client::transport_t::rtp_over_udp:
+	case solids::lib::net::rtsp::ff::client::transport_t::rtp_over_udp:
 		::av_dict_set(&dic, "rtsp_transport", "udp", 0);
 		break;
 	}
@@ -96,14 +96,14 @@ void sld::lib::net::rtsp::ff::client::core::process(void)
 		uint8_t * videoExtradata	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->extradata;
 		int32_t videoNum	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.num;
 		int32_t videoDen	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.den;
-		int32_t videoCodec2 = sld::lib::net::rtsp::ff::client::video_codec_t::avc;
+		int32_t videoCodec2 = solids::lib::net::rtsp::ff::client::video_codec_t::avc;
 		switch (videoCodec)
 		{
 		case AV_CODEC_ID_H264:
-			videoCodec2 = sld::lib::net::rtsp::ff::client::video_codec_t::avc;
+			videoCodec2 = solids::lib::net::rtsp::ff::client::video_codec_t::avc;
 			break;
 		case AV_CODEC_ID_HEVC:
-			videoCodec2 = sld::lib::net::rtsp::ff::client::video_codec_t::hevc;
+			videoCodec2 = solids::lib::net::rtsp::ff::client::video_codec_t::hevc;
 			break;
 		}
 
@@ -125,20 +125,20 @@ void sld::lib::net::rtsp::ff::client::core::process(void)
 		int32_t audioNum = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.num;
 		int32_t audioDen = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den;
 
-		int32_t audioCodec2 = sld::lib::net::rtsp::ff::client::audio_codec_t::aac;
+		int32_t audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::aac;
 		switch (audioCodec)
 		{
 		case AV_CODEC_ID_AAC:
-			audioCodec2 = sld::lib::net::rtsp::ff::client::audio_codec_t::aac;
+			audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::aac;
 			break;
 		case AV_CODEC_ID_MP3:
-			audioCodec2 = sld::lib::net::rtsp::ff::client::audio_codec_t::mp3;
+			audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::mp3;
 			break;
 		case AV_CODEC_ID_AC3:
-			audioCodec2 = sld::lib::net::rtsp::ff::client::audio_codec_t::ac3;
+			audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::ac3;
 			break;
 		case AV_CODEC_ID_OPUS:
-			audioCodec2 = sld::lib::net::rtsp::ff::client::audio_codec_t::opus;
+			audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::opus;
 			break;
 		}
 
@@ -220,9 +220,9 @@ void sld::lib::net::rtsp::ff::client::core::process(void)
 	_fmt_ctx = NULL;
 }
 
-unsigned sld::lib::net::rtsp::ff::client::core::process_cb(void* param)
+unsigned solids::lib::net::rtsp::ff::client::core::process_cb(void* param)
 {
-	sld::lib::net::rtsp::ff::client::core * self = static_cast<sld::lib::net::rtsp::ff::client::core*>(param);
+	solids::lib::net::rtsp::ff::client::core * self = static_cast<solids::lib::net::rtsp::ff::client::core*>(param);
 	self->process();
 	return 0;
 }

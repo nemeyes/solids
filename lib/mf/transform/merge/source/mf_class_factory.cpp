@@ -1,29 +1,29 @@
 #include "mf_class_factory.h"
 #include "mf_merge_transform.h"
 
-BOOL sld::lib::mf::transform::merge::factory::is_locked(void)
+BOOL solids::lib::mf::transform::merge::factory::is_locked(void)
 {
 	return (_lock_count == 0) ? FALSE : TRUE;
 }
 
-sld::lib::mf::transform::merge::factory::factory(void)
+solids::lib::mf::transform::merge::factory::factory(void)
 	: _ref_count(1)
 {
 
 }
 
-sld::lib::mf::transform::merge::factory::~factory(void)
+solids::lib::mf::transform::merge::factory::~factory(void)
 {
 
 }
 
 ///////////////// IUnknown methods ///////////////////////
-ULONG sld::lib::mf::transform::merge::factory::AddRef(void)
+ULONG solids::lib::mf::transform::merge::factory::AddRef(void)
 {
 	return ::InterlockedIncrement(&_ref_count);
 }
 
-ULONG sld::lib::mf::transform::merge::factory::Release(void)
+ULONG solids::lib::mf::transform::merge::factory::Release(void)
 {
 	assert(_ref_count >= 0);
 	ULONG count = ::InterlockedDecrement(&_ref_count);
@@ -32,7 +32,7 @@ ULONG sld::lib::mf::transform::merge::factory::Release(void)
 	return count;
 }
 
-HRESULT sld::lib::mf::transform::merge::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
+HRESULT solids::lib::mf::transform::merge::factory::QueryInterface(REFIID iid, __RPC__deref_out _Result_nullonfailure_ void ** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -52,7 +52,7 @@ HRESULT sld::lib::mf::transform::merge::factory::QueryInterface(REFIID iid, __RP
 ///////////////// end of IUnknown methods ///////////////////////
 
 ///////////////// IClassFactory methods ///////////////////////
-HRESULT sld::lib::mf::transform::merge::factory::CreateInstance(_In_opt_ IUnknown * unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
+HRESULT solids::lib::mf::transform::merge::factory::CreateInstance(_In_opt_ IUnknown * unk, _In_ REFIID riid, _COM_Outptr_ void ** ppv)
 {
 	if (ppv == NULL)
 	{
@@ -64,10 +64,10 @@ HRESULT sld::lib::mf::transform::merge::factory::CreateInstance(_In_opt_ IUnknow
 	{
 		return CLASS_E_NOAGGREGATION;
 	}
-	return sld::lib::mf::transform::merge::transform::CreateInstance(riid, ppv);
+	return solids::lib::mf::transform::merge::transform::CreateInstance(riid, ppv);
 }
 
-HRESULT sld::lib::mf::transform::merge::factory::LockServer(BOOL lock)
+HRESULT solids::lib::mf::transform::merge::factory::LockServer(BOOL lock)
 {
 	if (lock == FALSE)
 	{

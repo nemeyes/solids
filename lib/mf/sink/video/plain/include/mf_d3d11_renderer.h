@@ -5,7 +5,7 @@
 #include <mf_video_display.h>
 #include <sld_d3d11_renderer.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -18,8 +18,8 @@ namespace sld
 					namespace plain
 					{
                         class renderer
-                            : sld::lib::mf::base
-                            , sld::lib::mf::refcount_object
+                            : solids::lib::mf::base
+                            , solids::lib::mf::refcount_object
                             , public IMFVideoDisplayControl
                             , public IMFGetService
                         {
@@ -76,17 +76,17 @@ namespace sld
                             HRESULT     SetMonitor(UINT adapterID);
                             HRESULT     SetVideoMonitor(HWND hwndVideo);
 
-                            sld::lib::mf::critical_section                   _lock;                  // critical section for thread safety
+                            solids::lib::mf::critical_section                   _lock;                  // critical section for thread safety
                             BOOL                                                _is_shutdown;               // Flag to indicate if shutdown() method was called.
                             
-                            sld::lib::video::sink::d3d11::plain::renderer *  _d3d11_renderer;
+                            solids::lib::video::sink::d3d11::plain::renderer *  _d3d11_renderer;
 
                             IMFDXGIDeviceManager *                              m_pDXGIManager;
                             IDXGIOutput1 *                                      m_pDXGIOutput1;
                             IMFVideoSampleAllocatorEx *                         m_pSampleAllocatorEx;
                             HWND                                                m_hwndVideo;
-                            sld::lib::mf::sink::monitors *                   m_pMonitors;
-                            sld::lib::mf::sink::monitor_t *                  m_lpCurrMon;
+                            solids::lib::mf::sink::monitors *                   m_pMonitors;
+                            solids::lib::mf::sink::monitor_t *                  m_lpCurrMon;
                             UINT                                                m_DeviceResetToken;
                             UINT                                                m_ConnectionGUID;
                             UINT                                                m_DXSWSwitch;

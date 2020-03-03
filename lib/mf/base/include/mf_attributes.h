@@ -1,7 +1,7 @@
 #ifndef _MF_ATTRIBUTES_H_
 #define _MF_ATTRIBUTES_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{

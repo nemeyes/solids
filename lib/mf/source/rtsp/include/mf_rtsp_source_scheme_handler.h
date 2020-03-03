@@ -4,7 +4,7 @@
 #include <mf_base.h>
 #include <mf_refcount_object.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -16,8 +16,8 @@ namespace sld
 				{
 					class source;
 					class handler
-						: sld::lib::mf::base
-						, sld::lib::mf::refcount_object
+						: solids::lib::mf::base
+						, solids::lib::mf::refcount_object
 						, public IMFSchemeHandler
 						, public IMFAsyncCallback
 					{
@@ -43,7 +43,7 @@ namespace sld
 
 					private:
 						IMFAsyncResult * _result;
-						sld::lib::mf::source::rtsp::source * _source;
+						solids::lib::mf::source::rtsp::source * _source;
 					};
 				};
 			};

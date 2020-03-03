@@ -3,7 +3,7 @@
 
 #include <mf_base.h>
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
@@ -16,8 +16,8 @@ namespace sld
 					namespace multiview
 					{
 						class factory
-							: sld::lib::mf::base
-							, sld::lib::mf::refcount_object
+							: solids::lib::mf::base
+							, solids::lib::mf::refcount_object
 							, public IClassFactory
 						{
 						public:

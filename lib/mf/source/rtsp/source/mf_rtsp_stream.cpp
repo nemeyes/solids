@@ -1,8 +1,8 @@
 #include "mf_rtsp_stream.h"
 
-sld::lib::mf::source::rtsp::stream::stream(void)
+solids::lib::mf::source::rtsp::stream::stream(void)
 	: _event_queue(NULL)
-	, _state(sld::lib::mf::source::rtsp::stream::state_t::stopped)
+	, _state(solids::lib::mf::source::rtsp::stream::state_t::stopped)
 	, _active(FALSE)
 	, _eos(FALSE)
 	, _buffering(FALSE)
@@ -10,12 +10,12 @@ sld::lib::mf::source::rtsp::stream::stream(void)
 
 }
 
-sld::lib::mf::source::rtsp::stream::~stream(void)
+solids::lib::mf::source::rtsp::stream::~stream(void)
 {
 	release();
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::QueryInterface(REFIID iid, void** ppv)
+HRESULT solids::lib::mf::source::rtsp::stream::QueryInterface(REFIID iid, void** ppv)
 {
 	if (!ppv)
 		return E_POINTER;
@@ -34,20 +34,20 @@ HRESULT sld::lib::mf::source::rtsp::stream::QueryInterface(REFIID iid, void** pp
 	return S_OK;
 }
 
-ULONG sld::lib::mf::source::rtsp::stream::AddRef(void)
+ULONG solids::lib::mf::source::rtsp::stream::AddRef(void)
 { 
-	return sld::lib::mf::refcount_object::AddRef(); 
+	return solids::lib::mf::refcount_object::AddRef(); 
 }
 
-ULONG sld::lib::mf::source::rtsp::stream::Release(void)
+ULONG solids::lib::mf::source::rtsp::stream::Release(void)
 { 
-	return sld::lib::mf::refcount_object::Release();
+	return solids::lib::mf::refcount_object::Release();
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * unk)
+HRESULT solids::lib::mf::source::rtsp::stream::BeginGetEvent(IMFAsyncCallback * callback, IUnknown * unk)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -63,10 +63,10 @@ HRESULT sld::lib::mf::source::rtsp::stream::BeginGetEvent(IMFAsyncCallback * cal
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::EndGetEvent(IMFAsyncResult * result, IMFMediaEvent ** evt)
+HRESULT solids::lib::mf::source::rtsp::stream::EndGetEvent(IMFAsyncResult * result, IMFMediaEvent ** evt)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -81,14 +81,14 @@ HRESULT sld::lib::mf::source::rtsp::stream::EndGetEvent(IMFAsyncResult * result,
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::GetEvent(DWORD flags, IMFMediaEvent ** evt)
+HRESULT solids::lib::mf::source::rtsp::stream::GetEvent(DWORD flags, IMFMediaEvent ** evt)
 {
 	HRESULT hr = S_OK;
 	IMFMediaEventQueue * queue = NULL;
 
 	do
 	{
-		sld::lib::mf::auto_lock mutex(&_lock);
+		solids::lib::mf::auto_lock mutex(&_lock);
 		hr = check_shutdown();
 		if (FAILED(hr))
 			break;
@@ -105,10 +105,10 @@ HRESULT sld::lib::mf::source::rtsp::stream::GetEvent(DWORD flags, IMFMediaEvent 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::QueueEvent(MediaEventType met, REFGUID guidExtendedType, HRESULT hrStatus, const PROPVARIANT* pvValue)
+HRESULT solids::lib::mf::source::rtsp::stream::QueueEvent(MediaEventType met, REFGUID guidExtendedType, HRESULT hrStatus, const PROPVARIANT* pvValue)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 	
 	do
 	{
@@ -126,7 +126,7 @@ HRESULT sld::lib::mf::source::rtsp::stream::QueueEvent(MediaEventType met, REFGU
 //-------------------------------------------------------------------
 // IMFMediaStream methods
 //-------------------------------------------------------------------
-HRESULT sld::lib::mf::source::rtsp::stream::GetMediaSource(IMFMediaSource ** source)
+HRESULT solids::lib::mf::source::rtsp::stream::GetMediaSource(IMFMediaSource ** source)
 {
 	if (!source)
 		return E_POINTER;
@@ -134,7 +134,7 @@ HRESULT sld::lib::mf::source::rtsp::stream::GetMediaSource(IMFMediaSource ** sou
 		return E_UNEXPECTED;
 
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -149,7 +149,7 @@ HRESULT sld::lib::mf::source::rtsp::stream::GetMediaSource(IMFMediaSource ** sou
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::GetStreamDescriptor(IMFStreamDescriptor ** sd)
+HRESULT solids::lib::mf::source::rtsp::stream::GetStreamDescriptor(IMFStreamDescriptor ** sd)
 {
 	HRESULT hr = S_OK;
 	if (!sd)
@@ -171,10 +171,10 @@ HRESULT sld::lib::mf::source::rtsp::stream::GetStreamDescriptor(IMFStreamDescrip
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
+HRESULT solids::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	IMFMediaSource* source = NULL;
 	IMFSample * sample = NULL;
@@ -184,13 +184,13 @@ HRESULT sld::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
 		if (FAILED(hr))
 			break;
 
-		if (_state == sld::lib::mf::source::rtsp::stream::state_t::stopped)
+		if (_state == solids::lib::mf::source::rtsp::stream::state_t::stopped)
 		{
 			hr = MF_E_MEDIA_SOURCE_WRONGSTATE;
 			break;
 		}
 
-		if (_state == sld::lib::mf::source::rtsp::stream::state_t::paused)
+		if (_state == solids::lib::mf::source::rtsp::stream::state_t::paused)
 		{
 			hr = S_OK;
 			break;
@@ -208,9 +208,9 @@ HRESULT sld::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
 		int32_t index = 0;
 		do
 		{
-			if (_type == sld::lib::mf::source::rtsp::source::media_type_t::video)
+			if (_type == solids::lib::mf::source::rtsp::source::media_type_t::video)
 				_source->get_video_sample(&sample);
-			else if (_type == sld::lib::mf::source::rtsp::source::media_type_t::audio)
+			else if (_type == solids::lib::mf::source::rtsp::source::media_type_t::audio)
 				_source->get_audio_sample(&sample);
 
 			if (sample || index>=(total_waiting_duration/waiting_duration) || _eos)
@@ -277,9 +277,9 @@ HRESULT sld::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
 			else
 			{
 
-				if (_type == sld::lib::mf::source::rtsp::source::media_type_t::video)
+				if (_type == solids::lib::mf::source::rtsp::source::media_type_t::video)
 					::OutputDebugStringW(L"===========================Video RequestSample Failed================================\n");
-				else if (_type == sld::lib::mf::source::rtsp::source::media_type_t::audio)
+				else if (_type == solids::lib::mf::source::rtsp::source::media_type_t::audio)
 					::OutputDebugStringW(L"===========================Audio RequestSample Failed================================\n");
 
 				hr = MF_E_INVALIDREQUEST;
@@ -289,13 +289,13 @@ HRESULT sld::lib::mf::source::rtsp::stream::RequestSample(IUnknown * token)
 	} while (0);
 
 	// If there was an error, queue MEError from the source (except after shutdown).
-	if (FAILED(hr) && (_state != sld::lib::mf::source::rtsp::stream::state_t::finalized))
+	if (FAILED(hr) && (_state != solids::lib::mf::source::rtsp::stream::state_t::finalized))
 		hr = _source->QueueEvent(MEError, GUID_NULL, hr, NULL);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::initialize(sld::lib::mf::source::rtsp::source * source, IMFStreamDescriptor * sd, int32_t type)
+HRESULT solids::lib::mf::source::rtsp::stream::initialize(solids::lib::mf::source::rtsp::source * source, IMFStreamDescriptor * sd, int32_t type)
 {
 	_source = source;
 	_source->AddRef();
@@ -311,10 +311,10 @@ HRESULT sld::lib::mf::source::rtsp::stream::initialize(sld::lib::mf::source::rts
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::release(void)
+HRESULT solids::lib::mf::source::rtsp::stream::release(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -330,21 +330,21 @@ HRESULT sld::lib::mf::source::rtsp::stream::release(void)
 			break;
 
 
-		_state = sld::lib::mf::source::rtsp::stream::state_t::finalized;
+		_state = solids::lib::mf::source::rtsp::stream::state_t::finalized;
 
 	} while (FALSE);
 
-	sld::lib::mf::safe_release(_sd);
-	sld::lib::mf::safe_release(_source);
-	sld::lib::mf::safe_release(_event_queue);
+	solids::lib::mf::safe_release(_sd);
+	solids::lib::mf::safe_release(_source);
+	solids::lib::mf::safe_release(_event_queue);
 
 	return hr;
 }
 
 // Other methods (called by source)
-HRESULT sld::lib::mf::source::rtsp::stream::activate(BOOL active)
+HRESULT solids::lib::mf::source::rtsp::stream::activate(BOOL active)
 {
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	if (_active == active)
 		return S_OK;
@@ -353,10 +353,10 @@ HRESULT sld::lib::mf::source::rtsp::stream::activate(BOOL active)
 	return S_OK;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::start(const PROPVARIANT & start)
+HRESULT solids::lib::mf::source::rtsp::stream::start(const PROPVARIANT & start)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -368,17 +368,17 @@ HRESULT sld::lib::mf::source::rtsp::stream::start(const PROPVARIANT & start)
 			break;
 
 		_buffering = FALSE;
-		_state = sld::lib::mf::source::rtsp::stream::state_t::started;
+		_state = solids::lib::mf::source::rtsp::stream::state_t::started;
 
 	} while (0);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::pause(void)
+HRESULT solids::lib::mf::source::rtsp::stream::pause(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -390,17 +390,17 @@ HRESULT sld::lib::mf::source::rtsp::stream::pause(void)
 		if (FAILED(hr))
 			break;
 
-		_state = sld::lib::mf::source::rtsp::stream::state_t::paused;
+		_state = solids::lib::mf::source::rtsp::stream::state_t::paused;
 
 	} while (0);
 
 	return hr;
 }
 
-HRESULT sld::lib::mf::source::rtsp::stream::stop(void)
+HRESULT solids::lib::mf::source::rtsp::stream::stop(void)
 {
 	HRESULT hr = S_OK;
-	sld::lib::mf::auto_lock mutex(&_lock);
+	solids::lib::mf::auto_lock mutex(&_lock);
 
 	do
 	{
@@ -414,30 +414,30 @@ HRESULT sld::lib::mf::source::rtsp::stream::stop(void)
 		if (FAILED(hr))
 			break;
 
-		_state = sld::lib::mf::source::rtsp::stream::state_t::stopped;
+		_state = solids::lib::mf::source::rtsp::stream::state_t::stopped;
 
 	} while (0);
 
 	return hr;
 }
 
-BOOL sld::lib::mf::source::rtsp::stream::is_active(void) const 
+BOOL solids::lib::mf::source::rtsp::stream::is_active(void) const 
 { 
 	return _active; 
 }
 
-void sld::lib::mf::source::rtsp::stream::set_buffering(BOOL buffering)
+void solids::lib::mf::source::rtsp::stream::set_buffering(BOOL buffering)
 {
 	_buffering = buffering;
 }
 
-BOOL sld::lib::mf::source::rtsp::stream::is_buffering(void) const
+BOOL solids::lib::mf::source::rtsp::stream::is_buffering(void) const
 {
 	return _buffering;
 }
 
 //private function
-HRESULT sld::lib::mf::source::rtsp::stream::check_shutdown(void) const
+HRESULT solids::lib::mf::source::rtsp::stream::check_shutdown(void) const
 {
-	return _state == sld::lib::mf::source::rtsp::stream::state_t::finalized ? MF_E_SHUTDOWN : S_OK;
+	return _state == solids::lib::mf::source::rtsp::stream::state_t::finalized ? MF_E_SHUTDOWN : S_OK;
 }

@@ -2,7 +2,7 @@
 #ifndef _SLD_MF_REGISTRY_H_
 #define _SLD_MF_REGISTRY_H_
 
-namespace sld
+namespace solids
 {
 	namespace lib
 	{
