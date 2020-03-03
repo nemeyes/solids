@@ -1,0 +1,9 @@
+ffmpeg/v4_2_2/debug/lib/libavcodec.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_2/debug/lib/libavformat.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_2/debug/lib/libavfilter.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_2/release/lib/libavcodec.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_2/release/lib/libavformat.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_2/release/lib/libavfilter.a filter=lfs diff=lfs merge=lfs -text
+ffmpeg/v4_2_1/bin/avcodec-58.dll filter=lfs diff=lfs merge=lfs -text
+XTK/debug/lib/DirectXTK.lib filter=lfs diff=lfs merge=lfs -text
+XTK/release/lib/DirectXTK.lib filter=lfs diff=lfs merge=lfs -text
