@@ -38,12 +38,12 @@ namespace solids
 						int32_t play(const char * url, int32_t transport, int32_t stimeout);
 						int32_t stop(void);
 
-						virtual void on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size);
-						virtual void on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
+						virtual void on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height, int32_t fps);
+						virtual void on_recv_video(uint8_t * bytes, int32_t nbytes, long long pts, long long duration);
 						virtual void on_end_video(void);
 
-						virtual void on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
-						virtual void on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
+						virtual void on_begin_audio(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
+						virtual void on_recv_audio(uint8_t * bytes, int32_t nbytes, long long pts, long long duration);
 						virtual void on_end_audio(void);
 
 					private:

@@ -9,6 +9,7 @@
 #include <cstdio>
 #include <cstring>
 #include <sld_locks.h>
+#include <sld_bitstream_parser.h>
 
 #define AV_RB32(x)  \
     (((uint32_t)((const uint8_t*)(x))[0] << 24) | \
@@ -56,6 +57,8 @@ solids::lib::net::rtsp::client::core::core(solids::lib::net::rtsp::client* front
 	, _video_event(INVALID_HANDLE_VALUE)
 	, _audio_event(INVALID_HANDLE_VALUE)
 	, _start_time(-1)
+	, _width(0)
+	, _height(0)
 {
     _transport_option = transport_option;
     _recv_option = recv_option;
@@ -453,7 +456,11 @@ void solids::lib::net::rtsp::client::core::setup_streams(void)
 				
 				bs = h265_buffer_sink::createNew(this, envir(), vpsspspps[0], vpsspspps_size[0], vpsspspps[1], vpsspspps_size[1], vpsspspps[2], vpsspspps_size[2], 8 * 1024 * 1024);
 
-				_front->on_begin_video(solids::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size);
+				int32_t wdth = 0, hght = 0;
+				solids::lib::video::bitstream::parser::parse_seq_parameter_set(solids::lib::net::rtsp::client::video_codec_t::hevc, (const uint8_t*)vpsspspps[1], vpsspspps_size[1], wdth, hght);
+				width(wdth);
+				height(hght);
+				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size, wdth, hght);
 
 				delete [] vpsRecord;
 				delete [] spsRecord;
@@ -485,8 +492,12 @@ void solids::lib::net::rtsp::client::core::setup_streams(void)
 
 				bs = h264_buffer_sink::createNew(this, envir(), (const char*)spspps[0], spspps_size[0], (const char*)spspps[1], spspps_size[1], 4 * 1024 * 1024);
 				delete[] sPropRecord;
-
-				_front->on_begin_video(solids::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size);
+				
+				int32_t wdth = 0, hght = 0;
+				solids::lib::video::bitstream::parser::parse_seq_parameter_set(solids::lib::net::rtsp::client::video_codec_t::avc, (const uint8_t*)spspps[1], spspps_size[1], wdth, hght);
+				width(wdth);
+				height(hght);
+				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size, wdth, hght);
 			}
 			else if (!strcmp(media_subsession->codecName(), "MP4V-ES"))
 			{
@@ -506,7 +517,7 @@ void solids::lib::net::rtsp::client::core::setup_streams(void)
 				uint8_t * configStr = parseGeneralConfigStr(media_subsession->fmtp_config(), configStrSize);
 				bs = aac_buffer_sink::createNew(this, envir(), 512 * 1024, media_subsession->numChannels(), frequencyFromconfig, (char*)configStr, configStrSize);
 
-				_front->on_begin_audio(solids::lib::net::rtsp::client::audio_codec_t::aac, configStr, configStrSize, frequencyFromconfig, media_subsession->numChannels());
+				on_begin_audio(solids::lib::net::rtsp::client::audio_codec_t::aac, configStr, configStrSize, frequencyFromconfig, media_subsession->numChannels());
 				if (configStr)
 					delete configStr;
 				configStr = NULL;
@@ -771,10 +782,30 @@ BOOL solids::lib::net::rtsp::client::core::is_vlc(int32_t smt, uint8_t nal_unit_
 		return (nal_unit_type <= 31);
 }
 
-void solids::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size)
+void solids::lib::net::rtsp::client::core::width(int32_t wdth)
+{
+	_width = wdth;
+}
+
+void solids::lib::net::rtsp::client::core::height(int32_t hght)
+{
+	_height = hght;
+}
+
+int32_t solids::lib::net::rtsp::client::core::width(void)
+{
+	return _width;
+}
+
+int32_t solids::lib::net::rtsp::client::core::height(void)
+{
+	return _height;
+}
+
+void solids::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
 {
 	if (_front)
-		_front->on_begin_video(codec, extradata, extradata_size);
+		_front->on_begin_video(codec, extradata, extradata_size, width, height);
 }
 
 void solids::lib::net::rtsp::client::core::on_recv_video(uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
@@ -896,7 +927,8 @@ void solids::lib::net::rtsp::client::core::process_video(void)
 				//		break;
 				//} while (1);
 
-				_front->on_recv_video(bytes, nbytes, pts - _start_time, 166777i64);
+				//_front->on_recv_video(bytes, nbytes, pts - _start_time, 166777i64);
+				_front->on_recv_video(bytes, nbytes, pts - _start_time, 166666i64);
 #else
 				if (codec == solids::lib::net::rtsp::client::video_codec_t::avc)
 				{

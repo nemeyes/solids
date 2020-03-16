@@ -101,9 +101,8 @@ BOOL CSLDPlayerDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	ShowWindow(SW_MAXIMIZE);
-
-	ShowWindow(SW_MINIMIZE);
+	//ShowWindow(SW_MAXIMIZE);
+	//ShowWindow(SW_MINIMIZE);
 
 	// TODO: Add extra initialization here
 
@@ -159,8 +158,6 @@ HCURSOR CSLDPlayerDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-
-
 void CSLDPlayerDlg::OnBnClickedButtonPlay()
 {
 	// TODO: Add your control notification handler code here
@@ -170,7 +167,10 @@ void CSLDPlayerDlg::OnBnClickedButtonPlay()
 	_context.userdata = NULL;
 
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/samsung.mkv", MAX_PATH); //P010
-	::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica.mkv", MAX_PATH); //NV12
+	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica.mkv", MAX_PATH); //NV12
+	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/costarica_hevc.mp4", MAX_PATH); //NV12
+	::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/FHD_AVC.mp4", MAX_PATH); //NV12
+	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/test_sample.mp4", MAX_PATH); //NV12
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica_avc.mkv", MAX_PATH);
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.56.1:554/samsung.mkv", MAX_PATH);
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/FHD_AVC.mkv", MAX_PATH);
@@ -183,7 +183,6 @@ void CSLDPlayerDlg::OnBnClickedButtonPlay()
 	_controller.open(&_context);
 	_controller.play();
 }
-
 
 void CSLDPlayerDlg::OnBnClickedButtonStop()
 {

@@ -7,11 +7,11 @@
 #include <sld_stringhelper.h>
 #include <sld_locks.h>
 
-#define MIN_VIDEO_BUFFER_COUNT	60
-#define MIN_AUDIO_BUFFER_COUNT	60
+//#define MIN_VIDEO_BUFFER_COUNT	60
+//#define MIN_AUDIO_BUFFER_COUNT	60
 
-#define MAX_VIDEO_BUFFER_COUNT	MIN_VIDEO_BUFFER_COUNT*100
-#define MAX_AUDIO_BUFFER_COUNT	MIN_AUDIO_BUFFER_COUNT*100
+//#define MAX_VIDEO_BUFFER_COUNT	MIN_VIDEO_BUFFER_COUNT*100
+//#define MAX_AUDIO_BUFFER_COUNT	MIN_AUDIO_BUFFER_COUNT*100
 
 solids::lib::mf::source::rtsp::source::source(void)
 	: _work_queue_id(MFASYNC_CALLBACK_QUEUE_STANDARD)
@@ -893,7 +893,7 @@ HRESULT solids::lib::mf::source::rtsp::source::create_audio_ac3_mediatype(IMFMed
 	return hr;
 }
 
-HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -931,12 +931,7 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMe
 				break;
 		}
 
-		hr = MFSetAttributeSize(pmt, MF_MT_FRAME_SIZE, 3840, 2160);
-		if (FAILED(hr))
-			break;
-
 		//hr = MFSetAttributeRatio(pmt, MF_MT_FRAME_RATE, (UINT32*)&pRatio->Numerator, (UINT32*)&pRatio->Denominator);
-		/*
 		if ((width > 0) && (height > 0))
 		{
 			hr = MFSetAttributeSize(pmt, MF_MT_FRAME_SIZE, (UINT32)width, (UINT32)height);
@@ -948,7 +943,6 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMe
 			hr = E_FAIL;
 			break;
 		}
-		*/
 
 		*mt = pmt;
 		(*mt)->AddRef();
@@ -959,7 +953,7 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_h264_mediatype(IMFMe
 }
 
 
-HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
 {
 	HRESULT hr = S_OK;
 	ATL::CComPtr<IMFMediaType> pmt = NULL;
@@ -997,11 +991,6 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMe
 				break;
 		}
 
-
-		hr = MFSetAttributeSize(pmt, MF_MT_FRAME_SIZE, 3840, 2160);
-		if (FAILED(hr))
-			break;
-		/*
 		if ((width > 0) && (height > 0))
 		{
 			hr = MFSetAttributeSize(pmt, MF_MT_FRAME_SIZE, (UINT32)width, (UINT32)height);
@@ -1013,7 +1002,6 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMe
 			hr = E_FAIL;
 			break;
 		}
-		*/
 
 		*mt = pmt;
 		(*mt)->AddRef();
@@ -1022,7 +1010,7 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_hevc_mediatype(IMFMe
 	return hr;
 }
 
-HRESULT solids::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size)
+HRESULT solids::lib::mf::source::rtsp::source::create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
 {
 	HRESULT hr = S_OK;
 	IMFMediaType * mt = NULL;
@@ -1034,10 +1022,10 @@ HRESULT solids::lib::mf::source::rtsp::source::create_video_mediatype(int32_t co
 		switch (codec)
 		{
 		case solids::lib::mf::source::rtsp::source::video_codec_t::avc:
-			hr = create_video_h264_mediatype(&mt, extradata, extradata_size);
+			hr = create_video_h264_mediatype(&mt, extradata, extradata_size, width, height);
 			break;
 		case solids::lib::mf::source::rtsp::source::video_codec_t::hevc:
-			hr = create_video_hevc_mediatype(&mt, extradata, extradata_size);
+			hr = create_video_hevc_mediatype(&mt, extradata, extradata_size, width, height);
 			break;
 		}
 		if (FAILED(hr))
@@ -1466,7 +1454,7 @@ HRESULT solids::lib::mf::source::rtsp::source::get_audio_sample(IMFSample ** sam
 	return hr;
 }
 
-void solids::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_t* extradata, int32_t extradata_size)
+void solids::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height, int32_t fps)
 {
 	HRESULT hr = S_OK;
 	IMFMediaType * pmt = NULL;
@@ -1476,8 +1464,7 @@ void solids::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_
 	iter = _streams.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
 	if (iter == _streams.end())
 	{
-		create_video_mediatype(codec, extradata, extradata_size);
-
+		create_video_mediatype(codec, extradata, extradata_size, width, height);
 		solids::lib::exclusive_scopedlock mutex(&_samples_lock);
 		std::map<int32_t, std::vector<ATL::CAdapt<ATL::CComPtr<IMFSample>>>*>::iterator sample_iter;
 		sample_iter = _samples.find(solids::lib::mf::source::rtsp::source::media_type_t::video);
@@ -1494,6 +1481,7 @@ void solids::lib::mf::source::rtsp::source::on_begin_video(int32_t codec, uint8_
 		::memmove(_extradata, extradata, _extradata_size);
 	}
 
+	_video_fps = fps;
 	_video_codec = codec;
 	_video_wait_idr = TRUE;
 	_video_start_time = -1;
@@ -1567,7 +1555,7 @@ void solids::lib::mf::source::rtsp::source::on_recv_video(uint8_t* bytes, int32_
 					{
 						if (stream->is_buffering())
 						{
-							if (vq->size() >= MIN_VIDEO_BUFFER_COUNT)
+							if (vq->size() >= _video_fps)
 							{
 								hr = QueueEvent(MEBufferingStopped, GUID_NULL, hr, NULL);
 								if (SUCCEEDED(hr))
@@ -1622,9 +1610,6 @@ void solids::lib::mf::source::rtsp::source::on_begin_audio(int32_t codec, uint8_
 void solids::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration)
 {
 	HRESULT hr = S_OK;
-	//char debug[MAX_PATH] = { 0 };
-	//_snprintf_s(debug, MAX_PATH, "on_recv_audio : %lld[%lld]\n", pts, duration);
-	//::OutputDebugStringA(debug);
 	do
 	{
 		ATL::CComPtr<IMFSample> sample = NULL;
@@ -1652,6 +1637,7 @@ void solids::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_
 				if (aq)
 				{
 					aq->push_back(sample);
+					/*
 					if (aq->size() > MIN_AUDIO_BUFFER_COUNT)
 					{
 						if (stream->is_buffering() && _state == solids::lib::mf::source::rtsp::source::state_t::started)
@@ -1670,6 +1656,7 @@ void solids::lib::mf::source::rtsp::source::on_recv_audio(uint8_t* bytes, int32_
 								stream->set_buffering(TRUE);
 						}
 					}
+					*/
 				}
 			}
 		}

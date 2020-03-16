@@ -82,7 +82,21 @@ int32_t solids::lib::net::rtsp::client::pause(void)
 	return solids::lib::net::rtsp::client::err_code_t::success;
 }
 
-void solids::lib::net::rtsp::client::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size)
+int32_t solids::lib::net::rtsp::client::width(void)
+{
+	if (_live)
+		return _live->width();
+	return 0;
+}
+
+int32_t solids::lib::net::rtsp::client::height(void)
+{
+	if (_live)
+		return _live->height();
+	return 0;
+}
+
+void solids::lib::net::rtsp::client::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
 {
 
 }
