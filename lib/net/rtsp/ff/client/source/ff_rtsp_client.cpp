@@ -62,10 +62,10 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 		::av_dict_set(&dic, "rtsp_transport", "udp", 0);
 		break;
 	}
-	av_dict_set(&dic, "buffer_size", "37748736", 0);		// INT_MAX 2147483647 // 655360 -> 36MB 37748736
-	av_dict_set_int(&dic, "fifo_size", 37748736, 0);
-	av_dict_set(&dic, "recv_buffer_size", "37748736", 0);
-	av_dict_set(&dic, "send_buffer_size", "37748736", 0);
+	//av_dict_set(&dic, "buffer_size", "37748736", 0);		// INT_MAX 2147483647 // 655360 -> 36MB 37748736
+	//av_dict_set_int(&dic, "fifo_size", 37748736, 0);
+	//av_dict_set(&dic, "recv_buffer_size", "37748736", 0);
+	//av_dict_set(&dic, "send_buffer_size", "37748736", 0);
 
 	ret = ::avformat_open_input(&_fmt_ctx, _url, NULL, &dic);
 	::av_dict_free(&dic);
@@ -83,8 +83,6 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 
 	AVCodecID videoCodec = AV_CODEC_ID_NONE;
 	if (_stream_index[core::stream_index_t::video] >= 0)
-
-
 	{
 		videoCodec			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->codec_id;
 		int32_t videoWidth	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->width;
@@ -107,7 +105,7 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 			break;
 		}
 
-		_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize);
+		_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
 	}
 	else
 	{
@@ -172,22 +170,17 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 						}
 						else if (videoCodec == AV_CODEC_ID_HEVC)
 						{
+							bWaitFirstVideo = FALSE;
 							/*
-													if ((((pkt->data[4] >> 1) & 0x3F) == 0x20) ||
-														(((pkt->data[4] >> 1) & 0x3F) == 0x21) ||
-														(((pkt->data[4] >> 1) & 0x3F) == 0x22) ||
-														(((pkt->data[4] >> 1) & 0x3F) == 0x13) ||
-														(((pkt->data[4] >> 1) & 0x3F) == 0x14))
-							*/
 							char debug[MAX_PATH] = { 0 };
 							_snprintf_s(debug, MAX_PATH, "%.2x %.2x %.2x %.2x %.2x\n", pkt->data[0], pkt->data[1], pkt->data[2], pkt->data[3], pkt->data[4]);
 							::OutputDebugStringA(debug);
-
-							if ((((pkt->data[3] >> 1) & 0x3F) == 0x20) ||
-								(((pkt->data[3] >> 1) & 0x3F) == 0x21) ||
-								(((pkt->data[3] >> 1) & 0x3F) == 0x22) ||
-								(((pkt->data[3] >> 1) & 0x3F) == 0x13) ||
-								(((pkt->data[3] >> 1) & 0x3F) == 0x14))
+							*/
+							if ((((pkt->data[4] >> 1) & 0x3F) == 0x20) ||
+								(((pkt->data[4] >> 1) & 0x3F) == 0x21) ||
+								(((pkt->data[4] >> 1) & 0x3F) == 0x22) ||
+								(((pkt->data[4] >> 1) & 0x3F) == 0x13) ||
+								(((pkt->data[4] >> 1) & 0x3F) == 0x14))
 								bWaitFirstVideo = FALSE;
 							else
 								continue;

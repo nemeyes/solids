@@ -93,6 +93,11 @@ namespace solids
 					static BOOL is_idr(int32_t codec, uint8_t nalu_type);
 					static BOOL is_vlc(int32_t codec, uint8_t nalu_type);
 
+					void		width(int32_t wdth);
+					void		height(int32_t hght);
+					int32_t		width(void);
+					int32_t		height(void);
+
 				protected:
 					core(solids::lib::net::rtsp::client * front, UsageEnvironment & env, const char * url, const char * username, const char * password, int transport_option, int recv_option, int recv_timeout, float scale, unsigned int http_port_number, bool * kill_flag);
 					~core(void);
@@ -120,11 +125,11 @@ namespace solids
 
 					static void kill_trigger(void * param);
 
-					void		on_begin_video(int32_t codec, uint8_t* extradata, int32_t extradata_size);
+					void		on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height);
 					void		on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
 					void		on_end_video(void);
 
-					void		on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
+					void		on_begin_audio(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
 					void		on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
 					void		on_end_audio(void);
 
@@ -182,6 +187,9 @@ namespace solids
 					int32_t						_vps_size;
 					int32_t						_sps_size;
 					int32_t						_pps_size;
+
+					int32_t						_width;
+					int32_t						_height;
 
 					uint8_t						_audio_extradata[100];
 					int32_t						_audio_extradata_size;

@@ -108,13 +108,13 @@ namespace solids
 						HRESULT create_audio_aac_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size, int32_t samplerate, int32_t sampleformat, int32_t channels);
 						HRESULT create_audio_mp3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels);
 						HRESULT create_audio_ac3_mediatype(IMFMediaType ** mt, int32_t samplerate, int32_t sampleformat, int32_t channels);
-						HRESULT create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size);
-						HRESULT create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata_, int32_t extradata_size);
+						HRESULT create_video_h264_mediatype(IMFMediaType ** mt, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height);
+						HRESULT create_video_hevc_mediatype(IMFMediaType ** mt, uint8_t * extradata_, int32_t extradata_size, int32_t width, int32_t height);
 
-						HRESULT create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size);
+						HRESULT create_video_mediatype(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height);
 						HRESULT create_audio_mediatype(int32_t codec, int32_t samplerate, int32_t sampleformat, int32_t channels, uint8_t * extradata, int32_t extradata_size);
 
-						HRESULT create_video_sample(IMFSample** sample, const uint8_t * extradata, int32_t extradata_size, const uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
+						HRESULT create_video_sample(IMFSample ** sample, const uint8_t * extradata, int32_t extradata_size, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration);
 						HRESULT create_video_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration);
 						HRESULT create_audio_sample(IMFSample ** sample, const uint8_t * bytes, int32_t nbytes, long long pts, long long duration);
 
@@ -122,11 +122,11 @@ namespace solids
 						void	error_handle(const HRESULT hr);
 						void	release_samples(void);
 
-						void	on_begin_video(int32_t codec, uint8_t* extradata, int32_t extradata_size);
+						void	on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t widht, int32_t height, int32_t fps);
 						void	on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
 						void	on_end_video(void);
 
-						void	on_begin_audio(int32_t codec, uint8_t* extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
+						void	on_begin_audio(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t samplerate, int32_t channels);
 						void	on_recv_audio(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
 						void	on_end_audio(void);
 
@@ -144,6 +144,7 @@ namespace solids
 						critical_section		_stream_lock;
 						SRWLOCK					_samples_lock;
 
+						int32_t					_video_fps;
 						int32_t					_video_codec;
 
 						BOOL					_video_wait_idr;

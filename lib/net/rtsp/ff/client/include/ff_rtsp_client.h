@@ -27,20 +27,20 @@ namespace solids
 							static const int32_t audio = 1;
 						} stream_index_t;
 
-						core(solids::lib::net::rtsp::ff::client* front);
+						core(solids::lib::net::rtsp::ff::client * front);
 						~core(void);
 
 						int32_t play(const char * url, int32_t transport, int32_t stimeout);
 						int32_t stop(void);
 
 					private:
-						static unsigned __stdcall process_cb(void* param);
+						static unsigned __stdcall process_cb(void * param);
 						void process(void);
 
 					private:
-						solids::lib::net::rtsp::ff::client* _front;
+						solids::lib::net::rtsp::ff::client * _front;
 
-						AVFormatContext* _fmt_ctx;
+						AVFormatContext *	_fmt_ctx;
 						int32_t				_stream_index[2];
 
 						char				_url[MAX_PATH];
