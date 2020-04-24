@@ -1,17 +1,35 @@
 #ifndef _SLD_H_
 #define _SLD_H_
 
-#include <winsock2.h>
+//#include <winsock2.h>
 #include <windows.h>
+#include <winrt\Windows.Foundation.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstdint>
-#include <climits>
+#include <limits>
 #include <memory>
 #include <string>
+#include <sstream>
+#include <functional>
+#include <algorithm>
+#include <array>
+#include <map>
+#include <stack>
+#include <vector>
+#include <tuple>
+#include <codecvt>
 #include <dxgi1_2.h>
 #include <dxgi1_3.h>
+#include <dxgi1_4.h>
+#include <dxgi1_5.h>
+#include <dxgi1_6.h>
 #include <d3d11.h>
+#include <d3d11_1.h>
+#include <d3d11_2.h>
+#include <d3d11_3.h>
+#include <d3d11_4.h>
+
 
 #if defined(_DEBUG) && !defined(WITH_DISABLE_VLD)
 #include <vld.h>
@@ -51,8 +69,9 @@ namespace solids
 				static const int32_t unknown = -1;
 				static const int32_t success = 0;
 				static const int32_t generic_fail = 1;
-				static const int32_t invalid_file_path = 2;
-				static const int32_t unsupported_media_file = 3;
+				static const int32_t invalid_parameter = 2;
+				static const int32_t invalid_file_path = 3;
+				static const int32_t unsupported_media_file = 4;
 			} err_code_t;
 
 			typedef struct _protocol_t

@@ -574,8 +574,6 @@ HRESULT solids::lib::mf::sink::video::plain::renderer::CheckDeviceState(BOOL* pb
         return E_POINTER;
 
     static int deviceStateChecks = 0;
-    static D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
-
     HRESULT hr = SetVideoMonitor(m_hwndVideo);
     if (FAILED(hr))
         return hr;
@@ -586,12 +584,7 @@ HRESULT solids::lib::mf::sink::video::plain::renderer::CheckDeviceState(BOOL* pb
         // Lost/hung device. Destroy the device and create a new one.
         if (S_FALSE == hr || (m_DXSWSwitch > 0 && deviceStateChecks == m_DXSWSwitch))
         {
-            if (m_DXSWSwitch > 0 && deviceStateChecks == m_DXSWSwitch)
-            {
-                (driverType == D3D_DRIVER_TYPE_HARDWARE) ? driverType = D3D_DRIVER_TYPE_WARP : driverType = D3D_DRIVER_TYPE_HARDWARE;
-            }
-
-            hr = create_dxgi_manager_and_device(driverType);
+            hr = create_dxgi_manager_and_device();
             if (FAILED(hr))
                 return hr;
 
@@ -628,15 +621,16 @@ HRESULT solids::lib::mf::sink::video::plain::renderer::check_shutdown(void) cons
     }
 }
 
-HRESULT solids::lib::mf::sink::video::plain::renderer::create_dxgi_manager_and_device(D3D_DRIVER_TYPE DriverType)
+HRESULT solids::lib::mf::sink::video::plain::renderer::create_dxgi_manager_and_device(void)
 {
     HRESULT hr = S_OK;
+    int32_t status = solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success;
     UINT    resetToken;
     do
     {
-        hr = _d3d11_renderer->create_d3d11_dev(m_useDebugLayer);
-
-        if (FAILED(hr))
+        _d3d11_renderer_ctx.use_debug_layer = m_useDebugLayer;
+        status = _d3d11_renderer->initialize(&_d3d11_renderer_ctx);
+        if (status != solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success)
             break;
 
         if (m_pDXGIManager == NULL)
@@ -776,7 +770,7 @@ HRESULT solids::lib::mf::sink::video::plain::renderer::process_sample(ID3D11Text
 
     do
     {
-        hr = _d3d11_renderer->process_sample(m_hwndVideo, pTexture2D, dwViewIndex, rcDest, frameFormat, &pOutTexture);
+        hr = _d3d11_renderer->process(m_hwndVideo, pTexture2D, dwViewIndex, rcDest, frameFormat, &pOutTexture);
         if (FAILED(hr))
             break;
 

@@ -96,7 +96,7 @@ int32_t solids::lib::net::rtsp::client::height(void)
 	return 0;
 }
 
-void solids::lib::net::rtsp::client::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
+void solids::lib::net::rtsp::client::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height, int32_t fps)
 {
 
 }

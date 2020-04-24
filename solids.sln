@@ -59,6 +59,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bitstream", "bitstream", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "H2645BitstreamParser", "lib\video\bitstream\H2645BitstreamParser.vcxproj", "{E01F4E9B-17C7-40A5-A7C4-B003F19CF169}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "lib\video\sink\d3d11\base\base.vcxproj", "{67C5CF69-964F-453B-950F-CA528924377A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -155,6 +157,14 @@ Global
 		{E01F4E9B-17C7-40A5-A7C4-B003F19CF169}.Release|x64.Build.0 = Release|x64
 		{E01F4E9B-17C7-40A5-A7C4-B003F19CF169}.Release|x86.ActiveCfg = Release|Win32
 		{E01F4E9B-17C7-40A5-A7C4-B003F19CF169}.Release|x86.Build.0 = Release|Win32
+		{67C5CF69-964F-453B-950F-CA528924377A}.Debug|x64.ActiveCfg = Debug|x64
+		{67C5CF69-964F-453B-950F-CA528924377A}.Debug|x64.Build.0 = Debug|x64
+		{67C5CF69-964F-453B-950F-CA528924377A}.Debug|x86.ActiveCfg = Debug|Win32
+		{67C5CF69-964F-453B-950F-CA528924377A}.Debug|x86.Build.0 = Debug|Win32
+		{67C5CF69-964F-453B-950F-CA528924377A}.Release|x64.ActiveCfg = Release|x64
+		{67C5CF69-964F-453B-950F-CA528924377A}.Release|x64.Build.0 = Release|x64
+		{67C5CF69-964F-453B-950F-CA528924377A}.Release|x86.ActiveCfg = Release|Win32
+		{67C5CF69-964F-453B-950F-CA528924377A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -186,6 +196,7 @@ Global
 		{0A891D12-96C8-4DB5-B231-76DE9BFB6CCD} = {6E58CDFE-A5F9-423B-8AF8-D4B291A70E45}
 		{0DDA92C6-E037-4257-B9C8-A222EAEA2594} = {6E82A4D9-87C5-45CA-964A-3A25629FB5DF}
 		{E01F4E9B-17C7-40A5-A7C4-B003F19CF169} = {0DDA92C6-E037-4257-B9C8-A222EAEA2594}
+		{67C5CF69-964F-453B-950F-CA528924377A} = {591ABA95-7298-4412-817D-BE26E2408570}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86E15B90-00AE-4A8A-8D98-FDE60C3E4FC7}

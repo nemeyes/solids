@@ -28,7 +28,7 @@ namespace solids
 							~core(void);
 
 							BOOL			is_initialized(void);
-							int32_t			initialize(void);
+							int32_t			initialize(solids::lib::video::sink::d3d11::plain::renderer::context_t * context);
 							int32_t			release(void);
 
 							BOOL			present(void);
@@ -44,9 +44,7 @@ namespace solids
 							void			set_display_rect(RECT display_rect);
 							void			set_real_display_resolution(int32_t width, int32_t height);
 
-							HRESULT			create_d3d11_dev(int32_t useDebugLayer);
-
-							HRESULT			process_sample(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output);
+							HRESULT			process(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output);
 
 							void			release_d3d11_dev(void);
 							void			release_d3d11_video_dev(void);
@@ -64,6 +62,7 @@ namespace solids
 							void			set_video_context_parameters(ID3D11VideoContext* vc, const RECT* src, const RECT* dst, const RECT* target, D3D11_VIDEO_FRAME_FORMAT interlace);
 
 						private:
+							solids::lib::video::sink::d3d11::plain::renderer::context_t * _context;
 							BOOL					_is_initialized;
 							BOOL					_fullscreen;
 							IDXGIFactory2 *			_dxgi_factory;

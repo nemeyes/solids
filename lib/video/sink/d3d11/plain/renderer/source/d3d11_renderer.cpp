@@ -23,83 +23,28 @@ BOOL solids::lib::video::sink::d3d11::plain::renderer::core::is_initialized(void
 	return TRUE;
 }
 
-int32_t solids::lib::video::sink::d3d11::plain::renderer::core::initialize(void)
+int32_t solids::lib::video::sink::d3d11::plain::renderer::core::initialize(solids::lib::video::sink::d3d11::plain::renderer::context_t * context)
 {
+    if (!context)
+        return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::invalid_parameter;
 
+    _context = context;
 
-	return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success;
-}
-
-int32_t solids::lib::video::sink::d3d11::plain::renderer::core::release(void)
-{
-
-	return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success;
-}
-
-BOOL solids::lib::video::sink::d3d11::plain::renderer::core::present(void)
-{
-    HRESULT hr = _swap_chain->Present(0, 0);
-    if (SUCCEEDED(hr))
-        return TRUE;
-    else
-        return FALSE;
-}
-
-ID3D11Device * solids::lib::video::sink::d3d11::plain::renderer::core::d3d11_dev(void)
-{
-    return _d3d11_dev;
-}
-
-void solids::lib::video::sink::d3d11::plain::renderer::core::set_fullscreen(BOOL fs)
-{
-    _fullscreen = fs;
-}
-
-BOOL solids::lib::video::sink::d3d11::plain::renderer::core::get_fullscreen(void)
-{
-    return _fullscreen;
-}
-
-void solids::lib::video::sink::d3d11::plain::renderer::core::set_image_resolution(int32_t width, int32_t height)
-{
-    _image_width = width;
-    _image_height = height;
-}
-
-void solids::lib::video::sink::d3d11::plain::renderer::core::get_image_resolution(int32_t& width, int32_t& height)
-{
-    width = _image_width;
-    height = _image_height;
-}
-
-void solids::lib::video::sink::d3d11::plain::renderer::core::set_display_rect(RECT display_rect)
-{
-    _display_rect = display_rect;
-}
-
-void solids::lib::video::sink::d3d11::plain::renderer::core::set_real_display_resolution(int32_t width, int32_t height)
-{
-    _real_display_width = width;
-    _real_display_height = height;
-}
-
-HRESULT solids::lib::video::sink::d3d11::plain::renderer::core::create_d3d11_dev(int32_t useDebugLayer)
-{
     HRESULT hr = S_OK;
-    IDXGIOutput *       pDXGIOutput = NULL;
-    IDXGIAdapter *      pTempAdapter = NULL;
-    ID3D10Multithread * pMultiThread = NULL;
-    IDXGIDevice1 *      pDXGIDev = NULL;
-    IDXGIAdapter1 *     pAdapter = NULL;
+    IDXGIOutput* pDXGIOutput = NULL;
+    IDXGIAdapter* pTempAdapter = NULL;
+    ID3D10Multithread* pMultiThread = NULL;
+    IDXGIDevice1* pDXGIDev = NULL;
+    IDXGIAdapter1* pAdapter = NULL;
 
     D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
-    D3D_FEATURE_LEVEL featureLevel;
+    D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_11_1;
 
     solids::lib::safe_release(_d3d11_dev);
-    
+
     for (DWORD dwCount = 0; dwCount < ARRAYSIZE(featureLevels); dwCount++)
     {
-        hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, useDebugLayer, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3d11_dev, &featureLevel, NULL);
+        hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, _context->use_debug_layer, featureLevels, ARRAYSIZE(featureLevels), D3D11_SDK_VERSION, &_d3d11_dev, &featureLevel, NULL);
         if (SUCCEEDED(hr))
         {
             ID3D11VideoDevice* pD3D11VideoDevice = NULL;
@@ -189,10 +134,65 @@ HRESULT solids::lib::video::sink::d3d11::plain::renderer::core::create_d3d11_dev
     solids::lib::safe_release(pAdapter);
     solids::lib::safe_release(pDXGIOutput);
 
-    return hr;
+    if (SUCCEEDED(hr))
+        return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success;
+    else
+        return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::generic_fail;
 }
 
-HRESULT	solids::lib::video::sink::d3d11::plain::renderer::core::process_sample(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output)
+int32_t solids::lib::video::sink::d3d11::plain::renderer::core::release(void)
+{
+	return solids::lib::video::sink::d3d11::plain::renderer::err_code_t::success;
+}
+
+BOOL solids::lib::video::sink::d3d11::plain::renderer::core::present(void)
+{
+    HRESULT hr = _swap_chain->Present(0, 0);
+    if (SUCCEEDED(hr))
+        return TRUE;
+    else
+        return FALSE;
+}
+
+ID3D11Device * solids::lib::video::sink::d3d11::plain::renderer::core::d3d11_dev(void)
+{
+    return _d3d11_dev;
+}
+
+void solids::lib::video::sink::d3d11::plain::renderer::core::set_fullscreen(BOOL fs)
+{
+    _fullscreen = fs;
+}
+
+BOOL solids::lib::video::sink::d3d11::plain::renderer::core::get_fullscreen(void)
+{
+    return _fullscreen;
+}
+
+void solids::lib::video::sink::d3d11::plain::renderer::core::set_image_resolution(int32_t width, int32_t height)
+{
+    _image_width = width;
+    _image_height = height;
+}
+
+void solids::lib::video::sink::d3d11::plain::renderer::core::get_image_resolution(int32_t& width, int32_t& height)
+{
+    width = _image_width;
+    height = _image_height;
+}
+
+void solids::lib::video::sink::d3d11::plain::renderer::core::set_display_rect(RECT display_rect)
+{
+    _display_rect = display_rect;
+}
+
+void solids::lib::video::sink::d3d11::plain::renderer::core::set_real_display_resolution(int32_t width, int32_t height)
+{
+    _real_display_width = width;
+    _real_display_height = height;
+}
+
+HRESULT	solids::lib::video::sink::d3d11::plain::renderer::core::process(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output)
 {
     HRESULT hr = S_OK;
     ID3D11VideoContext *                pVideoContext   = NULL;

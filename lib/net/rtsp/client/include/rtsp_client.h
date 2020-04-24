@@ -125,7 +125,7 @@ namespace solids
 
 					static void kill_trigger(void * param);
 
-					void		on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height);
+					void		on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height, int32_t fps);
 					void		on_recv_video(uint8_t* bytes, int32_t nbytes, long long pts, long long duration);
 					void		on_end_video(void);
 

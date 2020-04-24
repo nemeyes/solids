@@ -460,7 +460,7 @@ void solids::lib::net::rtsp::client::core::setup_streams(void)
 				solids::lib::video::bitstream::parser::parse_seq_parameter_set(solids::lib::net::rtsp::client::video_codec_t::hevc, (const uint8_t*)vpsspspps[1], vpsspspps_size[1], wdth, hght);
 				width(wdth);
 				height(hght);
-				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size, wdth, hght);
+				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::hevc, extradata, extradata_size, wdth, hght, 60);
 
 				delete [] vpsRecord;
 				delete [] spsRecord;
@@ -497,7 +497,7 @@ void solids::lib::net::rtsp::client::core::setup_streams(void)
 				solids::lib::video::bitstream::parser::parse_seq_parameter_set(solids::lib::net::rtsp::client::video_codec_t::avc, (const uint8_t*)spspps[1], spspps_size[1], wdth, hght);
 				width(wdth);
 				height(hght);
-				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size, wdth, hght);
+				on_begin_video(solids::lib::net::rtsp::client::video_codec_t::avc, extradata, extradata_size, wdth, hght, 60);
 			}
 			else if (!strcmp(media_subsession->codecName(), "MP4V-ES"))
 			{
@@ -802,10 +802,10 @@ int32_t solids::lib::net::rtsp::client::core::height(void)
 	return _height;
 }
 
-void solids::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height)
+void solids::lib::net::rtsp::client::core::on_begin_video(int32_t codec, uint8_t * extradata, int32_t extradata_size, int32_t width, int32_t height, int32_t fps)
 {
 	if (_front)
-		_front->on_begin_video(codec, extradata, extradata_size, width, height);
+		_front->on_begin_video(codec, extradata, extradata_size, width, height, fps);
 }
 
 void solids::lib::net::rtsp::client::core::on_recv_video(uint8_t * bytes, int32_t nbytes, long long pts, long long duration)
