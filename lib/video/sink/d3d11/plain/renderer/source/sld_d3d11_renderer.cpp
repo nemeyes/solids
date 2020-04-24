@@ -19,9 +19,9 @@ BOOL solids::lib::video::sink::d3d11::plain::renderer::is_initialized(void)
 	return _core->is_initialized();
 }
 
-int32_t solids::lib::video::sink::d3d11::plain::renderer::initialize(void)
+int32_t solids::lib::video::sink::d3d11::plain::renderer::initialize(solids::lib::video::sink::d3d11::plain::renderer::context_t* context)
 {
-	return _core->initialize();
+	return _core->initialize(context);
 }
 
 int32_t solids::lib::video::sink::d3d11::plain::renderer::release(void)
@@ -69,14 +69,9 @@ void solids::lib::video::sink::d3d11::plain::renderer::set_real_display_resoluti
 	_core->set_real_display_resolution(width, height);
 }
 
-HRESULT solids::lib::video::sink::d3d11::plain::renderer::create_d3d11_dev(int32_t useDebugLayer)
+HRESULT solids::lib::video::sink::d3d11::plain::renderer::process(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output)
 {
-	return _core->create_d3d11_dev(useDebugLayer);
-}
-
-HRESULT solids::lib::video::sink::d3d11::plain::renderer::process_sample(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output)
-{
-	return _core->process_sample(hwnd, input, vi, rcDst, interlace, output);
+	return _core->process(hwnd, input, vi, rcDst, interlace, output);
 }
 
 void solids::lib::video::sink::d3d11::plain::renderer::release_d3d11_dev(void)

@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{4636af94-7783-4ece-aa97-720e3ff4469b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="misc">
+      <UniqueIdentifier>{8ce4f426-3eeb-40e2-b303-f75c1369d266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{b5f57fa8-dd67-490b-9d6f-f9fc55872eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="contents">
+      <UniqueIdentifier>{5b7349cd-c149-4130-be94-904db9f8135c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="helpers">
+      <UniqueIdentifier>{daa6eec9-d2ab-4d31-92cc-67c0e43fce55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="contents\readers">
+      <UniqueIdentifier>{0cd68ad8-796d-4265-8df7-cbe7e74839d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{f7521575-20ef-44b9-8642-a13529d514ce}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="misc\d3d11_rtti.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_clock.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_time.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\d3d11_service.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_render_target.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="contents\d3d11_content_manager.h">
+      <Filter>contents</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_exception.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\d3d11_string_helper.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_engine.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="contents\d3d11_content_type_reader.h">
+      <Filter>contents</Filter>
+    </ClInclude>
+    <ClInclude Include="contents\d3d11_content_type_reader_manager.h">
+      <Filter>contents</Filter>
+    </ClInclude>
+    <ClInclude Include="contents\d3d11_vertex_shader_reader.h">
+      <Filter>contents\readers</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_vertex_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_pixel_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_hull_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_geometry_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_domain_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_compute_shader.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_texture.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="math\d3d11_rectangle.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\d3d11_point.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\d3d11_ray.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math\d3d11_frustum.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_texture_cube.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_texture_2d.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3d11_vertex_declarations.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\d3d11_utility.h">
+      <Filter>misc</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_component.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\d3d11_drawable_component.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="helpers\d3d11_dx_helper.h">
+      <Filter>helpers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="core\d3d11_clock.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\d3d11_time.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\d3d11_service.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_render_target.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="contents\d3d11_content_manager.cpp">
+      <Filter>contents</Filter>
+    </ClCompile>
+    <ClCompile Include="core\d3d11_exception.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers\d3d11_string_helper.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="core\d3d11_engine.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="contents\d3d11_content_type_reader.cpp">
+      <Filter>contents</Filter>
+    </ClCompile>
+    <ClCompile Include="contents\d3d11_content_type_reader_manager.cpp">
+      <Filter>contents</Filter>
+    </ClCompile>
+    <ClCompile Include="contents\d3d11_vertex_shader_reader.cpp">
+      <Filter>contents\readers</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_vertex_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_pixel_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_hull_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_geometry_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_domain_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_compute_shader.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_texture.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="math\d3d11_rectangle.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\d3d11_point.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\d3d11_ray.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="math\d3d11_frustum.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_texture_cube.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_texture_2d.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\d3d11_vertex_declarations.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\d3d11_utility.cpp">
+      <Filter>misc</Filter>
+    </ClCompile>
+    <ClCompile Include="core\d3d11_component.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\d3d11_drawable_component.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="helpers\d3d11_dx_helper.cpp">
+      <Filter>helpers</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="contents\d3d11_content_manager.inl">
+      <Filter>contents</Filter>
+    </None>
+    <None Include="contents\d3d11_content_type_reader.inl">
+      <Filter>contents</Filter>
+    </None>
+    <None Include="graphics\d3d11_texture.inl">
+      <Filter>graphics</Filter>
+    </None>
+    <None Include="math\d3d11_rectangle.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="math\d3d11_point.inl">
+      <Filter>math</Filter>
+    </None>
+    <None Include="graphics\d3d11_vertex_declarations.inl">
+      <Filter>graphics</Filter>
+    </None>
+    <None Include="core\d3d11_engine.inl">
+      <Filter>core</Filter>
+    </None>
+  </ItemGroup>
+</Project>

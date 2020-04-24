@@ -68,7 +68,7 @@ namespace solids
                             HRESULT     CheckDeviceState(BOOL* pbDeviceChanged);
                             BOOL        check_empty_rect(RECT* pDst);
                             HRESULT     check_shutdown(void) const;
-                            HRESULT     create_dxgi_manager_and_device(D3D_DRIVER_TYPE DriverType = D3D_DRIVER_TYPE_HARDWARE);
+                            HRESULT     create_dxgi_manager_and_device();
                             HRESULT     GetVideoDisplayArea(IMFMediaType* pType, MFVideoArea* pArea);
                             void        PixelAspectToPictureAspect(int Width, int Height, int PixelAspectX, int PixelAspectY, int* pPictureAspectX, int* pPictureAspectY);
                             HRESULT     process_sample(ID3D11Texture2D * pTexture2D, UINT dwViewIndex, RECT rcDest, UINT32 unInterlaceMode, IMFSample** ppVideoOutFrame);
@@ -79,6 +79,7 @@ namespace solids
                             solids::lib::mf::critical_section                   _lock;                  // critical section for thread safety
                             BOOL                                                _is_shutdown;               // Flag to indicate if shutdown() method was called.
                             
+                            solids::lib::video::sink::d3d11::plain::renderer::context_t _d3d11_renderer_ctx;
                             solids::lib::video::sink::d3d11::plain::renderer *  _d3d11_renderer;
 
                             IMFDXGIDeviceManager *                              m_pDXGIManager;

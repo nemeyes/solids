@@ -26,11 +26,20 @@ namespace solids
 						{
 							class core;
 						public:
+							typedef struct _context_t
+							{
+								int32_t use_debug_layer;
+								_context_t(void)
+									: use_debug_layer(0)
+								{
+								}
+							} context_t;
+
 							renderer(void);
 							~renderer(void);
 
 							BOOL			is_initialized(void);
-							int32_t			initialize(void);
+							int32_t			initialize(solids::lib::video::sink::d3d11::plain::renderer::context_t * context);
 							int32_t			release(void);
 
 							BOOL			present(void);
@@ -46,9 +55,8 @@ namespace solids
 							void			set_display_rect(RECT display_rect);
 							void			set_real_display_resolution(int32_t width, int32_t height);
 
-							HRESULT			create_d3d11_dev(int32_t useDebugLayer);
 
-							HRESULT			process_sample(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output);
+							HRESULT			process(HWND hwnd, ID3D11Texture2D * input, int32_t vi, RECT rcDst, D3D11_VIDEO_FRAME_FORMAT interlace, ID3D11Texture2D ** output);
 
 							void			release_d3d11_dev(void);
 							void			release_d3d11_video_dev(void);

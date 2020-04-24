@@ -167,9 +167,9 @@ void CSLDPlayerDlg::OnBnClickedButtonPlay()
 	_context.userdata = NULL;
 
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/samsung.mkv", MAX_PATH); //P010
-	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica.mkv", MAX_PATH); //NV12
+	::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica.mkv", MAX_PATH); //NV12
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/costarica_hevc.mp4", MAX_PATH); //NV12
-	::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/FHD_AVC.mp4", MAX_PATH); //NV12
+	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/FHD_AVC.mp4", MAX_PATH); //NV12
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/vod/test_sample.mp4", MAX_PATH); //NV12
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.0.43/costarica_avc.mkv", MAX_PATH);
 	//::wcsncpy_s(_context.url, L"rtsp://192.168.56.1:554/samsung.mkv", MAX_PATH);

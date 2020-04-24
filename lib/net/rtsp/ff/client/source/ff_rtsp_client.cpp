@@ -81,20 +81,30 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 	_stream_index[core::stream_index_t::video] = ::av_find_best_stream(_fmt_ctx, AVMEDIA_TYPE_VIDEO, -1, -1, NULL, 0);
 	_stream_index[core::stream_index_t::audio] = ::av_find_best_stream(_fmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, NULL, 0);
 
-	AVCodecID videoCodec = AV_CODEC_ID_NONE;
+	AVCodecID videoCodec		= AVCodecID::AV_CODEC_ID_NONE;
+	int32_t videoWidth			= 0;
+	int32_t videoHeight			= 0;
+	int32_t videoFPSNum			= 0;
+	int32_t videoFPSDen			= 0;
+	double videoFPS				= 0.0f;
+	int32_t videoExtradataSize	= 0;
+	uint8_t* videoExtradata		= NULL;
+	int32_t videoNum			= 0;
+	int32_t videoDen			= 0;
+	int32_t videoCodec2			= solids::lib::net::rtsp::ff::client::video_codec_t::avc;
 	if (_stream_index[core::stream_index_t::video] >= 0)
 	{
 		videoCodec			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->codec_id;
-		int32_t videoWidth	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->width;
-		int32_t videoHeight = _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->height;
-		int32_t videoFPSNum = _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->r_frame_rate.num;
-		int32_t videoFPSDen = _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->r_frame_rate.den;
+		videoWidth			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->width;
+		videoHeight			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->height;
+		videoFPSNum			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->r_frame_rate.num;
+		videoFPSDen			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->r_frame_rate.den;
 		double videoFPS		= (double)videoFPSNum / (double)videoFPSDen;
-		int32_t videoExtradataSize	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->extradata_size;
-		uint8_t * videoExtradata	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->extradata;
-		int32_t videoNum	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.num;
-		int32_t videoDen	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.den;
-		int32_t videoCodec2 = solids::lib::net::rtsp::ff::client::video_codec_t::avc;
+		videoExtradataSize	= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->extradata_size;
+		videoExtradata		= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->codecpar->extradata;
+		videoNum			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.num;
+		videoDen			= _fmt_ctx->streams[_stream_index[core::stream_index_t::video]]->time_base.den;
+		videoCodec2			= solids::lib::net::rtsp::ff::client::video_codec_t::avc;
 		switch (videoCodec)
 		{
 		case AV_CODEC_ID_H264:
@@ -104,26 +114,33 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 			videoCodec2 = solids::lib::net::rtsp::ff::client::video_codec_t::hevc;
 			break;
 		}
-
-		_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
+		//_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
 	}
 	else
 	{
 		return;
 	}
 
+	int32_t audioCodec			= 0;
+	int32_t audioSamplerate		= 0;
+	int32_t audioChannels		= 0;
+	int32_t audioSampleformat	= 0;
+	int32_t audioExtradataSize	= 0;
+	uint8_t* audioExtradata		= NULL;
+	int32_t audioNum			= 0;
+	int32_t audioDen			= 0;
+	int32_t audioCodec2			= solids::lib::net::rtsp::ff::client::audio_codec_t::aac;
 	if (_stream_index[core::stream_index_t::audio] >= 0)
 	{
-		int32_t audioCodec = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->codec_id;
-		int32_t audioSamplerate = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->sample_rate;
-		int32_t audioChannels = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->channels;
-		int32_t audioSampleformat = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->format;
-		int32_t audioExtradataSize = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->extradata_size;
-		uint8_t * audioExtradata = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->extradata;
-		int32_t audioNum = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.num;
-		int32_t audioDen = _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den;
-
-		int32_t audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::aac;
+		audioCodec			= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->codec_id;
+		audioSamplerate		= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->sample_rate;
+		audioChannels		= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->channels;
+		audioSampleformat	= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->format;
+		audioExtradataSize	= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->extradata_size;
+		audioExtradata		= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->codecpar->extradata;
+		audioNum			= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.num;
+		audioDen			= _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den;
+		audioCodec2			= solids::lib::net::rtsp::ff::client::audio_codec_t::aac;
 		switch (audioCodec)
 		{
 		case AV_CODEC_ID_AAC:
@@ -139,11 +156,11 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 			audioCodec2 = solids::lib::net::rtsp::ff::client::audio_codec_t::opus;
 			break;
 		}
-
-		_front->on_begin_audio(audioCodec2, audioExtradata, audioExtradataSize, audioSamplerate, audioChannels);
+		//_front->on_begin_audio(audioCodec2, audioExtradata, audioExtradataSize, audioSamplerate, audioChannels);
 	}
 
 	BOOL bWaitFirstVideo = TRUE;
+	BOOL bWaitFirstAudio = TRUE;
 	int64_t videoStartTime = 0;
 	while (_run)
 	{
@@ -160,30 +177,55 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 					{
 						if (videoCodec == AV_CODEC_ID_H264)
 						{
-							if (((pkt->data[4] & 0x1F) == 0x07) || ((pkt->data[4] & 0x1F) == 0x08) || ((pkt->data[4] & 0x1F) == 0x05))
-							{
-								videoStartTime = pkt->pts;
-								bWaitFirstVideo = FALSE;
-							}
-							else
-								continue;
-						}
-						else if (videoCodec == AV_CODEC_ID_HEVC)
-						{
-							bWaitFirstVideo = FALSE;
 							/*
 							char debug[MAX_PATH] = { 0 };
 							_snprintf_s(debug, MAX_PATH, "%.2x %.2x %.2x %.2x %.2x\n", pkt->data[0], pkt->data[1], pkt->data[2], pkt->data[3], pkt->data[4]);
 							::OutputDebugStringA(debug);
 							*/
+#if 0
+							if (((pkt->data[4] & 0x1F) == 0x07) || ((pkt->data[4] & 0x1F) == 0x08) || ((pkt->data[4] & 0x1F) == 0x05))
+							{
+								videoStartTime = pkt->pts;
+								bWaitFirstVideo = FALSE;
+								_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
+							}
+							else
+							{
+								continue;
+							}
+#else
+							videoStartTime = pkt->pts;
+							bWaitFirstVideo = FALSE;
+							_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
+#endif
+						}
+						else if (videoCodec == AV_CODEC_ID_HEVC)
+						{
+							/*
+							char debug[MAX_PATH] = { 0 };
+							_snprintf_s(debug, MAX_PATH, "%.2x %.2x %.2x %.2x %.2x\n", pkt->data[0], pkt->data[1], pkt->data[2], pkt->data[3], pkt->data[4]);
+							::OutputDebugStringA(debug);
+							*/
+#if 0
 							if ((((pkt->data[4] >> 1) & 0x3F) == 0x20) ||
 								(((pkt->data[4] >> 1) & 0x3F) == 0x21) ||
 								(((pkt->data[4] >> 1) & 0x3F) == 0x22) ||
 								(((pkt->data[4] >> 1) & 0x3F) == 0x13) ||
 								(((pkt->data[4] >> 1) & 0x3F) == 0x14))
+							{
+								videoStartTime = pkt->pts;
 								bWaitFirstVideo = FALSE;
+								_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
+							}
 							else
+							{
 								continue;
+							}
+#else
+							videoStartTime = pkt->pts;
+							bWaitFirstVideo = FALSE;
+							_front->on_begin_video(videoCodec2, videoExtradata, videoExtradataSize, videoWidth, videoHeight, int32_t(round(videoFPS)));
+#endif
 						}
 					}
 					if (!bWaitFirstVideo)
@@ -194,7 +236,13 @@ void solids::lib::net::rtsp::ff::client::core::process(void)
 			{
 				if (pkt->size > 0)
 				{
-					_front->on_recv_audio(pkt->data, pkt->size, (pkt->pts * 10000000) / _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den, (pkt->duration * 10000000) / _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den);
+					if (bWaitFirstAudio)
+					{
+						bWaitFirstAudio = FALSE;
+						_front->on_begin_audio(audioCodec2, audioExtradata, audioExtradataSize, audioSamplerate, audioChannels);
+					}
+					if (!bWaitFirstAudio)
+						_front->on_recv_audio(pkt->data, pkt->size, (pkt->pts * 10000000) / _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den, (pkt->duration * 10000000) / _fmt_ctx->streams[_stream_index[core::stream_index_t::audio]]->time_base.den);
 				}
 			}
 		}

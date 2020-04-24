@@ -2,7 +2,6 @@
 #define _SLD_MF_BASE_H_
 
 #define WIN32_LEAN_AND_MEAN
-#include <winsock2.h>
 #include <windows.h>
 #include <atlbase.h>
 #include <float.h>
