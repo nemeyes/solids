@@ -193,7 +193,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\base\include;$(SolutionDir)lib\video\sink\d3d11\plain\renderer\include;$(SolutionDir)lib\mf\base\include;$(SolutionDir)lib\mf\sink\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\video\sink\d3d11\plain\renderer\include;$(SolutionDir)lib\mf\base\include;$(SolutionDir)lib\mf\sink\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -203,9 +203,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
-      <AdditionalDependencies>winmm.lib;d3d11.lib;mfuuid.lib;mfplat.lib;wmcodecdspuuid.lib;strmiids.lib;D3D11Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libtcmalloc_minimal.lib;winmm.lib;d3d11.lib;mfuuid.lib;mfplat.lib;wmcodecdspuuid.lib;strmiids.lib;D3D11Renderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>mf_d3d11_renderer.def</ModuleDefinitionFile>
+      <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

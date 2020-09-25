@@ -179,7 +179,7 @@
       <PreprocessorDefinitions>NDEBUG;EMMERGETRANSFORM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\base\include;$(SolutionDir)lib\mf\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\mf\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -189,8 +189,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
-      <AdditionalDependencies>winmm.lib;mfuuid.lib;mfplat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libtcmalloc_minimal.lib;winmm.lib;mfuuid.lib;mfplat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>$(SolutionDir)lib\mf\transform\merge\source\mf_merge_transform.def</ModuleDefinitionFile>
+      <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

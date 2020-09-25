@@ -3,7 +3,7 @@
 
 //#include <winsock2.h>
 #include <windows.h>
-#include <winrt\Windows.Foundation.h>
+//#include <winrt\Windows.Foundation.h>
 #include <cstdlib>
 #include <cstdio>
 #include <cstdint>
@@ -31,9 +31,9 @@
 #include <d3d11_4.h>
 
 
-#if defined(_DEBUG) && !defined(WITH_DISABLE_VLD)
-#include <vld.h>
-#endif
+//#if defined(_DEBUG) && !defined(WITH_DISABLE_VLD)
+//#include <vld.h>
+//#endif
 
 #define SLD_MAX(A, B)                           (((A) > (B)) ? (A) : (B))
 #define SLD_MIN(A, B)                           (((A) < (B)) ? (A) : (B))
@@ -101,6 +101,14 @@ namespace solids
 				static const int32_t vp8 = 4;
 				static const int32_t vp9 = 5;
 			} video_codec_t;
+
+			typedef struct _colorspace_t
+			{
+				static const int nv12 = 0;
+				static const int bgra = 1;
+				static const int yv12 = 2;
+				static const int i420 = 3;
+			} colorspace_t;
 
 			typedef struct _audio_codec_t
 			{

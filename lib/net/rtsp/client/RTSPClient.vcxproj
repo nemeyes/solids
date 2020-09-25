@@ -556,7 +556,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;_WINSOCK_DEPRECATED_NO_WARNINGS;EXPORT_SLD_RTSP_CLIENT_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\base\include;$(SolutionDir)lib\video\bitstream\include;live;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\video\bitstream\include;live;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -566,8 +566,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
-      <AdditionalDependencies>rpcrt4.lib;ws2_32.lib;mswsock.lib;H2645BitstreamParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libtcmalloc_minimal.lib;rpcrt4.lib;ws2_32.lib;mswsock.lib;H2645BitstreamParser.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
