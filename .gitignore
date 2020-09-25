@@ -1,3 +1,5 @@
 /.vs/*
 /release/*
 *.vcxproj.user
+**VC.db
+**.ipch

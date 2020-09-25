@@ -195,7 +195,7 @@ regsvr32 /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;WITH_FFRTSPCLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)lib\base\include;$(SolutionDir)lib\net\rtsp\ff\client\include;$(SolutionDir)lib\net\rtsp\client\include;$(SolutionDir)lib\mf\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\net\rtsp\ff\client\include;$(SolutionDir)lib\net\rtsp\client\include;$(SolutionDir)lib\mf\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -204,10 +204,11 @@ regsvr32 /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>winmm.lib;mfuuid.lib;mfplat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libtcmalloc_minimal.lib;winmm.lib;mfuuid.lib;mfplat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
       <ModuleDefinitionFile>$(SolutionDir)lib\mf\source\rtsp\source\mf_rtsp_source.def</ModuleDefinitionFile>
+      <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
     <PostBuildEvent>
       <Command>regsvr32 /u /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll
