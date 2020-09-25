@@ -162,7 +162,8 @@
       <ModuleDefinitionFile>$(SolutionDir)lib\mf\source\rtsp\source\mf_rtsp_source.def</ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>regsvr32 /u /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll
+      <Command>$(SolutionDir)scripts\copy_mf_rtsp_source_dlls.bat $(SolutionDir) $(Configuration)
+regsvr32 /u /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll
 regsvr32 /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -211,7 +212,8 @@ regsvr32 /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName
       <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
     <PostBuildEvent>
-      <Command>regsvr32 /u /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll
+      <Command>$(SolutionDir)scripts\copy_mf_rtsp_source_dlls.bat $(SolutionDir) $(Configuration)
+regsvr32 /u /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll
 regsvr32 /s $(SolutionDir)release\$(Platform)\$(Configuration)\bin\$(ProjectName).dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
