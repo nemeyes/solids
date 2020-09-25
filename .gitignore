@@ -3,3 +3,8 @@
 *.vcxproj.user
 **VC.db
 **.ipch
+**VC.db-shm
+**VC.db-wal
+**VC.opendb
+**.suo
+**.bak
