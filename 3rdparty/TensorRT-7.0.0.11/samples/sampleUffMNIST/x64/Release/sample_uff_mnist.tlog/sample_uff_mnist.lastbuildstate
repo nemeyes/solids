@@ -1,0 +1,2 @@
+#TargetFrameworkVersion=v4.0:PlatformToolSet=v141:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0.18362.0
+Release|x64|D:\Download\TensorRT-7.0.0.11.Windows10.x86_64.cuda-10.0.cudnn7.6\TensorRT-7.0.0.11\samples\sampleUffMNIST\|

@@ -1,0 +1,569 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-us" xml:lang="en-us">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+      <meta name="copyright" content="(C) Copyright 2005"></meta>
+      <meta name="DC.rights.owner" content="(C) Copyright 2005"></meta>
+      <meta name="DC.Type" content="cuda_reference"></meta>
+      <meta name="DC.Title" content="Overview"></meta>
+      <meta name="DC.Format" content="XHTML"></meta>
+      <meta name="DC.Identifier" content="r_overview"></meta>
+      <link rel="stylesheet" type="text/css" href="../common/formatting/commonltr.css"></link>
+      <link rel="stylesheet" type="text/css" href="../common/formatting/site.css"></link>
+      <title>CUPTI :: CUPTI Documentation</title>
+      <!--[if lt IE 9]>
+      <script src="../common/formatting/html5shiv-printshiv.min.js"></script>
+      <![endif]-->
+      <script type="text/javascript" charset="utf-8" src="../common/scripts/tynt/tynt.js"></script>
+      <script type="text/javascript" charset="utf-8" src="../common/formatting/jquery.min.js"></script>
+      <script type="text/javascript" charset="utf-8" src="../common/formatting/jquery.ba-hashchange.min.js"></script>
+      <script type="text/javascript" charset="utf-8" src="../common/formatting/jquery.scrollintoview.min.js"></script>
+      <script type="text/javascript" src="../search/htmlFileList.js"></script>
+      <script type="text/javascript" src="../search/htmlFileInfoList.js"></script>
+      <script type="text/javascript" src="../search/nwSearchFnt.min.js"></script>
+      <script type="text/javascript" src="../search/stemmers/en_stemmer.min.js"></script>
+      <script type="text/javascript" src="../search/index-1.js"></script>
+      <script type="text/javascript" src="../search/index-2.js"></script>
+      <script type="text/javascript" src="../search/index-3.js"></script>
+      <link rel="canonical" href="https://developer.nvidia.com/Cupti/index.html"></link>
+      <link rel="stylesheet" type="text/css" href="../common/formatting/qwcode.highlight.css"></link>
+   </head>
+   <body>
+      
+      <header id="header"><span id="company">NVIDIA</span><span id="site-title">CUPTI Documentation</span><form id="search" method="get" action="search">
+            <input type="text" name="search-text"></input><fieldset id="search-location">
+               <legend>Search In:</legend>
+               <label><input type="radio" name="search-type" value="site"></input>Entire Site</label>
+               <label><input type="radio" name="search-type" value="document"></input>Just This Document</label></fieldset>
+            <button type="reset">clear search</button>
+            <button id="submit" type="submit">search</button></form>
+      </header>
+      <div id="site-content">
+         <nav id="site-nav">
+            <div class="category closed"><a href="../index.html" title="The root of the site.">CUPTI
+                  v10.2</a></div>
+            <div class="category"><a href="index.html" title="CUPTI">CUPTI</a></div>
+            <ul>
+               <li>
+                  <div class="section-link"><a href="r_overview.html#r_overview">Overview</a></div>
+                  <ul>
+                     <li>
+                        <div class="section-link"><a href="r_overview.html#r_whats_new">What's New</a></div>
+                     </li>
+                  </ul>
+               </li>
+               <li>
+                  <div class="section-link"><a href="r_main.html#r_main">1.&nbsp;Usage</a></div>
+                  <ul>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_compatibility_requirements">1.1.&nbsp;CUPTI Compatibility and Requirements</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_initialization">1.2.&nbsp;CUPTI Initialization</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_activity">1.3.&nbsp;CUPTI Activity API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_source_correlation">1.3.1.&nbsp;SASS Source Correlation</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_pc_sampling">1.3.2.&nbsp;PC Sampling</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_nvlink">1.3.3.&nbsp;NVLink</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_openacc">1.3.4.&nbsp;OpenACC</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#unique_1380481505">1.3.5.&nbsp;External Correlation</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_callback_api">1.4.&nbsp;CUPTI Callback API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_driver_runtime_api_callback">1.4.1.&nbsp;Driver and Runtime API Callbacks</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_resource_callbacks">1.4.2.&nbsp;Resource Callbacks</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_synchronization_callbacks">1.4.3.&nbsp;Synchronization Callbacks</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_nvtx_callbacks">1.4.4.&nbsp;NVIDIA Tools Extension Callbacks</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_event_api">1.5.&nbsp;CUPTI Event API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_collecting_kernel_execution_events">1.5.1.&nbsp;Collecting Kernel Execution Events</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_sampling_events">1.5.2.&nbsp;Sampling Events</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_metric_api">1.6.&nbsp;CUPTI Metric API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#metrics-reference">1.6.1.&nbsp;Metrics Reference</a></div>
+                              <ul>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#metrics-reference-3x">1.6.1.1.&nbsp;Metrics for Capability 3.x</a></div>
+                                 </li>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#metrics-reference-5x">1.6.1.2.&nbsp;Metrics for Capability 5.x</a></div>
+                                 </li>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#metrics-reference-6x">1.6.1.3.&nbsp;Metrics for Capability 6.x</a></div>
+                                 </li>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#metrics-reference-7x">1.6.1.4.&nbsp;Metrics for Capability 7.0</a></div>
+                                 </li>
+                              </ul>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_profiler">1.7.&nbsp;CUPTI Profiling API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_multi_pass_collection">1.7.1.&nbsp;Multi Pass Collection</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_range_profiling">1.7.2.&nbsp;Range Profiling</a></div>
+                              <ul>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#r_profiler_auto_range">1.7.2.1.&nbsp;Auto Range</a></div>
+                                 </li>
+                                 <li>
+                                    <div class="section-link"><a href="r_main.html#r_profiler_user_range">1.7.2.2.&nbsp;User Range</a></div>
+                                 </li>
+                              </ul>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_profiler_definitions">1.7.3.&nbsp;CUPTI Profiler Definitions</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_host_metrics_api">1.8.&nbsp;Perfworks Metrics API</a></div>
+                        <ul>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_host_derived_metrics_api">1.8.1.&nbsp;Derived metrics</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#r_host_raw_metrics_api">1.8.2.&nbsp;Raw Metrics</a></div>
+                           </li>
+                           <li>
+                              <div class="section-link"><a href="r_main.html#metrics_map_table_70">1.8.3.&nbsp;Metrics Mapping Table</a></div>
+                           </li>
+                        </ul>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_samples">1.9.&nbsp;Samples</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="r_main.html#r_profiling_migration">1.10.&nbsp;Migration to the new Profiling API</a></div>
+                     </li>
+                  </ul>
+               </li>
+               <li>
+                  <div class="section-link"><a href="modules.html#modules">2.&nbsp;Modules</a></div>
+                  <ul>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__RESULT__API">2.1.&nbsp;CUPTI Result Codes</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__VERSION__API">2.2.&nbsp;CUPTI Version</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__ACTIVITY__API">2.3.&nbsp;CUPTI Activity API</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__CALLBACK__API">2.4.&nbsp;CUPTI Callback API</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__EVENT__API">2.5.&nbsp;CUPTI Event API</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__METRIC__API">2.6.&nbsp;CUPTI Metric API</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="modules.html#group__CUPTI__PROFILER__API">2.7.&nbsp;CUPTI Profiler API</a></div>
+                     </li>
+                  </ul>
+               </li>
+               <li>
+                  <div class="section-link"><a href="annotated.html#annotated">3.&nbsp;Data Structures</a></div>
+                  <ul>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Activity">3.1.&nbsp;CUpti_Activity</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityAPI">3.2.&nbsp;CUpti_ActivityAPI</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityAutoBoostState">3.3.&nbsp;CUpti_ActivityAutoBoostState</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityBranch">3.4.&nbsp;CUpti_ActivityBranch</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityBranch2">3.5.&nbsp;CUpti_ActivityBranch2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityCdpKernel">3.6.&nbsp;CUpti_ActivityCdpKernel</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityContext">3.7.&nbsp;CUpti_ActivityContext</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityCudaEvent">3.8.&nbsp;CUpti_ActivityCudaEvent</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityDevice">3.9.&nbsp;CUpti_ActivityDevice</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityDevice2">3.10.&nbsp;CUpti_ActivityDevice2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityDeviceAttribute">3.11.&nbsp;CUpti_ActivityDeviceAttribute</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityEnvironment">3.12.&nbsp;CUpti_ActivityEnvironment</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityEvent">3.13.&nbsp;CUpti_ActivityEvent</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityEventInstance">3.14.&nbsp;CUpti_ActivityEventInstance</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityExternalCorrelation">3.15.&nbsp;CUpti_ActivityExternalCorrelation</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityFunction">3.16.&nbsp;CUpti_ActivityFunction</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityGlobalAccess">3.17.&nbsp;CUpti_ActivityGlobalAccess</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityGlobalAccess2">3.18.&nbsp;CUpti_ActivityGlobalAccess2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityGlobalAccess3">3.19.&nbsp;CUpti_ActivityGlobalAccess3</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstantaneousEvent">3.20.&nbsp;CUpti_ActivityInstantaneousEvent</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstantaneousEventInstance">3.21.&nbsp;CUpti_ActivityInstantaneousEventInstance</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstantaneousMetric">3.22.&nbsp;CUpti_ActivityInstantaneousMetric</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstantaneousMetricInstance">3.23.&nbsp;CUpti_ActivityInstantaneousMetricInstance</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstructionCorrelation">3.24.&nbsp;CUpti_ActivityInstructionCorrelation</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityInstructionExecution">3.25.&nbsp;CUpti_ActivityInstructionExecution</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityKernel">3.26.&nbsp;CUpti_ActivityKernel</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityKernel2">3.27.&nbsp;CUpti_ActivityKernel2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityKernel3">3.28.&nbsp;CUpti_ActivityKernel3</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityKernel4">3.29.&nbsp;CUpti_ActivityKernel4</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMarker">3.30.&nbsp;CUpti_ActivityMarker</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMarker2">3.31.&nbsp;CUpti_ActivityMarker2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMarkerData">3.32.&nbsp;CUpti_ActivityMarkerData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMemcpy">3.33.&nbsp;CUpti_ActivityMemcpy</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMemcpy2">3.34.&nbsp;CUpti_ActivityMemcpy2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMemory">3.35.&nbsp;CUpti_ActivityMemory</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMemset">3.36.&nbsp;CUpti_ActivityMemset</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMetric">3.37.&nbsp;CUpti_ActivityMetric</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityMetricInstance">3.38.&nbsp;CUpti_ActivityMetricInstance</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityModule">3.39.&nbsp;CUpti_ActivityModule</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityName">3.40.&nbsp;CUpti_ActivityName</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityNvLink">3.41.&nbsp;CUpti_ActivityNvLink</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityNvLink2">3.42.&nbsp;CUpti_ActivityNvLink2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityNvLink3">3.43.&nbsp;CUpti_ActivityNvLink3</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#unionCUpti__ActivityObjectKindId">3.44.&nbsp;CUpti_ActivityObjectKindId</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOpenAcc">3.45.&nbsp;CUpti_ActivityOpenAcc</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOpenAccData">3.46.&nbsp;CUpti_ActivityOpenAccData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOpenAccLaunch">3.47.&nbsp;CUpti_ActivityOpenAccLaunch</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOpenAccOther">3.48.&nbsp;CUpti_ActivityOpenAccOther</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOpenMp">3.49.&nbsp;CUpti_ActivityOpenMp</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityOverhead">3.50.&nbsp;CUpti_ActivityOverhead</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPcie">3.51.&nbsp;CUpti_ActivityPcie</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPCSampling">3.52.&nbsp;CUpti_ActivityPCSampling</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPCSampling2">3.53.&nbsp;CUpti_ActivityPCSampling2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPCSampling3">3.54.&nbsp;CUpti_ActivityPCSampling3</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPCSamplingConfig">3.55.&nbsp;CUpti_ActivityPCSamplingConfig</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPCSamplingRecordInfo">3.56.&nbsp;CUpti_ActivityPCSamplingRecordInfo</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityPreemption">3.57.&nbsp;CUpti_ActivityPreemption</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivitySharedAccess">3.58.&nbsp;CUpti_ActivitySharedAccess</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivitySourceLocator">3.59.&nbsp;CUpti_ActivitySourceLocator</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityStream">3.60.&nbsp;CUpti_ActivityStream</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivitySynchronization">3.61.&nbsp;CUpti_ActivitySynchronization</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityUnifiedMemoryCounter">3.62.&nbsp;CUpti_ActivityUnifiedMemoryCounter</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityUnifiedMemoryCounter2">3.63.&nbsp;CUpti_ActivityUnifiedMemoryCounter2</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ActivityUnifiedMemoryCounterConfig">3.64.&nbsp;CUpti_ActivityUnifiedMemoryCounterConfig</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__CallbackData">3.65.&nbsp;CUpti_CallbackData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__EventGroupSet">3.66.&nbsp;CUpti_EventGroupSet</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__EventGroupSets">3.67.&nbsp;CUpti_EventGroupSets</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__GraphData">3.68.&nbsp;CUpti_GraphData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#unionCUpti__MetricValue">3.69.&nbsp;CUpti_MetricValue</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ModuleResourceData">3.70.&nbsp;CUpti_ModuleResourceData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__NvtxData">3.71.&nbsp;CUpti_NvtxData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__BeginPass__Params">3.72.&nbsp;CUpti_Profiler_BeginPass_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__BeginSession__Params">3.73.&nbsp;CUpti_Profiler_BeginSession_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__CounterDataImage__CalculateScratchBufferSize__Params">3.74.&nbsp;CUpti_Profiler_CounterDataImage_CalculateScratchBufferSize_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__CounterDataImage__CalculateSize__Params">3.75.&nbsp;CUpti_Profiler_CounterDataImage_CalculateSize_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__CounterDataImage__Initialize__Params">3.76.&nbsp;CUpti_Profiler_CounterDataImage_Initialize_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__CounterDataImage__InitializeScratchBuffer__Params">3.77.&nbsp;CUpti_Profiler_CounterDataImage_InitializeScratchBuffer_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__CounterDataImageOptions">3.78.&nbsp;CUpti_Profiler_CounterDataImageOptions</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__DeInitialize__Params">3.79.&nbsp;CUpti_Profiler_DeInitialize_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__DisableProfiling__Params">3.80.&nbsp;CUpti_Profiler_DisableProfiling_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__EnableProfiling__Params">3.81.&nbsp;CUpti_Profiler_EnableProfiling_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__EndPass__Params">3.82.&nbsp;CUpti_Profiler_EndPass_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__EndSession__Params">3.83.&nbsp;CUpti_Profiler_EndSession_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__FlushCounterData__Params">3.84.&nbsp;CUpti_Profiler_FlushCounterData_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__Initialize__Params">3.85.&nbsp;CUpti_Profiler_Initialize_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__IsPassCollected__Params">3.86.&nbsp;CUpti_Profiler_IsPassCollected_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__SetConfig__Params">3.87.&nbsp;CUpti_Profiler_SetConfig_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__Profiler__UnsetConfig__Params">3.88.&nbsp;CUpti_Profiler_UnsetConfig_Params</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__ResourceData">3.89.&nbsp;CUpti_ResourceData</a></div>
+                     </li>
+                     <li>
+                        <div class="section-link"><a href="annotated.html#structCUpti__SynchronizeData">3.90.&nbsp;CUpti_SynchronizeData</a></div>
+                     </li>
+                  </ul>
+               </li>
+               <li>
+                  <div class="section-link"><a href="functions.html#functions">4.&nbsp;Data Fields</a></div>
+               </li>
+               <li>
+                  <div class="section-link"><a href="r_limitations.html#r_limitations">5.&nbsp;Limitations</a></div>
+               </li>
+               <li>
+                  <div class="section-link"><a href="r_changelog.html#r_changelog">6.&nbsp;Changelog</a></div>
+               </li>
+               <li>
+                  <div class="section-link"><a href="notices-header.html#notices-header">Notices</a></div>
+                  <ul></ul>
+               </li>
+            </ul>
+         </nav>
+         <div id="resize-nav"></div>
+         <nav id="search-results">
+            <h2>Search Results</h2>
+            <ol></ol>
+         </nav>
+         
+         <div id="contents-container">
+            <div id="breadcrumbs-container">
+               <div id="breadcrumbs"><a href="index.html" shape="rect">&lt; Previous</a> | <a href="r_main.html" shape="rect">Next &gt;</a></div>
+               <div id="release-info">CUPTI
+                  (<a href="../pdf/Cupti.pdf">PDF</a>)
+                  
+                  -
+                  
+                  v10.2
+                  (<a href="https://developer.nvidia.com/cuda-toolkit-archive">older</a>)
+                  -
+                  Last updated Nov 19, 2019
+                  -
+                  <a href="mailto:devtools@nvidia.com?subject=CUPTI Documentation Feedback: CUPTI">Send Feedback</a>
+                  -
+                  <span class="st_facebook"></span><span class="st_twitter"></span><span class="st_linkedin"></span><span class="st_reddit"></span><span class="st_slashdot"></span><span class="st_tumblr"></span><span class="st_sharethis"></span></div>
+            </div>
+            <article id="contents">
+               <div class="topic nested1" id="r_overview"><a name="r_overview" shape="rect">
+                     <!-- --></a><h2 class="topictitle2">Overview</h2>
+                  <div class="body refbody">
+                     <div class="section">
+                        <p class="p">The <em class="ph i">CUDA Profiling Tools Interface</em> (CUPTI) enables the creation
+                           of profiling and tracing tools that target CUDA applications. CUPTI
+                           provides the following APIs: <em class="ph i">the Activity API</em>, the <em class="ph i">Callback API</em>,
+                           the <em class="ph i">Event API</em>, the <em class="ph i">Metric API</em> and the <em class="ph i">Profiler API</em>.
+                           Using these APIs, you can develop profiling tools that give insight into
+                           the CPU and GPU behavior of CUDA applications. CUPTI is delivered as a
+                           dynamic library on all platforms supported by CUDA.
+                        </p>
+                     </div>
+                  </div>
+                  <div class="topic reference cuda_reference nested1" id="r_whats_new"><a name="r_whats_new" shape="rect">
+                        <!-- --></a><h3 class="topictitle3">What's New</h3>
+                     <div class="body refbody">
+                        <div class="section">
+                           <div class="p">CUPTI contains below change as part of the CUDA Toolkit 10.2 release.
+                              
+                              <ul class="ul">
+                                 <li class="li">CUPTI allows tracing features for non-root and non-admin users on desktop platforms.
+                                    Note that events and metrics profiling is still restricted for non-root and non-admin users.
+                                    More details about the issue and the solutions can be found on this
+                                    <a class="xref" href="https://developer.nvidia.com/nvidia-development-tools-solutions-ERR_NVGPUCTRPERM-permission-issue-performance-counters" target="_blank" shape="rect">web page</a>.
+                                 </li>
+                                 <li class="li">Added support for tracing features on the virtual GPUs (vGPU).</li>
+                                 <li class="li">CUPTI no longer turns off the performance characteristics of CUDA Graph when tracing
+                                    the application.
+                                 </li>
+                                 <li class="li">CUPTI now shows memset nodes in the CUDA graph.</li>
+                                 <li class="li">Fixed the incorrect timing issue for the asynchronous cuMemset/cudaMemset activity.</li>
+                                 <li class="li">Several performance improvements are done in the tracing path.</li>
+                              </ul>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+               
+               <hr id="contents-end"></hr>
+               
+            </article>
+         </div>
+      </div>
+      <script language="JavaScript" type="text/javascript" charset="utf-8" src="../common/formatting/common.min.js"></script>
+      <script language="JavaScript" type="text/javascript" charset="utf-8" src="../common/scripts/google-analytics/google-analytics-write.js"></script>
+      <script language="JavaScript" type="text/javascript" charset="utf-8" src="../common/scripts/google-analytics/google-analytics-tracker.js"></script>
+      <script type="text/javascript">var switchTo5x=true;</script><script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script><script type="text/javascript">stLight.options({publisher: "998dc202-a267-4d8e-bce9-14debadb8d92", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script></body>
+</html>

@@ -15,7 +15,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -179,7 +178,7 @@ void CPETestDlg::OnBnClickedButtonPlay()
 		L"MP4 Files (*.mp4)|*.mp4|"
 		L"Mastroka Files (*.mkv)|*.mkv|"
 		L"AVI Files (*.avi)|*.avi|"
-		L"All Files||");
+		L"All Files|*.*|");
 	if (dlg.DoModal() == IDOK)
 	{
 		CString filePath = dlg.GetPathName();
@@ -242,11 +241,12 @@ void CPETestDlg::on_video_begin(int32_t codec, const uint8_t* extradata, int32_t
 	long long* pTimestamp = NULL;
 	_decoder->decode((uint8_t*)extradata, extradataSize, 0, &ppDecoded, &nDecoded, &pTimestamp);
 
-
 	_estimator = new solids::lib::video::nvidia::pose::estimator();
 	_estimator_ctx.width = width;
 	_estimator_ctx.height = height;
 	_estimator->initialize(&_estimator_ctx);
+
+	
 
 	_renderer = new solids::lib::video::nvidia::renderer();
 	_renderer_ctx.cuctx = _decoder->context();
@@ -272,6 +272,9 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 	{
 		uint8_t* render = NULL;
 		int32_t pitch = 0;
+		//cv::cuda::GpuMat img = cv::cuda::GpuMat(_decoder_ctx.height, _decoder_ctx.width, CV_8UC4, ppDecoded[i], _decoder->get_pitch2());
+		//cv::Mat mImg;
+		//img.download(mImg);
 		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
 		_renderer->render(render, pitch);
 	}
@@ -282,7 +285,7 @@ void CPETestDlg::on_video_end(void)
 	if (_renderer)
 		_renderer->release();
 	if (_decoder)
-		_decoder->release();
+		_decoder->release(); 
 	if (_estimator)
 		_estimator->release();
 	if (_renderer)

@@ -19,12 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Openpose.h" />
     <ClInclude Include="include\pose_estimator.h" />
+    <ClInclude Include="include\resize.h" />
     <ClInclude Include="include\sld_pose_estimator.h" />
+    <ClInclude Include="include\TensorrtPoseNet.h" />
+    <ClInclude Include="parse\connect_parts.hpp" />
+    <ClInclude Include="parse\find_peaks.hpp" />
+    <ClInclude Include="parse\munkres.hpp" />
+    <ClInclude Include="parse\paf_score_graph.hpp" />
+    <ClInclude Include="parse\refine_peaks.hpp" />
+    <ClInclude Include="parse\utils\CoverTable.hpp" />
+    <ClInclude Include="parse\utils\PairGraph.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="parse\connect_parts.cpp" />
+    <ClCompile Include="parse\find_peaks.cpp" />
+    <ClCompile Include="parse\munkres.cpp" />
+    <ClCompile Include="parse\paf_score_graph.cpp" />
+    <ClCompile Include="parse\refine_peaks.cpp" />
+    <ClCompile Include="source\Openpose.cpp" />
     <ClCompile Include="source\pose_estimator.cpp" />
     <ClCompile Include="source\sld_pose_estimator.cpp" />
+    <ClCompile Include="source\TensorrtPoseNet.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="source\resize.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -63,7 +83,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0\extras\visual_studio_integration\MSBuildExtensions\CUDA 11.0.props" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -138,21 +158,25 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\cudnn\v8.0.1\include;$(SolutionDir)3rdparty\TensorRT\v7.1.3.4\include;$(SolutionDir)lib\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\opencv\v4.4.0\Debug\include;$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\include;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common\windows;$(SolutionDir)lib\base\include;include;$(SolutionDir)3rdparty\cuda\v10.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\cudnn\v8.0.1\lib;$(SolutionDir)3rdparty\TensorRT\v7.1.3.4\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cudnn.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\lib;$(SolutionDir)3rdparty\opencv\v4.4.0\Debug\x64\vc16\lib;$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)3rdparty\cuda\v10.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;opencv_core440d.lib;opencv_imgproc440d.lib;opencv_objdetect440d.lib;opencv_cudaimgproc440d.lib;opencv_highgui440d.lib;opencv_video440d.lib;opencv_videoio440d.lib;opencv_features2d440d.lib;opencv_flann440d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_52,sm_52</CodeGeneration>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -164,8 +188,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)3rdparty\cudnn\v8.0.1\include;$(SolutionDir)3rdparty\TensorRT\v7.1.3.4\include;$(SolutionDir)lib\base\include;include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\opencv\v4.4.0\Release\include;$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\include;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common\windows;$(SolutionDir)lib\base\include;include;$(SolutionDir)3rdparty\cuda\v10.2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -174,17 +198,21 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
-      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)3rdparty\cudnn\v8.0.1\lib;$(SolutionDir)3rdparty\TensorRT\v7.1.3.4\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libtcmalloc_minimal.lib;nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cudnn.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\lib;$(SolutionDir)3rdparty\opencv\v4.4.0\Release\x64\vc16\lib;$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)3rdparty\cuda\v10.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;opencv_core440.lib;opencv_imgproc440.lib;opencv_highgui440.lib;opencv_video440.lib;opencv_videoio440.lib;opencv_features2d440.lib;opencv_flann440.lib;opencv_objdetect440.lib;opencv_cudaimgproc440.lib;libtcmalloc_minimal.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
     <PostBuildEvent>
       <Command>
       </Command>
     </PostBuildEvent>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <CodeGeneration>compute_52,sm_52</CodeGeneration>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.0\extras\visual_studio_integration\MSBuildExtensions\CUDA 11.0.targets" />
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.2.targets" />
   </ImportGroup>
 </Project>

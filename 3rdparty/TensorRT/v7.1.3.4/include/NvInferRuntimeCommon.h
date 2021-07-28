@@ -1187,7 +1187,7 @@ public:
 
     virtual ~IErrorRecorder() noexcept {};
 
-    // Public APIâ€™s used to retrieve information from the error recorder.
+    // Public API?™s used to retrieve information from the error recorder.
 
     //!
     //! \brief Return the number of errors
@@ -1256,7 +1256,7 @@ public:
     //!
     virtual void clear() noexcept = 0;
 
-    // APIâ€™s used by TensorRT to report Error information to the application.
+    // API?™s used by TensorRT to report Error information to the application.
 
     //!
     //! \brief report an error to the error recorder with the corresponding enum and description.
