@@ -83,6 +83,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FFDemuxer", "lib\container\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NVPlayerDetector", "lib\video\nvidia\player\detector\nvplayerdetector.vcxproj", "{7CF3BC48-2EE9-4693-97E0-71E05C0A8F55}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NVObjectDetector", "NVObjectDetector\NVObjectDetector.vcxproj", "{F08E6282-324A-4C86-A924-33C793EFCDA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{A1EC2A5E-7BA0-4DC6-A3D4-DFA9CA8B235D}"
+	ProjectSection(SolutionItems) = preProject
+		lib\video\nvidia\pose\estimator\source\resize.cu = lib\video\nvidia\pose\estimator\source\resize.cu
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -243,6 +250,14 @@ Global
 		{7CF3BC48-2EE9-4693-97E0-71E05C0A8F55}.Release|x64.Build.0 = Release|x64
 		{7CF3BC48-2EE9-4693-97E0-71E05C0A8F55}.Release|x86.ActiveCfg = Release|Win32
 		{7CF3BC48-2EE9-4693-97E0-71E05C0A8F55}.Release|x86.Build.0 = Release|Win32
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Debug|x64.ActiveCfg = Debug|x64
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Debug|x64.Build.0 = Debug|x64
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Debug|x86.ActiveCfg = Debug|Win32
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Debug|x86.Build.0 = Debug|Win32
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Release|x64.ActiveCfg = Release|x64
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Release|x64.Build.0 = Release|x64
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Release|x86.ActiveCfg = Release|Win32
+		{F08E6282-324A-4C86-A924-33C793EFCDA5}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -286,6 +301,8 @@ Global
 		{E3477C67-642E-4D04-8B58-D30E82BFEEE2} = {91DAC6AE-C64F-43E7-A141-97A9DDBE739E}
 		{490667AA-0959-49CC-9836-D6EEE2722B0D} = {E3477C67-642E-4D04-8B58-D30E82BFEEE2}
 		{7CF3BC48-2EE9-4693-97E0-71E05C0A8F55} = {58293E70-FA6B-4F1C-B501-CCDED161AA53}
+		{F08E6282-324A-4C86-A924-33C793EFCDA5} = {58293E70-FA6B-4F1C-B501-CCDED161AA53}
+		{A1EC2A5E-7BA0-4DC6-A3D4-DFA9CA8B235D} = {58293E70-FA6B-4F1C-B501-CCDED161AA53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {86E15B90-00AE-4A8A-8D98-FDE60C3E4FC7}

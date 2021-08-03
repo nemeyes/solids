@@ -83,7 +83,8 @@ namespace pose
 		cv::cuda::GpuMat img = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, input, inputStride);
 		cv::cuda::GpuMat img2;
 		cv::Mat mImg, mImg1, mImg1_2, mImg2, mImg3;
-		cv::cuda::cvtColor(img, img2, cv::COLOR_RGBA2RGB);
+		//cv::cuda::cvtColor(img, img2, cv::COLOR_RGBA2RGB);
+		cv::cuda::cvtColor(img, img2, cv::COLOR_BGRA2RGB);
 		// TODO: cuda cvt 사용하기
 		std::chrono::system_clock::time_point st = std::chrono::system_clock::now();
 		img2.download(mImg1);
@@ -116,7 +117,8 @@ namespace pose
 		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
 		std::cout << "upload elapsed Time : " << elapsedTime << std::endl;
 
-		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2RGBA);
+		//cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2RGBA);
+		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2BGRA);
 		
 		*output = (uint8_t*)img.ptr();
 
