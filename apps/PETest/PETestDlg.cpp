@@ -275,6 +275,12 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 		//cv::cuda::GpuMat img = cv::cuda::GpuMat(_decoder_ctx.height, _decoder_ctx.width, CV_8UC4, ppDecoded[i], _decoder->get_pitch2());
 		//cv::Mat mImg;
 		//img.download(mImg);
+		
+		
+		// TODO: _detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
+		// detector의 output은 bbox vector 포인터 전달. pitch의 경우 vector size값 전달...!
+		// pose estimator에 인자값하나 더 만들어주기..! bbox때문..!
+		// TODO: pose estimator에 bbox vector 전달하기...
 		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
 		_renderer->render(render, pitch);
 	}

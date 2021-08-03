@@ -15,19 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="object_detector.cpp">
+    <ClCompile Include="source\object_detector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="sld_object_detector.cpp">
+    <ClCompile Include="source\sld_object_detector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="object_detector.h">
+    <ClInclude Include="include\sld_object_detector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="sld_object_detector.h">
+    <ClInclude Include="include\object_detector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="include\resize.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="source\resize.cu">
+      <Filter>소스 파일</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

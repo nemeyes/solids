@@ -9,6 +9,7 @@
 #include <sld_nvdecoder.h>
 #include <sld_pose_estimator.h>
 #include <sld_nvrenderer.h>
+// TODO: #include <sld_object_detector.h>
 
 //#include <opencv2/opencv.hpp>
 //#include <opencv2/core/cuda.hpp>

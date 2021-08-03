@@ -159,6 +159,7 @@ namespace object
 		data.insert(data.end(), ptr2, ptr2 + inputWidthSize * inputHeightSize);
 		cudaMemcpy(cudaBuffers[0], data.data(), data.size() * sizeof(float), cudaMemcpyHostToDevice);
 #else
+		// GPU Operation
 		cudaMemcpy((void*)srcGpuImg.ptr(), input, inputStride, cudaMemcpyHostToDevice);
 		resizeAndNorm((void*)srcGpuImg.ptr(), (float*)cudaBuffers[0], 1920, 1080, inputWidthSize, inputHeightSize, cudaStream);
 #endif
@@ -175,6 +176,7 @@ namespace object
 		std::vector<float> scores;
 		std::vector<int> classes;
 
+		// TODO: Functionalization [PostProcessing]
 		for (int32_t i = 0; i < cpuConfidenceBuffer.size() / classesNum; ++i)
 		{
 			std::vector<float> tmpVector;
