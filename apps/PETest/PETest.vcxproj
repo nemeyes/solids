@@ -177,7 +177,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\misc\threadpool\manager\include;$(SolutionDir)lib\container\ff\demuxer\include;$(SolutionDir)lib\video\nvidia\decoder\include;$(SolutionDir)lib\video\nvidia\pose\estimator\include;$(SolutionDir)lib\video\nvidia\renderer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparty\gperf\v2.7\include;$(SolutionDir)lib\base\include;$(SolutionDir)lib\misc\threadpool\manager\include;$(SolutionDir)lib\container\ff\demuxer\include;$(SolutionDir)lib\video\nvidia\decoder\include;$(SolutionDir)lib\video\nvidia\pose\estimator\include;$(SolutionDir)lib\video\nvidia\renderer\include;$(SolutionDir)lib\video\nvidia\object\detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -186,7 +186,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)release\$(Platform)\$(Configuration)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libtcmalloc_minimal.lib;ThreadPoolManager.lib;FFDemuxer.lib;NVDecoder.lib;NVPoseEstimator.lib;NVRenderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libtcmalloc_minimal.lib;ThreadPoolManager.lib;FFDemuxer.lib;NVDecoder.lib;NVPoseEstimator.lib;NVObjectDetector.lib;NVRenderer.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

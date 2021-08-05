@@ -9,7 +9,7 @@
 #include <sld_nvdecoder.h>
 #include <sld_pose_estimator.h>
 #include <sld_nvrenderer.h>
-// TODO: #include <sld_object_detector.h>
+#include <sld_object_detector.h>
 
 //#include <opencv2/opencv.hpp>
 //#include <opencv2/core/cuda.hpp>
@@ -38,6 +38,9 @@ public:
 private:
 	solids::lib::video::nvidia::decoder::context_t _decoder_ctx;
 	solids::lib::video::nvidia::decoder* _decoder;
+
+	solids::lib::video::nvidia::object::detector::context_t _detector_ctx;
+	solids::lib::video::nvidia::object::detector* _detector;
 
 	solids::lib::video::nvidia::pose::estimator::context_t _estimator_ctx;
 	solids::lib::video::nvidia::pose::estimator* _estimator;

@@ -34,9 +34,9 @@ namespace pose
 		return _core->release();
 	}
 
-	int32_t estimator::estimate(uint8_t* input, int32_t inputStride, uint8_t** output, int32_t& outputStride)
+	int32_t estimator::estimate(uint8_t* input, int32_t inputStride, uint8_t* srcBBox, int32_t bboxSize, uint8_t** output, int32_t& outputStride)
 	{
-		return _core->estimate(input, inputStride, output, outputStride);
+		return _core->estimate(input, inputStride, srcBBox, bboxSize, output, outputStride);
 	}
 
 };

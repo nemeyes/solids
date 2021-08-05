@@ -86,9 +86,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NVObjectDetector", "lib\video\nvidia\object\detector\NVObjectDetector.vcxproj", "{F08E6282-324A-4C86-A924-33C793EFCDA5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{A1EC2A5E-7BA0-4DC6-A3D4-DFA9CA8B235D}"
-	ProjectSection(SolutionItems) = preProject
-		lib\video\nvidia\pose\estimator\source\resize.cu = lib\video\nvidia\pose\estimator\source\resize.cu
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

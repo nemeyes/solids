@@ -2,7 +2,7 @@
 
 
 #define MAX_WORKSPACE (1 << 30) // 1G workspace memory
-
+//#define _Only_Pose_Esimation
 static Logger gLogger;
 
 namespace solids
@@ -78,16 +78,26 @@ namespace pose
 		return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
 	}
 
-	int32_t estimator::core::estimate(uint8_t* input, int32_t inputStride, uint8_t** output, int32_t& outputStride)
+	int32_t estimator::core::estimate(uint8_t* input, int32_t inputStride, uint8_t* srcBBox, int32_t bboxSize, uint8_t** output, int32_t& outputStride)
 	{
 		cv::cuda::GpuMat img = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, input, inputStride);
-		cv::cuda::GpuMat img2;
-		cv::Mat mImg, mImg1, mImg1_2, mImg2, mImg3;
+		cv::cuda::GpuMat img2, img3;
+		
+		std::vector<cv::Rect> bboxes;
+		if(bboxSize == 0)
+			return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
+
+		// TODO: srcBBox 해제해주기
+		
+#ifdef _Only_Pose_Esimation
+		// TODO: GPUMat Crop Detected Image
+		cv::Mat mImg1;
 		//cv::cuda::cvtColor(img, img2, cv::COLOR_RGBA2RGB);
 		cv::cuda::cvtColor(img, img2, cv::COLOR_BGRA2RGB);
-		// TODO: cuda cvt 사용하기
+		
 		std::chrono::system_clock::time_point st = std::chrono::system_clock::now();
 		img2.download(mImg1);
+	
 		int elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
 		std::cout << "download elapsed Time : " << elapsedTime << std::endl;
 		
@@ -96,13 +106,14 @@ namespace pose
 		cudaMemcpy((void*)img2.ptr(), mImg1.data, mImg1.step[0] * mImg1.rows, cudaMemcpyHostToDevice);
 		resizeAndNorm((void*)img2.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
 
-		// TODO: cudamemcpy 제외하고 사용해보기
-		//cudaMemcpy((void*)img2.ptr(), cudaBuffers[0], getSizeByDim(inputDims[0]) * sizeof(float), cudaMemcpyDeviceToHost);
-
 		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
 
 		cudaMemcpy(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
 		cudaMemcpy(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		//--------------------------------------------------------------
+		//cudaMemcpyAsync(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
+		//cudaMemcpyAsync(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
+		//cudaStreamSynchronize(cudaStream);
 		//--------------------------------------------------------------
 		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
 		std::cout << "cudamemcpy & inference elapsed Time : " << elapsedTime << std::endl;
@@ -114,12 +125,82 @@ namespace pose
 
 		st = std::chrono::system_clock::now();
 		img2.upload(mImg1);
+
 		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
 		std::cout << "upload elapsed Time : " << elapsedTime << std::endl;
 
 		//cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2RGBA);
 		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2BGRA);
 		
+#else
+	for (int i = 0; i < bboxSize / sizeof(cv::Rect); ++i)
+	{
+		// get bbox
+		cv::Rect tmpRect;
+		::memmove(&tmpRect, srcBBox + (i * sizeof(cv::Rect)), sizeof(cv::Rect));
+		// TODO: BBox 예외처리해주기... 이거는 Object Detection에서 해주기
+		// 1) image size 넘치는경우
+		// 2) 좌표의 값이 -가 되는 경우
+		// 3) Person의 BBox만 보내주자
+		if (tmpRect.x < 0) tmpRect.x = 0;
+		if (tmpRect.y < 0) tmpRect.y = 0;
+		tmpRect.width = (tmpRect.width <= _ctx->width) ? tmpRect.width : _ctx->width;
+		tmpRect.height = (tmpRect.height <= _ctx->height) ? tmpRect.height : _ctx->height;
+		cv::Rect roi{ tmpRect.x, tmpRect.y, tmpRect.width - tmpRect.x, tmpRect.height - tmpRect.y };
+
+		// TODO: GPUMat Crop Detected Image
+		cv::Mat mImg, mImg1, mImg1_2, mImg2, mImg3;
+		//cv::cuda::cvtColor(img, img2, cv::COLOR_RGBA2RGB);
+		cv::cuda::cvtColor(img, img2, cv::COLOR_BGRA2RGB);
+
+		std::chrono::system_clock::time_point st = std::chrono::system_clock::now();
+		img2.download(mImg1);
+		cv::cuda::GpuMat cropimg3 = (cv::cuda::GpuMat(img2, roi)).clone();
+		cropimg3.download(mImg2);
+		//mImg1.copyTo(mImg2);
+		//mImg2 = mImg2(roi);
+		//img3.upload(mImg2);
+		int elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "download elapsed Time : " << elapsedTime << std::endl;
+
+		st = std::chrono::system_clock::now();
+		//-------------------------------------------------------------
+		//cudaMemcpy((void*)img2.ptr(), mImg1.data, mImg1.step[0] * mImg1.rows, cudaMemcpyHostToDevice);
+		//resizeAndNorm((void*)img2.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
+		cudaMemcpy((void*)cropimg3.ptr(), mImg2.data, mImg2.step[0] * mImg2.rows, cudaMemcpyHostToDevice);
+		resizeAndNorm((void*)cropimg3.ptr(), (float*)cudaBuffers[0], cropimg3.cols, cropimg3.rows, inputWidthSize, inputHeightSize, cudaStream);
+
+		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
+
+		cudaMemcpy(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		cudaMemcpy(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
+		//--------------------------------------------------------------
+		//cudaMemcpyAsync(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
+		//cudaMemcpyAsync(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
+		//cudaStreamSynchronize(cudaStream);
+		//--------------------------------------------------------------
+		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "cudamemcpy & inference elapsed Time : " << elapsedTime << std::endl;
+
+		st = std::chrono::system_clock::now();
+		m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, mImg2);
+		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "detect elapsed Time : " << elapsedTime << std::endl;
+
+		st = std::chrono::system_clock::now();
+		// crop image patch to original image
+		mImg2.copyTo(mImg1(roi));
+		img2.upload(mImg1);
+
+		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "upload elapsed Time : " << elapsedTime << std::endl;
+		//cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2RGBA);
+		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2BGRA);
+
+	}
+#endif
+
+		//-----------detect inference----------------------
 		*output = (uint8_t*)img.ptr();
 
 		//--------------------------------------------------------------

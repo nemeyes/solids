@@ -96,7 +96,7 @@ namespace object
 		cudaSetDevice(0);
 
 		// TODO: File seek function
-		std::string engineFilePath = "";
+		std::string engineFilePath = "D:\\Download\\TensorRT-7.0.0.11.Windows10.x86_64.cuda-10.0.cudnn7.6\\TensorRT-7.0.0.11\\bin\\yolov4_1_3_288_288_static_Upsample1fp16.engine";
 		std::fstream file;
 		file.open(engineFilePath, std::ios::binary | std::ios::in);
 		if (!file.is_open())
@@ -141,7 +141,8 @@ namespace object
 		cv::cuda::GpuMat rgbGpuImg;
 		int32_t classesNum = 80;
 		cv::Size frameSize = srcGpuImg.size();
-
+		cv::cuda::cvtColor(srcGpuImg, srcGpuImg, cv::COLOR_BGRA2BGR);
+		srcGpuImg.download(rgbImg);
 		// Pre-Processing
 #ifdef __host_memory
 		srcGpuImg.download(rgbImg);
@@ -160,8 +161,9 @@ namespace object
 		cudaMemcpy(cudaBuffers[0], data.data(), data.size() * sizeof(float), cudaMemcpyHostToDevice);
 #else
 		// GPU Operation
-		cudaMemcpy((void*)srcGpuImg.ptr(), input, inputStride, cudaMemcpyHostToDevice);
-		resizeAndNorm((void*)srcGpuImg.ptr(), (float*)cudaBuffers[0], 1920, 1080, inputWidthSize, inputHeightSize, cudaStream);
+		
+		cudaMemcpy((void*)srcGpuImg.ptr(), rgbImg.data, rgbImg.step[0] * rgbImg.rows, cudaMemcpyHostToDevice);
+		resizeAndNorm((void*)srcGpuImg.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
 #endif
 		// Inference
 		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
@@ -172,7 +174,7 @@ namespace object
 
 		// Post-Processing
 		int32_t stIdx = 0;
-		std::vector<cv::Rect> bboxes;
+		std::vector<cv::Rect>* bboxes = new std::vector<cv::Rect>;
 		std::vector<float> scores;
 		std::vector<int> classes;
 
@@ -210,16 +212,18 @@ namespace object
 			//int32_t x = int(centerx - w / 2);
 			//int32_t y = int(centery - h / 2);
 			cv::Rect bbox = { x, y, w, h };
-			bboxes.push_back(bbox);
+			bboxes->push_back(bbox);
 			scores.push_back(confidence);
 			classes.push_back(label);
 		}
 
 		// Step4 : Calculate NMS with NMSBoxes(opencv cv::dnn::NMSBoxes)
 		std::vector<int32_t> indices;
-		cv::dnn::NMSBoxes(bboxes, scores, confThreshold, nmsThreshold, indices); // Remote to overlap box 
+		cv::dnn::NMSBoxes(*bboxes, scores, confThreshold, nmsThreshold, indices); // Remote to overlap box 
 
 		// Step5 : draw BBoxes or Send to BBox from Pose Estimation
+		*output = (uint8_t*)bboxes->data();
+		outputStride = bboxes->size() * sizeof(cv::Rect);
 
 		return solids::lib::video::nvidia::object::detector::err_code_t::success;
 	}

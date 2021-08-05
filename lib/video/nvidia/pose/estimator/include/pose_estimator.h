@@ -75,7 +75,7 @@ namespace solids
 						int32_t initialize(solids::lib::video::nvidia::pose::estimator::context_t* ctx);
 						int32_t release(void);
 
-						int32_t estimate(uint8_t* input, int32_t inputStride, uint8_t** output, int32_t& outputStride);
+						int32_t estimate(uint8_t* input, int32_t inputStride, uint8_t* srcBBox, int32_t bboxSize, uint8_t** output, int32_t& outputStride);
 
 
 						//std::vector<nvinfer1::Dims> inputDims;

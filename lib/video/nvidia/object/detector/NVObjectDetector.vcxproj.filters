@@ -29,7 +29,7 @@
     <ClInclude Include="include\object_detector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="include\resize.h">
+    <ClInclude Include="inclue\resize.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
