@@ -178,6 +178,7 @@ namespace object
 		std::vector<float> scores;
 		std::vector<int> classes;
 
+		// TODO: NMS 관련 코드 수정하기(중첩되는 부분이 정상적으로처리가 안되는 부분이 존재... NMSThreshold값을 낮추기...)
 		// TODO: Functionalization [PostProcessing]
 		for (int32_t i = 0; i < cpuConfidenceBuffer.size() / classesNum; ++i)
 		{

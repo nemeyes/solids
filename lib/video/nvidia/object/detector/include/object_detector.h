@@ -160,7 +160,7 @@ namespace solids
 						cudaStream_t cudaStream;
 						
 						float confThreshold = 0.4f;
-						float nmsThreshold = 0.6f;
+						float nmsThreshold = 0.1f;
 					};
 					
 				}

@@ -2,7 +2,7 @@
 
 
 #define MAX_WORKSPACE (1 << 30) // 1G workspace memory
-//#define _Only_Pose_Esimation
+#define _Only_Pose_Esimation
 static Logger gLogger;
 
 namespace solids
