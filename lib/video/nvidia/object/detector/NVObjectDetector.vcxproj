@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\object_detector.h" />
-    <ClInclude Include="inclue\resize.h" />
+    <ClInclude Include="include\resize.h" />
     <ClInclude Include="include\sld_object_detector.h" />
   </ItemGroup>
   <ItemGroup>

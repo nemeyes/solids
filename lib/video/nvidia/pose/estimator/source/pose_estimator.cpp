@@ -84,52 +84,33 @@ namespace pose
 		cv::cuda::GpuMat img2, img3;
 		
 		std::vector<cv::Rect> bboxes;
+		// BBox Check ( Object Detection result )
 		if(bboxSize == 0)
 			return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
 
 		// TODO: srcBBox 해제해주기
 		
+		// Do not use BBox
 #ifdef _Only_Pose_Esimation
 		// TODO: GPUMat Crop Detected Image
 		cv::Mat mImg1;
-		//cv::cuda::cvtColor(img, img2, cv::COLOR_RGBA2RGB);
+
+		// Pre-Processing 
 		cv::cuda::cvtColor(img, img2, cv::COLOR_BGRA2RGB);
-		
-		std::chrono::system_clock::time_point st = std::chrono::system_clock::now();
 		img2.download(mImg1);
-	
-		int elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
-		std::cout << "download elapsed Time : " << elapsedTime << std::endl;
-		
-		st = std::chrono::system_clock::now();
-		//-------------------------------------------------------------
 		cudaMemcpy((void*)img2.ptr(), mImg1.data, mImg1.step[0] * mImg1.rows, cudaMemcpyHostToDevice);
 		resizeAndNorm((void*)img2.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
-
+		
+		// Inference
 		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
-
+		
+		// Inference ouput device to host
 		cudaMemcpy(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
 		cudaMemcpy(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
-		//--------------------------------------------------------------
-		//cudaMemcpyAsync(cpuCmapBuffer.data(), (float*)cudaBuffers[1], cpuCmapBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
-		//cudaMemcpyAsync(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost, cudaStream);
-		//cudaStreamSynchronize(cudaStream);
-		//--------------------------------------------------------------
-		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
-		std::cout << "cudamemcpy & inference elapsed Time : " << elapsedTime << std::endl;
 
-		st = std::chrono::system_clock::now();
+		// Post-Processing
 		m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, mImg1);
-		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
-		std::cout << "detect elapsed Time : " << elapsedTime << std::endl;
-
-		st = std::chrono::system_clock::now();
 		img2.upload(mImg1);
-
-		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
-		std::cout << "upload elapsed Time : " << elapsedTime << std::endl;
-
-		//cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2RGBA);
 		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2BGRA);
 		
 #else
@@ -200,16 +181,7 @@ namespace pose
 	}
 #endif
 
-		//-----------detect inference----------------------
 		*output = (uint8_t*)img.ptr();
-
-		//--------------------------------------------------------------
-		// Debug
-		//img.download(mImg2); // Debug
-		//cv::cuda::GpuMat imgOut = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, *output, inputStride);
-		//imgOut.download(mImg3);
-		//--------------------------------------------------------------
-
 		outputStride = inputStride;
 		return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
 	}

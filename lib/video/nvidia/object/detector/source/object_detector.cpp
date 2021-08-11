@@ -143,6 +143,7 @@ namespace object
 		cv::Size frameSize = srcGpuImg.size();
 		cv::cuda::cvtColor(srcGpuImg, srcGpuImg, cv::COLOR_BGRA2BGR);
 		srcGpuImg.download(rgbImg);
+		
 		// Pre-Processing
 #ifdef __host_memory
 		srcGpuImg.download(rgbImg);
