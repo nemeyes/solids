@@ -15,7 +15,6 @@
 #define new DEBUG_NEW
 #endif
 
-
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -58,6 +57,7 @@ CPETestDlg::CPETestDlg(CWnd* pParent /*=nullptr*/)
 	, _decoder(NULL)
 	, _estimator(NULL)
 	, _renderer(NULL)
+	, _detector(NULL)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -179,7 +179,7 @@ void CPETestDlg::OnBnClickedButtonPlay()
 		L"MP4 Files (*.mp4)|*.mp4|"
 		L"Mastroka Files (*.mkv)|*.mkv|"
 		L"AVI Files (*.avi)|*.avi|"
-		L"All Files||");
+		L"All Files|*.*|");
 	if (dlg.DoModal() == IDOK)
 	{
 		CString filePath = dlg.GetPathName();
@@ -242,11 +242,15 @@ void CPETestDlg::on_video_begin(int32_t codec, const uint8_t* extradata, int32_t
 	long long* pTimestamp = NULL;
 	_decoder->decode((uint8_t*)extradata, extradataSize, 0, &ppDecoded, &nDecoded, &pTimestamp);
 
-
 	_estimator = new solids::lib::video::nvidia::pose::estimator();
 	_estimator_ctx.width = width;
 	_estimator_ctx.height = height;
 	_estimator->initialize(&_estimator_ctx);
+
+	_detector = new solids::lib::video::nvidia::object::detector();
+	_detector_ctx.width = width;
+	_detector_ctx.height = height;
+	_detector->initialize(&_detector_ctx);
 
 	_renderer = new solids::lib::video::nvidia::renderer();
 	_renderer_ctx.cuctx = _decoder->context();
@@ -270,9 +274,22 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 	_decoder->decode(bytes, nbytes, 0, &ppDecoded, &nDecoded, &pTimestamp);
 	for (int i = 0; i < nDecoded; i++)
 	{
+		uint8_t* pBBox = NULL;
+		int32_t bboxSize = 0;
+		//std::vector<cv::Rect> BBox;
 		uint8_t* render = NULL;
 		int32_t pitch = 0;
-		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
+		//cv::cuda::GpuMat img = cv::cuda::GpuMat(_decoder_ctx.height, _decoder_ctx.width, CV_8UC4, ppDecoded[i], _decoder->get_pitch2());
+		//cv::Mat mImg;
+		//img.download(mImg);
+		
+		
+		// TODO: _detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
+		_detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &pBBox, bboxSize);
+		// detector의 output은 bbox vector 포인터 전달. pitch의 경우 vector size값 전달...!
+		// pose estimator에 인자값하나 더 만들어주기..! bbox때문..!
+		// TODO: pose estimator에 bbox vector 전달하기...
+		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), pBBox, bboxSize, &render, pitch);
 		_renderer->render(render, pitch);
 	}
 }
@@ -282,7 +299,7 @@ void CPETestDlg::on_video_end(void)
 	if (_renderer)
 		_renderer->release();
 	if (_decoder)
-		_decoder->release();
+		_decoder->release(); 
 	if (_estimator)
 		_estimator->release();
 	if (_renderer)

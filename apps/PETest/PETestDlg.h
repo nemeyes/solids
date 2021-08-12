@@ -9,7 +9,10 @@
 #include <sld_nvdecoder.h>
 #include <sld_pose_estimator.h>
 #include <sld_nvrenderer.h>
+#include <sld_object_detector.h>
 
+//#include <opencv2/opencv.hpp>
+//#include <opencv2/core/cuda.hpp>
 
 // CPETestDlg 대화 상자
 class CPETestDlg
@@ -20,7 +23,6 @@ class CPETestDlg
 // 생성입니다.
 public:
 	CPETestDlg(CWnd* pParent = nullptr);	// 표준 생성자입니다.
-
 // 대화 상자 데이터입니다.
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_PETEST_DIALOG };
@@ -36,6 +38,9 @@ public:
 private:
 	solids::lib::video::nvidia::decoder::context_t _decoder_ctx;
 	solids::lib::video::nvidia::decoder* _decoder;
+
+	solids::lib::video::nvidia::object::detector::context_t _detector_ctx;
+	solids::lib::video::nvidia::object::detector* _detector;
 
 	solids::lib::video::nvidia::pose::estimator::context_t _estimator_ctx;
 	solids::lib::video::nvidia::pose::estimator* _estimator;

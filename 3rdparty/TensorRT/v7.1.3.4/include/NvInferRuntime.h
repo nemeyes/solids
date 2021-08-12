@@ -406,10 +406,10 @@ struct DynamicPluginTensorDesc
     //! Information required to interpret a pointer to tensor data, except that desc.dims has -1 in place of any runtime dimension.
     PluginTensorDesc desc;
 
-    //! Lower bounds on tensorâ€™s dimensions
+    //! Lower bounds on tensor?™s dimensions
     Dims min;
 
-    //! Upper bounds on tensorâ€™s dimensions
+    //! Upper bounds on tensor?™s dimensions
     Dims max;
 };
 
@@ -816,7 +816,7 @@ public:
     //!
     //! * There is no such layer by that name.
     //! * The layer does not have weights with the specified role.
-    //! * The number of weights is inconsistent with the layerâ€™s original specification.
+    //! * The number of weights is inconsistent with the layer?™s original specification.
     //!
     //! Modifying the weights before method refit() completes will result in undefined behavior.
     virtual bool setWeights(const char* layerName, WeightsRole role, Weights weights) TRTNOEXCEPT = 0;

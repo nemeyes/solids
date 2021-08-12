@@ -1,0 +1,55 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Project",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "cxx-headers::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-cxx-headers-Debug-f12947a4a6e02847dd2e.json",
+					"name" : "cxx-headers",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/workspace/cppworkspace/PoseEstimation/3rdparty/cuda/v10.2/include/cuda/std/detail/libcxx/include/out/build/x64-Debug(기본값)",
+		"source" : "D:/workspace/cppworkspace/PoseEstimation/3rdparty/cuda/v10.2/include/cuda/std/detail/libcxx/include"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 1
+	}
+}
