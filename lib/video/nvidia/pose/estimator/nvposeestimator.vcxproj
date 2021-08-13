@@ -199,7 +199,7 @@
       <EnableUAC>false</EnableUAC>
       <ImportLibrary>$(SolutionDir)release\$(Platform)\$(Configuration)\lib\$(ProjectName).lib</ImportLibrary>
       <AdditionalLibraryDirectories>$(SolutionDir)3rdparty\TensorRT-7.0.0.11\samples\common;$(SolutionDir)3rdparty\TensorRT-7.0.0.11\lib;$(SolutionDir)3rdparty\opencv\v4.4.0\Release\x64\vc16\lib;$(SolutionDir)3rdparty\gperf\v2.7\lib;$(SolutionDir)3rdparty\cuda\v10.2\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;opencv_core440.lib;opencv_imgproc440.lib;opencv_highgui440.lib;opencv_video440.lib;opencv_videoio440.lib;opencv_features2d440.lib;opencv_flann440.lib;opencv_objdetect440.lib;opencv_cudaimgproc440.lib;libtcmalloc_minimal.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nppc.lib;nppial.lib;nppicc.lib;nppidei.lib;nppif.lib;nppig.lib;nppim.lib;nppist.lib;nppisu.lib;nppitc.lib;npps.lib;cublas.lib;cufft.lib;nvinfer.lib;nvinfer_plugin.lib;nvonnxparser.lib;nvparsers.lib;myelin64_1.lib;cudart.lib;nvrtc.lib;opencv_core440.lib;opencv_imgproc440.lib;opencv_highgui440.lib;opencv_video440.lib;opencv_videoio440.lib;opencv_features2d440.lib;opencv_flann440.lib;opencv_objdetect440.lib;opencv_cudaimgproc440.lib;libtcmalloc_minimal.lib;opencv_cudawarping440.lib;opencv_cudaarithm440.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ForceSymbolReferences>__tcmalloc</ForceSymbolReferences>
     </Link>
     <PostBuildEvent>

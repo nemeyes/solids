@@ -15,6 +15,8 @@
 #define new DEBUG_NEW
 #endif
 
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -270,6 +272,7 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 {
 	int32_t nDecoded = 0;
 	uint8_t** ppDecoded = NULL;
+	std::chrono::system_clock::time_point st;
 	long long* pTimestamp = NULL;
 	_decoder->decode(bytes, nbytes, 0, &ppDecoded, &nDecoded, &pTimestamp);
 	for (int i = 0; i < nDecoded; i++)
@@ -279,18 +282,22 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 		//std::vector<cv::Rect> BBox;
 		uint8_t* render = NULL;
 		int32_t pitch = 0;
-		//cv::cuda::GpuMat img = cv::cuda::GpuMat(_decoder_ctx.height, _decoder_ctx.width, CV_8UC4, ppDecoded[i], _decoder->get_pitch2());
-		//cv::Mat mImg;
-		//img.download(mImg);
-		
-		
-		// TODO: _detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
+		int32_t elapsedTime = 0;
+
+		st = std::chrono::system_clock::now();
 		_detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &pBBox, bboxSize);
-		// detector의 output은 bbox vector 포인터 전달. pitch의 경우 vector size값 전달...!
-		// pose estimator에 인자값하나 더 만들어주기..! bbox때문..!
-		// TODO: pose estimator에 bbox vector 전달하기...
+		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "detect elapsed Time : " << elapsedTime << std::endl;
+
+		st = std::chrono::system_clock::now();
 		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), pBBox, bboxSize, &render, pitch);
+		elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "estimate elapsed Time : " << elapsedTime << std::endl;
+
+		st = std::chrono::system_clock::now();
 		_renderer->render(render, pitch);
+		elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - st).count();
+		std::cout << "render elapsed Time : " << elapsedTime << std::endl;
 	}
 }
 

@@ -81,7 +81,7 @@ namespace pose
 	int32_t estimator::core::estimate(uint8_t* input, int32_t inputStride, uint8_t* srcBBox, int32_t bboxSize, uint8_t** output, int32_t& outputStride)
 	{
 		cv::cuda::GpuMat img = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, input, inputStride);
-		cv::cuda::GpuMat img2, img3;
+		cv::cuda::GpuMat img2, img3, resizeImg, normImg;;
 		
 		std::vector<cv::Rect> bboxes;
 		// BBox Check ( Object Detection result )
@@ -96,11 +96,24 @@ namespace pose
 		cv::Mat mImg1;
 
 		// Pre-Processing 
+#ifdef backup
 		cv::cuda::cvtColor(img, img2, cv::COLOR_BGRA2RGB);
 		img2.download(mImg1);
 		cudaMemcpy((void*)img2.ptr(), mImg1.data, mImg1.step[0] * mImg1.rows, cudaMemcpyHostToDevice);
 		resizeAndNorm((void*)img2.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
-		
+#else
+		cv::cuda::resize(img, resizeImg, cv::Size(inputWidthSize, inputHeightSize));
+		resizeImg.convertTo(normImg, CV_32FC3, 1.0f / 255.0f);
+		cv::cuda::cvtColor(normImg, normImg, cv::COLOR_BGRA2RGB);
+
+		std::vector<cv::cuda::GpuMat> inputChannels{
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, cudaBuffers.data()[0]),
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, (void**)cudaBuffers.data()[0] + inputWidthSize * inputHeightSize),
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, (void**)cudaBuffers.data()[0] + inputWidthSize * inputHeightSize * 2)
+		};
+		cv::cuda::split(normImg, inputChannels);
+
+#endif		
 		// Inference
 		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
 		
@@ -109,9 +122,10 @@ namespace pose
 		cudaMemcpy(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
 
 		// Post-Processing
+		img.download(mImg1);
 		m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, mImg1);
-		img2.upload(mImg1);
-		cv::cuda::cvtColor(img2, img, cv::COLOR_RGB2BGRA);
+		img.upload(mImg1);
+		//cv::cuda::cvtColor(img, img, cv::COLOR_RGB2BGRA);
 		
 #else
 	for (int i = 0; i < bboxSize / sizeof(cv::Rect); ++i)

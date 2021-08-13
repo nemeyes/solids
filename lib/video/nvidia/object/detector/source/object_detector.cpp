@@ -137,12 +137,13 @@ namespace object
 	int32_t detector::core::detect(uint8_t* input, int32_t inputStride, uint8_t** output, int32_t& outputStride)
 	{
 		cv::cuda::GpuMat srcGpuImg = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, input, inputStride);
-		cv::Mat rgbImg;
-		cv::cuda::GpuMat rgbGpuImg;
+		cv::cuda::GpuMat gpuImg, resizeImg, normImg;
+		//cv::Mat rgbImg;
+		//cv::cuda::GpuMat rgbGpuImg;
 		int32_t classesNum = 80;
 		cv::Size frameSize = srcGpuImg.size();
 		cv::cuda::cvtColor(srcGpuImg, srcGpuImg, cv::COLOR_BGRA2BGR);
-		srcGpuImg.download(rgbImg);
+		//srcGpuImg.download(rgbImg);
 		
 		// Pre-Processing
 #ifdef __host_memory
@@ -160,11 +161,21 @@ namespace object
 		data.insert(data.end(), ptr1, ptr1 + inputWidthSize * inputHeightSize);
 		data.insert(data.end(), ptr2, ptr2 + inputWidthSize * inputHeightSize);
 		cudaMemcpy(cudaBuffers[0], data.data(), data.size() * sizeof(float), cudaMemcpyHostToDevice);
-#else
+#elif __legacy
 		// GPU Operation
 		
 		cudaMemcpy((void*)srcGpuImg.ptr(), rgbImg.data, rgbImg.step[0] * rgbImg.rows, cudaMemcpyHostToDevice);
 		resizeAndNorm((void*)srcGpuImg.ptr(), (float*)cudaBuffers[0], _ctx->width, _ctx->height, inputWidthSize, inputHeightSize, cudaStream);
+#else
+		cv::cuda::resize(srcGpuImg, resizeImg, cv::Size(inputWidthSize, inputHeightSize));
+		resizeImg.convertTo(normImg, CV_32FC3, 1.0f / 255.0f);
+
+		std::vector<cv::cuda::GpuMat> inputChannels{
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, cudaBuffers.data()[0]),
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, (void**)cudaBuffers.data()[0] + inputWidthSize * inputHeightSize),
+			cv::cuda::GpuMat(normImg.rows, normImg.cols, CV_32F, (void**)cudaBuffers.data()[0] + inputWidthSize * inputHeightSize * 2)
+		};
+		cv::cuda::split(normImg, inputChannels);
 #endif
 		// Inference
 		context->enqueue(1, cudaBuffers.data(), cudaStream, nullptr);
@@ -179,7 +190,6 @@ namespace object
 		std::vector<float> scores;
 		std::vector<int> classes;
 
-		// TODO: NMS 관련 코드 수정하기(중첩되는 부분이 정상적으로처리가 안되는 부분이 존재... NMSThreshold값을 낮추기...)
 		// TODO: Functionalization [PostProcessing]
 		for (int32_t i = 0; i < cpuConfidenceBuffer.size() / classesNum; ++i)
 		{
@@ -209,8 +219,8 @@ namespace object
 			// Get Boundary Box Info
 			int32_t x = int(cpuBboxBuffer[targetBoxStartIdx] * frameSize.width);      // Stary X
 			int32_t y = int(cpuBboxBuffer[targetBoxStartIdx + 1] * frameSize.height); // Start Y
-			int32_t w = int(cpuBboxBuffer[targetBoxStartIdx + 2] * frameSize.width);  // End X
-			int32_t h = int(cpuBboxBuffer[targetBoxStartIdx + 3] * frameSize.height); // End Y
+			int32_t w = int(cpuBboxBuffer[targetBoxStartIdx + 2] * frameSize.width) - x;  // End X
+			int32_t h = int(cpuBboxBuffer[targetBoxStartIdx + 3] * frameSize.height) - y; // End Y
 			//int32_t x = int(centerx - w / 2);
 			//int32_t y = int(centery - h / 2);
 			cv::Rect bbox = { x, y, w, h };

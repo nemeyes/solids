@@ -11,6 +11,8 @@
 #include <sld_nvrenderer.h>
 #include <sld_object_detector.h>
 
+#include <chrono>
+#include <iostream>
 //#include <opencv2/opencv.hpp>
 //#include <opencv2/core/cuda.hpp>
 
