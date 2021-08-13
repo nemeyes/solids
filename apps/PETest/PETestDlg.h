@@ -19,7 +19,7 @@
 // CPETestDlg 대화 상자
 class CPETestDlg
 	: public CDialogEx
-	, public solids::lib::misc::threadpool::manager
+	, public solids::lib::misc::threadpool::manager 
 	, public solids::lib::container::ff::demuxer
 {
 // 생성입니다.
