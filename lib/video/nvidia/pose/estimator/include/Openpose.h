@@ -36,6 +36,7 @@ public:
 		//int W = 56;
 	};
 	void detect(std::vector<float> cmap_vector, std::vector<float> paf_vector, cv::Mat &frame);
+	void detect(std::vector<float> cmap_vector, std::vector<float> paf_vector, const int& width, const int& height, std::vector<std::array<int, 36>>& vecJointPoint);
 
 
 private:

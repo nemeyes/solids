@@ -162,6 +162,7 @@ namespace solids
 						
 						float confThreshold = 0.4f;
 						float nmsThreshold = 0.1f;
+						int classesNum = 80;
 					};
 					
 				}

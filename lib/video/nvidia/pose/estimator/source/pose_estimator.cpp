@@ -31,18 +31,15 @@ namespace pose
 		_ctx = ctx;
 		std::cout << "Loading OpenPose Inference Engine ... " << std::endl;
 
-
 		cudaSetDevice(0);
 		std::fstream file;
 
 		confThreshold = 0.3f;
 		nmsThreshold = 0.3f;
-		std::string engineFilePath = "trt_pose_fp16.engine";
-		//std::string engineFilePath = "pose_higher_hrnet_w32_512.engine";
-		file.open(engineFilePath, std::ios::binary | std::ios::in);
+		file.open(_ctx->enginePath, std::ios::binary | std::ios::in);
 		if (!file.is_open())
 		{
-			std::cout << "read engine file: " << engineFilePath << " failed" << std::endl;
+			std::cout << "read engine file: " << _ctx->enginePath << " failed" << std::endl;
 			return 0;
 		}
 		file.seekg(0, std::ios::end);
@@ -82,8 +79,8 @@ namespace pose
 	{
 		cv::cuda::GpuMat img = cv::cuda::GpuMat(_ctx->height, _ctx->width, CV_8UC4, input, inputStride);
 		cv::cuda::GpuMat img2, img3, resizeImg, normImg;;
-		
 		std::vector<cv::Rect> bboxes;
+
 		// BBox Check ( Object Detection result )
 		if(bboxSize == 0)
 			return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
@@ -122,10 +119,15 @@ namespace pose
 		cudaMemcpy(cpuPafBuffer.data(), (float*)cudaBuffers[2], cpuPafBuffer.size() * sizeof(float), cudaMemcpyDeviceToHost);
 
 		// Post-Processing
+#ifdef _drawSkeleton
 		img.download(mImg1);
-		m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, mImg1);
+		//m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, mImg1);
 		img.upload(mImg1);
-		//cv::cuda::cvtColor(img, img, cv::COLOR_RGB2BGRA);
+#else
+		std::vector<std::array<int, 36>> jointPoint;
+		m_openpose.detect(cpuCmapBuffer, cpuPafBuffer, img.cols, img.rows, jointPoint);
+#endif
+		 
 		
 #else
 	for (int i = 0; i < bboxSize / sizeof(cv::Rect); ++i)
@@ -195,8 +197,8 @@ namespace pose
 	}
 #endif
 
-		*output = (uint8_t*)img.ptr();
-		outputStride = inputStride;
+		//*output = (uint8_t*)img.ptr();
+		//outputStride = inputStride;
 		return solids::lib::video::nvidia::pose::estimator::err_code_t::success;
 	}
 

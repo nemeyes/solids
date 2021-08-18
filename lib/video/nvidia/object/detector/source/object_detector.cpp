@@ -91,17 +91,16 @@ namespace object
 	{
 		_ctx = ctx; 
 		std::cout << "Loading Object Detecte Inference Eninge..." << std::endl;
-
+		
 		// Select GPU Device Num
 		cudaSetDevice(0);
 
 		// TODO: File seek function
-		std::string engineFilePath = "D:\\Download\\TensorRT-7.0.0.11.Windows10.x86_64.cuda-10.0.cudnn7.6\\TensorRT-7.0.0.11\\bin\\yolov4_1_3_288_288_static_Upsample1fp16.engine";
 		std::fstream file;
-		file.open(engineFilePath, std::ios::binary | std::ios::in);
+		file.open(_ctx->enginePath, std::ios::binary | std::ios::in);
 		if (!file.is_open())
 		{
-			std::cout << "read engine file : " << engineFilePath << " failed" << std::endl;
+			std::cout << "read engine file : " << _ctx->enginePath << " failed" << std::endl;
 			return 0;
 		}
 		file.seekg(0, std::ios::end);
@@ -140,7 +139,7 @@ namespace object
 		cv::cuda::GpuMat gpuImg, resizeImg, normImg;
 		//cv::Mat rgbImg;
 		//cv::cuda::GpuMat rgbGpuImg;
-		int32_t classesNum = 80;
+		//int32_t classesNum = 80;
 		cv::Size frameSize = srcGpuImg.size();
 		cv::cuda::cvtColor(srcGpuImg, srcGpuImg, cv::COLOR_BGRA2BGR);
 		//srcGpuImg.download(rgbImg);
