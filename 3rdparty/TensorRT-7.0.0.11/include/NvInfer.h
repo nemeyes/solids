@@ -4374,7 +4374,7 @@ public:
 //! and that input must from a IRecurrenceLayer in the same loop.
 //!
 //! If getLoopOutput() is kCONCATENATE or kREVERSE, a second input must be provided.
-//! The second input must be a scalar ?�shape tensor?? defined before the loop commences,
+//! The second input must be a scalar “shape tensor”, defined before the loop commences,
 //! that specifies the concatenation length of the output.
 //!
 //! The output tensor has j more dimensions than the input tensor, where

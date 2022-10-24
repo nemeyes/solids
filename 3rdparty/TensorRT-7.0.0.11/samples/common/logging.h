@@ -26,8 +26,6 @@
 #include <sstream>
 #include <string>
 
-#pragma warning(disable : 4996)
-
 using Severity = nvinfer1::ILogger::Severity;
 
 class LogStreamConsumerBuffer : public std::stringbuf

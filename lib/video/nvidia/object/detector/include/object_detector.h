@@ -8,6 +8,7 @@
 
 #include <opencv2/cudaimgproc.hpp>
 #include <opencv2/cudawarping.hpp>
+#include <opencv2/cudaarithm.hpp>
 #include <opencv2/dnn/dnn.hpp>
 
 #include <iostream>
@@ -161,6 +162,7 @@ namespace solids
 						
 						float confThreshold = 0.4f;
 						float nmsThreshold = 0.1f;
+						int classesNum = 80;
 					};
 					
 				}

@@ -11,13 +11,15 @@
 #include <sld_nvrenderer.h>
 #include <sld_object_detector.h>
 
+#include <chrono>
+#include <iostream>
 //#include <opencv2/opencv.hpp>
 //#include <opencv2/core/cuda.hpp>
 
 // CPETestDlg 대화 상자
 class CPETestDlg
 	: public CDialogEx
-	, public solids::lib::misc::threadpool::manager
+	, public solids::lib::misc::threadpool::manager 
 	, public solids::lib::container::ff::demuxer
 {
 // 생성입니다.

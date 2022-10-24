@@ -341,14 +341,10 @@ samplesCommon::UffSampleParams initializeSampleParams(const samplesCommon::Args&
         params.dataDirs = args.dataDirs;
     }
 
-    //params.uffFileName = locateFile("lenet5.uff", params.dataDirs);
-    params.uffFileName = locateFile("kerasToUff3.uff", params.dataDirs);
-    //params.uffFileName = locateFile("lenet5_mnist_frozen.pb", params.dataDirs); 
-    //params.inputTensorNames.push_back("in");
-    params.inputTensorNames.push_back("in_input");
+    params.uffFileName = locateFile("lenet5.uff", params.dataDirs);
+    params.inputTensorNames.push_back("in");
     params.batchSize = 1;
-    //params.outputTensorNames.push_back("out");
-    params.outputTensorNames.push_back("out/Softmax");
+    params.outputTensorNames.push_back("out");
     params.dlaCore = args.useDLACore;
     params.int8 = args.runInInt8;
     params.fp16 = args.runInFp16;

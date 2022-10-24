@@ -27,9 +27,11 @@ namespace solids
 						{
 							int32_t width;
 							int32_t height;
+							std::string enginePath;
 							_context_t(void)
 								: width(-1)
 								, height(-1)
+								, enginePath("")
 							{}
 
 							~_context_t(void)

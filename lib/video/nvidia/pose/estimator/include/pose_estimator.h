@@ -59,10 +59,14 @@ namespace solids
 						std::string onnx_filename;
 					} onnx_params_t;
 
+					typedef struct _TRTJointPoint
+					{
+						int px{-1};
+						int py{-1};
+					}TRTJointPoint;
+
 					template<typename T>
 					using rtunique_ptr = std::unique_ptr<T, infer_deleter_t>;
-
-
 
 					class estimator::core
 					{

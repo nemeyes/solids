@@ -15,6 +15,8 @@
 #define new DEBUG_NEW
 #endif
 
+#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+
 // 응용 프로그램 정보에 사용되는 CAboutDlg 대화 상자입니다.
 
 class CAboutDlg : public CDialogEx
@@ -245,11 +247,13 @@ void CPETestDlg::on_video_begin(int32_t codec, const uint8_t* extradata, int32_t
 	_estimator = new solids::lib::video::nvidia::pose::estimator();
 	_estimator_ctx.width = width;
 	_estimator_ctx.height = height;
+	_estimator_ctx.enginePath = "trt_pose_fp16.engine";
 	_estimator->initialize(&_estimator_ctx);
 
 	_detector = new solids::lib::video::nvidia::object::detector();
 	_detector_ctx.width = width;
 	_detector_ctx.height = height;
+	_detector_ctx.enginePath = "D:\\Download\\TensorRT-7.0.0.11.Windows10.x86_64.cuda-10.0.cudnn7.6\\TensorRT-7.0.0.11\\bin\\yolov4_1_3_288_288_static_Upsample1fp16.engine";
 	_detector->initialize(&_detector_ctx);
 
 	_renderer = new solids::lib::video::nvidia::renderer();
@@ -270,27 +274,31 @@ void CPETestDlg::on_video_recv(uint8_t* bytes, int32_t nbytes, int32_t nFrameIdx
 {
 	int32_t nDecoded = 0;
 	uint8_t** ppDecoded = NULL;
+	std::chrono::system_clock::time_point st;
 	long long* pTimestamp = NULL;
 	_decoder->decode(bytes, nbytes, 0, &ppDecoded, &nDecoded, &pTimestamp);
 	for (int i = 0; i < nDecoded; i++)
 	{
 		uint8_t* pBBox = NULL;
 		int32_t bboxSize = 0;
-		//std::vector<cv::Rect> BBox;
 		uint8_t* render = NULL;
 		int32_t pitch = 0;
-		//cv::cuda::GpuMat img = cv::cuda::GpuMat(_decoder_ctx.height, _decoder_ctx.width, CV_8UC4, ppDecoded[i], _decoder->get_pitch2());
-		//cv::Mat mImg;
-		//img.download(mImg);
-		
-		
-		// TODO: _detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &render, pitch);
+		//int32_t elapsedTime = 0;
+
+		//st = std::chrono::system_clock::now();
 		_detector->detect(ppDecoded[i], (int32_t)_decoder->get_pitch2(), &pBBox, bboxSize);
-		// detector의 output은 bbox vector 포인터 전달. pitch의 경우 vector size값 전달...!
-		// pose estimator에 인자값하나 더 만들어주기..! bbox때문..!
-		// TODO: pose estimator에 bbox vector 전달하기...
+		//elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		//std::cout << "detect elapsed Time : " << elapsedTime << std::endl;
+
+		//st = std::chrono::system_clock::now();
 		_estimator->estimate(ppDecoded[i], (int32_t)_decoder->get_pitch2(), pBBox, bboxSize, &render, pitch);
+		//elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - st).count();
+		//std::cout << "estimate elapsed Time : " << elapsedTime << std::endl;
+
+		//st = std::chrono::system_clock::now();
 		_renderer->render(render, pitch);
+		//elapsedTime = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now() - st).count();
+		//std::cout << "render elapsed Time : " << elapsedTime << std::endl;
 	}
 }
 
